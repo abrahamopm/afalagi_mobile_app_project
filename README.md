@@ -13,7 +13,7 @@ Add, view, update, and delete properties with details like location, price, room
 Log viewings, record client feedback, assign Interest Scores (1–5 stars), and track interactions between clients and properties.
 
 ## Design Approach
-Developed using **Domain-Driven Design (DDD)** with **Property** and **Viewing** as main Aggregates.  
+To be developed using **Domain-Driven Design (DDD)** with **Property** and **Viewing** as main Aggregates.  
 Includes role-based authorization: Agents see only their own leads; Admins view everything.
 
 ## Team Members
