@@ -19,11 +19,14 @@ Users (agents) can create, edit, delete, and manage custom categories or tags (e
 * Edit existing categories
 * Delete categories (with proper handling of references)
 
-# Design Approach
+## Design Approach
 
-Developed using Domain-Driven Design (DDD) with Property and Viewing as main aggregates.
+The project follows modern architectural patterns to ensure scalability, maintainability, and a premium user experience.
 
-Includes authentication (login, signup, delete account) and authorization.
+Afalagi implements a robust security layer to protect sensitive lead and property data:
+- **Identity Management**: A dedicated authentication system handling user registration, secure login, and session persistence.
+- **Authorization**: Role-based access control ensuring agents can only access and modify their own property portfolios and client interaction history.
+- **Data Privacy**: Built-in features for permanent account deletion and sensitive data scrubbing, adhering to modern privacy standards.
 
 ## Team Members
 
