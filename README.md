@@ -19,6 +19,12 @@ Users (agents) can create, edit, delete, and manage custom categories or tags (e
 * Edit existing categories
 * Delete categories (with proper handling of references)
 
+# Design Approach
+
+Developed using Domain-Driven Design (DDD) with Property and Viewing as main aggregates.
+
+Includes authentication (login, signup, delete account) and authorization.
+
 ## Team Members
 
 | Full Name | ID |
