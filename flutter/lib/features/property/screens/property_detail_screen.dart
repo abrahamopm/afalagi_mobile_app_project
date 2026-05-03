@@ -1,4 +1,4 @@
-import 'package:afalagi/core/theme/theme.dart';
+import 'package:afalagi/core/theme/Theme.dart';
 import 'package:afalagi/core/widgets/button.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
