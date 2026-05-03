@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:afalagi/core/theme/Theme.dart';
+import 'package:afalagi/core/theme/theme.dart';
 
 class StatCard extends StatelessWidget {
   final String title;

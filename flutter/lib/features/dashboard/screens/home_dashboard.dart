@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:afalagi/core/theme/Theme.dart';
+import 'package:afalagi/core/theme/theme.dart';
 import 'package:afalagi/core/widgets/stat_card.dart';
 import 'package:afalagi/core/widgets/button.dart';
 import 'package:go_router/go_router.dart';

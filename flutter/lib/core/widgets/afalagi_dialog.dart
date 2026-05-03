@@ -1,4 +1,4 @@
-import 'package:afalagi/core/theme/Theme.dart';
+import 'package:afalagi/core/theme/theme.dart';
 import 'package:flutter/material.dart';
 
 /// Shared confirmation dialog aligned with design.json Confirmation Dialog.

@@ -1,4 +1,4 @@
-import 'package:afalagi/core/theme/Theme.dart';
+import 'package:afalagi/core/theme/theme.dart';
 import 'package:afalagi/core/widgets/afalagi_dialog.dart';
 import 'package:afalagi/core/widgets/button.dart';
 import 'package:afalagi/core/widgets/input.dart';

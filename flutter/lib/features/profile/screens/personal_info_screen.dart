@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:afalagi/core/theme/Theme.dart';
+import 'package:afalagi/core/theme/theme.dart';
 import 'package:afalagi/core/widgets/button.dart';
 import 'package:afalagi/core/widgets/input.dart';
 import 'package:afalagi/core/widgets/image.dart';
