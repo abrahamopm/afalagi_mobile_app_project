@@ -20,7 +20,7 @@ class CustomScaffold {
       onTap: onTap,
       type: BottomNavigationBarType.fixed,
       selectedItemColor: AppTheme.primaryColor,
-      unselectedItemColor: AppTheme.primaryColor.withOpacity(0.6),
+      unselectedItemColor: AppTheme.primaryColor.withAlpha(150),
       showUnselectedLabels: true,
       items: const [
         BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
