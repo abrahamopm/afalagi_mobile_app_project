@@ -1,3 +1,5 @@
+import 'package:afalagi/core/constants/image.dart';
+import 'package:afalagi/core/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'signup_screen.dart';
 
@@ -5,9 +7,14 @@ void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -22,32 +29,22 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ThemeData theme = Theme.of(context);
+
     return Scaffold(
       body: Center(
         child: Container(
           padding: const EdgeInsets.all(24),
-        
+
           child: Column(
-            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const SizedBox(height: 20),
 
-              
-              Column(
-                children: const [
-                  Icon(Icons.home, size: 60, color: Colors.teal),
-                  SizedBox(height: 10),
-                  Text(
-                    "Afalagi",
-                    style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.teal),
-                  ),
-                ],
-              ),
+              Center(child: CustomImages.appLogo(height: 75)),
 
-              const SizedBox(height: 20),
+              const SizedBox(height: 30),
 
               const Text(
                 "Welcome Back",
@@ -58,71 +55,90 @@ class LoginScreen extends StatelessWidget {
               const Text(
                 "Please enter your credentials to manage your portfolio.",
                 textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.grey),
               ),
 
-              const SizedBox(height: 20),
+              const SizedBox(height: 30),
 
-              
-              TextField(
-                decoration: InputDecoration(
-                  hintText: "john.doe@curator.com",
-                  prefixIcon: const Icon(Icons.email),
-                  filled: true,
-                  fillColor: Colors.grey[300],
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                    borderSide: BorderSide.none,
+              ...[
+                Text(
+                  "EMAIL ADDRESS",
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: AppTheme.primaryColor,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
-              ),
+                SizedBox(height: 10),
+                TextField(
+                  decoration: InputDecoration(
+                    hintText: "john.doe@curator.com",
+                    prefixIcon: const Icon(Icons.email),
+                    filled: true,
+                    fillColor: Colors.grey[300],
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                ),
+              ],
 
               const SizedBox(height: 15),
-
-              
-              TextField(
-                obscureText: true,
-                decoration: InputDecoration(
-                  hintText: "********",
-                  prefixIcon: const Icon(Icons.lock),
-                  filled: true,
-                  fillColor: Colors.grey[300],
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                    borderSide: BorderSide.none,
+              ...[
+                Text(
+                  "PASSWORD",
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: AppTheme.primaryColor,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
-              ),
-
+                SizedBox(height: 10),
+                TextField(
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    hintText: "********",
+                    prefixIcon: const Icon(Icons.lock),
+                    filled: true,
+                    fillColor: Colors.grey[300],
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                ),
+              ],
               const SizedBox(height: 10),
 
               Row(
                 children: const [
                   Switch(value: false, onChanged: null),
-                  Text("Remember Me")
+                  Text("Remember Me"),
                 ],
               ),
 
               const SizedBox(height: 10),
 
-             
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF243E63),
+                    backgroundColor: AppTheme.primaryColor,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30)),
+                      borderRadius: BorderRadius.circular(30),
+                    ),
                     padding: const EdgeInsets.symmetric(vertical: 16),
                   ),
                   onPressed: () {},
-                  child: const Text("Sign in", style: TextStyle(fontSize: 16)),
+                  child: const Text(
+                    "Sign in",
+                    style: TextStyle(fontSize: 16, color: Colors.white),
+                  ),
                 ),
               ),
 
               const SizedBox(height: 15),
 
-              
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -132,17 +148,20 @@ class LoginScreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const SignupScreen()),
+                          builder: (context) => const SignupScreen(),
+                        ),
                       );
                     },
                     child: const Text(
                       "Sign Up",
                       style: TextStyle(
-                          fontWeight: FontWeight.bold, color: Colors.black),
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
                     ),
                   ),
                 ],
-              )
+              ),
             ],
           ),
         ),
