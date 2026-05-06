@@ -13,7 +13,6 @@ class ClientListScreen extends StatelessWidget {
     ];
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Clients')),
       body: ListView.builder(
         itemCount: clients.length,
         itemBuilder: (context, index) {

@@ -1,3 +1,4 @@
+import 'package:afalagi/core/theme/theme.dart%20';
 import 'package:afalagi/core/widgets/image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -16,9 +17,11 @@ class CustomScaffold {
   ) {
     return BottomNavigationBar(
       currentIndex: currentIndex,
-      onTap: (value) {
-        onTap(value);
-      },
+      onTap: onTap,
+      type: BottomNavigationBarType.fixed,
+      selectedItemColor: AppTheme.primaryColor,
+      unselectedItemColor: AppTheme.primaryColor.withOpacity(0.6),
+      showUnselectedLabels: true,
       items: const [
         BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
         BottomNavigationBarItem(

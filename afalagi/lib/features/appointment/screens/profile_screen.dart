@@ -5,16 +5,13 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Profile')),
-      body: const Column(
-        children: [
-          SizedBox(height: 20),
-          CircleAvatar(radius: 50, child: Icon(Icons.person, size: 50)),
-          ListTile(title: Text('Name'), subtitle: Text('Admin User')),
-          ListTile(title: Text('Email'), subtitle: Text('admin@afalagi.com')),
-        ],
-      ),
+    return const Column(
+      children: [
+        SizedBox(height: 20),
+        CircleAvatar(radius: 50, child: Icon(Icons.person, size: 50)),
+        ListTile(title: Text('Name'), subtitle: Text('Admin User')),
+        ListTile(title: Text('Email'), subtitle: Text('admin@afalagi.com')),
+      ],
     );
   }
 }

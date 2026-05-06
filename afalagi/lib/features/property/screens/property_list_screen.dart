@@ -1,5 +1,3 @@
-import 'package:afalagi/core/widgets/scaffold.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../models/property_model.dart';
@@ -9,7 +7,6 @@ class PropertyListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Dummy data
     final properties = [
       Property(
         id: '1',
@@ -26,7 +23,6 @@ class PropertyListScreen extends StatelessWidget {
     ];
 
     return Scaffold(
-      appBar: CustomScaffold.appBar(),
       body: ListView.builder(
         itemCount: properties.length,
         itemBuilder: (context, index) {
