@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'features/auth/screens/splash_screen.dart';
 import 'features/auth/screens/login_screen.dart';
@@ -38,20 +37,11 @@ class AppRoutes {
   static const String activityLog = '/activity-log';
 
   static final router = GoRouter(
-    initialLocation: initial,
+    initialLocation: properties,
     routes: [
-      GoRoute(
-        path: initial,
-        builder: (context, state) => const SplashScreen(),
-      ),
-      GoRoute(
-        path: login,
-        builder: (context, state) => const LoginScreen(),
-      ),
-      GoRoute(
-        path: signup,
-        builder: (context, state) => const SignupScreen(),
-      ),
+      GoRoute(path: initial, builder: (context, state) => const SplashScreen()),
+      GoRoute(path: login, builder: (context, state) => const LoginScreen()),
+      GoRoute(path: signup, builder: (context, state) => const SignupScreen()),
       GoRoute(
         path: dashboard,
         builder: (context, state) => const DashboardScreen(),

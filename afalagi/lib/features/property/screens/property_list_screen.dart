@@ -1,3 +1,5 @@
+import 'package:afalagi/core/widgets/scaffold.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../models/property_model.dart';
@@ -9,12 +11,22 @@ class PropertyListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // Dummy data
     final properties = [
-      Property(id: '1', title: 'Luxury Villa', description: 'A beautiful villa', price: 1000000),
-      Property(id: '2', title: 'Modern Apartment', description: 'City center apartment', price: 500000),
+      Property(
+        id: '1',
+        title: 'Luxury Villa',
+        description: 'A beautiful villa',
+        price: 1000000,
+      ),
+      Property(
+        id: '2',
+        title: 'Modern Apartment',
+        description: 'City center apartment',
+        price: 500000,
+      ),
     ];
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Properties')),
+      appBar: CustomScaffold.appBar(),
       body: ListView.builder(
         itemCount: properties.length,
         itemBuilder: (context, index) {

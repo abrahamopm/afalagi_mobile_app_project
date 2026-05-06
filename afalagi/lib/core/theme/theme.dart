@@ -17,7 +17,7 @@ class AppTheme {
         900: primaryColor.withOpacity(1.0),
       }),
       useMaterial3: true,
-      appBarTheme: const AppBarTheme(centerTitle: true, elevation: 0),
+      appBarTheme: const AppBarTheme(elevation: 0),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           minimumSize: const Size(double.infinity, 50),
