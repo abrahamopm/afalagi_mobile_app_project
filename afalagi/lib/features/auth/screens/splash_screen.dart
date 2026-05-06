@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:afalagi/core/constants/image.dart';
+import 'package:afalagi/core/widgets/image.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {

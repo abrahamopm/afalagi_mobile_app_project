@@ -1,4 +1,4 @@
-import 'package:afalagi/core/constants/image.dart';
+import 'package:afalagi/core/widgets/image.dart';
 import 'package:afalagi/core/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'signup_screen.dart';
