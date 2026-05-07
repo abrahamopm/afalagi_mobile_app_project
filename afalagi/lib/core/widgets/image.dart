@@ -13,11 +13,17 @@ class CustomImages {
     );
   }
 
-  static Image reselientImage(String url, {double? width, double? height}) {
+  static Image reselientImage(
+    String url, {
+    double? width,
+    double? height,
+    BoxFit? fit,
+  }) {
     return Image.network(
       url,
       width: width,
       height: height,
+      fit: fit,
       errorBuilder: (context, error, stackTrace) {
         return Image.asset(logoImage);
       },

@@ -24,8 +24,10 @@ class PropertyDetailScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Price: \$${property.price}',
-                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            Text(
+              'Price: \$${property.price}',
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 10),
             Text(property.description),
             const SizedBox(height: 20),

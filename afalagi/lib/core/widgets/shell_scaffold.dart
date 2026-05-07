@@ -10,6 +10,7 @@ class ShellScaffold extends StatelessWidget {
     final String location = GoRouterState.of(context).uri.toString();
     if (location.startsWith('/dashboard')) return 0;
     if (location.startsWith('/properties')) return 1;
+    if (location.startsWith('/property-detail')) return 1;
     if (location.startsWith('/clients')) return 2;
     if (location.startsWith('/viewing-history')) return 3;
     if (location.startsWith('/profile')) return 4;
@@ -18,11 +19,21 @@ class ShellScaffold extends StatelessWidget {
 
   void _onItemTapped(int index, BuildContext context) {
     switch (index) {
-      case 0: context.go('/dashboard'); break;
-      case 1: context.go('/properties'); break;
-      case 2: context.go('/clients'); break;
-      case 3: context.go('/viewing-history'); break;
-      case 4: context.go('/profile'); break;
+      case 0:
+        context.go('/dashboard');
+        break;
+      case 1:
+        context.go('/properties');
+        break;
+      case 2:
+        context.go('/clients');
+        break;
+      case 3:
+        context.go('/viewing-history');
+        break;
+      case 4:
+        context.go('/profile');
+        break;
     }
   }
 
