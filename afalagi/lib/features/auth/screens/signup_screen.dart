@@ -1,3 +1,4 @@
+import 'package:afalagi/core/widgets/button.dart';
 import 'package:flutter/material.dart';
 import 'package:afalagi/core/theme/theme.dart';
 import 'package:go_router/go_router.dart';
@@ -112,16 +113,9 @@ class SignupScreen extends StatelessWidget {
               const SizedBox(height: 10),
               SizedBox(
                 width: double.infinity,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF243E63),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                  ),
+                child: CustomButton(
+                  text: "Sign Up",
                   onPressed: () => context.go('/dashboard'),
-                  child: const Text("Sign Up", style: TextStyle(fontSize: 16)),
                 ),
               ),
               const SizedBox(height: 15),
