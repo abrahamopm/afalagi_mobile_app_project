@@ -1,3 +1,4 @@
+import 'package:afalagi/core/widgets/afalagi_dialog.dart';
 import 'package:afalagi/core/widgets/property_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -15,37 +16,25 @@ class PropertyListScreen extends ConsumerStatefulWidget {
 class _PropertyListScreenState extends ConsumerState<PropertyListScreen> {
   final List<String> _selectedTags = [];
 
-  void _deleteProperty(String id) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Delete Property'),
-        content: const Text('Are you sure you want to delete this property?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () async {
-              final messenger = ScaffoldMessenger.of(context);
-              Navigator.pop(context);
-              try {
-                await ref.read(propertyListProvider.notifier).deleteProperty(id);
-                messenger.showSnackBar(
-                  const SnackBar(content: Text('Property deleted successfully')),
-                );
-              } catch (e) {
-                messenger.showSnackBar(
-                  SnackBar(content: Text('Error: ${e.toString()}')),
-                );
-              }
-            },
-            child: const Text('Delete', style: TextStyle(color: Colors.red)),
-          ),
-        ],
-      ),
+  Future<void> _deleteProperty(String id) async {
+    final confirmed = await AfalagiDialog.showConfirm(
+      context,
+      title: 'Delete Property',
+      content: 'Are you sure you want to delete this property?',
     );
+    if (confirmed != true || !mounted) return;
+
+    final messenger = ScaffoldMessenger.of(context);
+    try {
+      await ref.read(propertyListProvider.notifier).deleteProperty(id);
+      messenger.showSnackBar(
+        const SnackBar(content: Text('Property deleted successfully')),
+      );
+    } catch (e) {
+      messenger.showSnackBar(
+        SnackBar(content: Text('Error: ${e.toString()}')),
+      );
+    }
   }
 
   Widget _buildTagFilterChips() {
@@ -68,9 +57,9 @@ class _PropertyListScreenState extends ConsumerState<PropertyListScreen> {
                       _selectedTags.clear();
                     });
                   },
-                  selectedColor: Theme.of(context).primaryColor.withValues(alpha: 0.12),
+                  selectedColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.12),
                   labelStyle: TextStyle(
-                    color: _selectedTags.isEmpty ? Theme.of(context).primaryColor : Colors.black87,
+                    color: _selectedTags.isEmpty ? Theme.of(context).colorScheme.primary : Colors.black87,
                     fontWeight: _selectedTags.isEmpty ? FontWeight.bold : null,
                   ),
                 ),
@@ -92,10 +81,10 @@ class _PropertyListScreenState extends ConsumerState<PropertyListScreen> {
                         }
                       });
                     },
-                    selectedColor: Theme.of(context).primaryColor.withValues(alpha: 0.12),
-                    checkmarkColor: Theme.of(context).primaryColor,
+                    selectedColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.12),
+                    checkmarkColor: Theme.of(context).colorScheme.primary,
                     labelStyle: TextStyle(
-                      color: isSelected ? Theme.of(context).primaryColor : Colors.black87,
+                      color: isSelected ? Theme.of(context).colorScheme.primary : Colors.black87,
                       fontWeight: isSelected ? FontWeight.bold : null,
                     ),
                     backgroundColor: Colors.white,
