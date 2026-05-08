@@ -65,7 +65,7 @@ class ProfileScreen extends ConsumerWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                   decoration: BoxDecoration(
-                    color: AppColors.success.withOpacity(0.1),
+                    color: AppColors.success.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Row(
@@ -260,7 +260,7 @@ class ProfileScreen extends ConsumerWidget {
                   margin: const EdgeInsets.symmetric(horizontal: 4),
                   padding: const EdgeInsets.symmetric(vertical: 20),
                   decoration: BoxDecoration(
-                    color: AppColors.danger.withOpacity(0.05),
+                    color: AppColors.danger.withValues(alpha: 0.05),
                     borderRadius: BorderRadius.circular(24),
                   ),
                   child: Row(
