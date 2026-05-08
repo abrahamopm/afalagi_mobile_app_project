@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:afalagi/core/theme/theme.dart';
 import 'package:afalagi/features/viewing/domain/entities/viewing_entity.dart';
 import 'package:afalagi/features/viewing/widgets/viewing_cards.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:afalagi/core/widgets/afalagi_dialog.dart';
 import 'package:go_router/go_router.dart';
 import '../providers/viewing_provider.dart';
 
@@ -44,45 +44,10 @@ class _ViewingHistoryScreenState extends ConsumerState<ViewingHistoryScreen> {
   }
 
   Future<bool?> _showPlatformConfirmation({required String title, required String content}) {
-    final platform = Theme.of(context).platform;
-
-    if (platform == TargetPlatform.iOS || platform == TargetPlatform.macOS) {
-      return showCupertinoDialog<bool>(
-        context: context,
-        builder: (context) => CupertinoAlertDialog(
-          title: Text(title),
-          content: Text(content),
-          actions: [
-            CupertinoDialogAction(
-              child: const Text('Cancel'),
-              onPressed: () => Navigator.of(context).pop(false),
-            ),
-            CupertinoDialogAction(
-              isDestructiveAction: true,
-              child: const Text('Delete'),
-              onPressed: () => Navigator.of(context).pop(true),
-            ),
-          ],
-        ),
-      );
-    }
-
-    return showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(title),
-        content: Text(content),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Delete', style: TextStyle(color: AppColors.danger)),
-          ),
-        ],
-      ),
+    return AfalagiDialog.showConfirm(
+      context,
+      title: title,
+      content: content,
     );
   }
 

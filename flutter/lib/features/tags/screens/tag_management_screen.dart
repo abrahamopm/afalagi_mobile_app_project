@@ -1,4 +1,5 @@
 import 'package:afalagi/core/theme/theme.dart';
+import 'package:afalagi/core/widgets/afalagi_dialog.dart';
 import 'package:afalagi/core/widgets/button.dart';
 import 'package:afalagi/core/widgets/input.dart';
 import 'package:afalagi/features/tags/domain/entities/tag_entity.dart';
@@ -77,22 +78,10 @@ class _TagManagementScreenState extends ConsumerState<TagManagementScreen> {
   }
 
   Future<void> _deleteTag(TagEntity tag) async {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Delete Tag'),
-        content: Text('Delete "${tag.name}"? It will be removed from properties.'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Delete', style: TextStyle(color: Colors.red)),
-          ),
-        ],
-      ),
+    final confirmed = await AfalagiDialog.showConfirm(
+      context,
+      title: 'Delete Tag',
+      content: 'Delete "${tag.name}"? It will be removed from properties.',
     );
 
     if (confirmed != true) return;
@@ -116,12 +105,8 @@ class _TagManagementScreenState extends ConsumerState<TagManagementScreen> {
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setDialogState) => AlertDialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          title: const Text(
-            'Edit Tag',
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
+          shape: AppTheme.compactDialogShape,
+          title: const Text('Edit Tag'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
