@@ -12,10 +12,9 @@ class LogoutDialog extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authStateProvider);
     final isLoading = authState.isLoading;
+    final dialogTheme = Theme.of(context).dialogTheme;
 
     return Dialog(
-      backgroundColor: Colors.white,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
         child: Column(
@@ -35,23 +34,15 @@ class LogoutDialog extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 24),
-            const Text(
+            Text(
               'Logout',
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: AppColors.primary,
-              ),
+              style: dialogTheme.titleTextStyle?.copyWith(fontSize: 22),
             ),
             const SizedBox(height: 12),
-            const Text(
+            Text(
               'Are you sure you want to log out of your Afalagi agent account?',
               textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.grey,
-                fontSize: 14,
-                height: 1.5,
-              ),
+              style: dialogTheme.contentTextStyle?.copyWith(fontSize: 14),
             ),
             const SizedBox(height: 32),
             CustomButton(

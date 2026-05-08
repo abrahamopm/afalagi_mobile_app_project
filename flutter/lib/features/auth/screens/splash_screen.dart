@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:afalagi/core/theme/theme.dart';
 import 'package:afalagi/core/widgets/image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -32,8 +33,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
             ),
             Spacer(),
             LinearProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
-              backgroundColor: Colors.grey[300],
+              valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primary),
+              backgroundColor: AppColors.inputField,
             ),
             Spacer(),
           ],
