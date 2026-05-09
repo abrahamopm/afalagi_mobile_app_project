@@ -11,6 +11,7 @@ class Property {
   final int baths;
   final int sqft;
   final bool isAvailable;
+  final List<String> tags;
 
   Property({
     required this.id,
@@ -23,6 +24,7 @@ class Property {
     required this.baths,
     required this.sqft,
     this.isAvailable = true,
+    this.tags = const [],
   });
 
   // Helper to format price with commas (e.g., 1,890,000)
@@ -43,6 +45,7 @@ class Property {
       sqft: json['sqft'],
       description: json['description'] ?? 'No description available',
       isAvailable: json['isAvailable'] ?? true,
+      tags: List<String>.from(json['tags'] ?? []),
     );
   }
 }

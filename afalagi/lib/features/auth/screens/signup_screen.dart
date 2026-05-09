@@ -1,4 +1,5 @@
 import 'package:afalagi/core/widgets/button.dart';
+import 'package:afalagi/core/widgets/input.dart';
 import 'package:flutter/material.dart';
 import 'package:afalagi/core/theme/theme.dart';
 import 'package:go_router/go_router.dart';
@@ -27,72 +28,25 @@ class SignupScreen extends StatelessWidget {
               const SizedBox(height: 8),
               const Text("Enter your details to begin your journey."),
               const SizedBox(height: 20),
-              Text(
-                "FULL NAME",
-                style: TextStyle(
-                  fontSize: 12,
-                  color: AppTheme.primaryColor,
-                  fontWeight: FontWeight.w700,
-                ),
+              CustomTextField(
+                label: "FULL NAME",
+                hintText: "Kaleab Mulugeta",
+                prefixIcon: const Icon(Icons.person_outline, size: 20),
               ),
-              const SizedBox(height: 10),
-              TextField(
-                decoration: InputDecoration(
-                  hintText: "Kaleab Mulugeta",
-                  prefixIcon: const Icon(Icons.person),
-                  filled: true,
-                  fillColor: Colors.grey[300],
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
+              const SizedBox(height: 24),
+              CustomTextField(
+                label: "EMAIL ADDRESS",
+                hintText: "kalili@gmail.com",
+                keyboardType: TextInputType.emailAddress,
+                prefixIcon: const Icon(Icons.email_outlined, size: 20),
               ),
-              const SizedBox(height: 15),
-              Text(
-                "EMAIL ADDRESS",
-                style: TextStyle(
-                  fontSize: 12,
-                  color: AppTheme.primaryColor,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              const SizedBox(height: 10),
-              TextField(
-                decoration: InputDecoration(
-                  hintText: "kalili@gmail.com",
-                  prefixIcon: const Icon(Icons.email),
-                  filled: true,
-                  fillColor: Colors.grey[300],
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 15),
-              Text(
-                "PASSWORD",
-                style: TextStyle(
-                  fontSize: 12,
-                  color: AppTheme.primaryColor,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              const SizedBox(height: 10),
-              TextField(
+              const SizedBox(height: 24),
+              CustomTextField(
+                label: "PASSWORD",
+                hintText: "••••••••",
                 obscureText: true,
-                decoration: InputDecoration(
-                  hintText: "********",
-                  prefixIcon: const Icon(Icons.lock),
-                  suffixIcon: const Icon(Icons.visibility),
-                  filled: true,
-                  fillColor: Colors.grey[300],
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
+                prefixIcon: const Icon(Icons.lock_outline, size: 20),
+                suffixIcon: const Icon(Icons.visibility_off_outlined, size: 20),
               ),
               const SizedBox(height: 10),
               Row(

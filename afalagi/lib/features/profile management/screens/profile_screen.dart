@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:afalagi/core/theme/theme.dart';
 import 'package:afalagi/core/widgets/image.dart';
 import 'package:afalagi/core/widgets/logout_dialog.dart';
+import 'package:go_router/go_router.dart';
 
 void main() => runApp(const ProfileApp());
 
@@ -173,10 +174,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
               const SizedBox(height: 16),
-              _buildMenuItem(Icons.person_outline, 'Personal Information', false),
-              _buildMenuItem(Icons.business_outlined, 'Agency Details', false),
-              _buildMenuItem(Icons.help_outline, 'Help & Support', false),
-              _buildMenuItem(Icons.delete_outline, 'Delete Account', true),
+              _buildMenuItem(Icons.person_outline, 'Personal Information', false, () {
+                context.push('/personal-info');
+              }),
+              _buildMenuItem(Icons.business_outlined, 'Agency Details', false, () {
+                context.push('/agency-details');
+              }),
+              _buildMenuItem(Icons.label_outline, 'Tag Management', false, () {
+                context.push('/tag-management');
+              }),
+              _buildMenuItem(Icons.history_outlined, 'Viewing History', false, () {
+                context.push('/viewing-history');
+              }),
+              _buildMenuItem(Icons.help_outline, 'Help & Support', false, () {}),
+              _buildMenuItem(Icons.delete_outline, 'Delete Account', true, () {
+                context.push('/delete-account');
+              }),
               const SizedBox(height: 32),
 
               // Logout Button
@@ -250,7 +263,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildMenuItem(IconData icon, String title, bool isDestructive) {
+  Widget _buildMenuItem(
+      IconData icon, String title, bool isDestructive, VoidCallback onTap) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
@@ -270,18 +284,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
             color: const Color(0xFFF1F4F9),
             borderRadius: BorderRadius.circular(10),
           ),
-          child: Icon(icon, color: isDestructive ? const Color(0xFFE53E3E) : const Color(0xFF1B385E), size: 20),
+          child: Icon(icon,
+              color: isDestructive
+                  ? const Color(0xFFE53E3E)
+                  : const Color(0xFF1B385E),
+              size: 20),
         ),
         title: Text(
           title,
           style: TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.bold,
-            color: isDestructive ? const Color(0xFFE53E3E) : const Color(0xFF1B385E),
+            color: isDestructive
+                ? const Color(0xFFE53E3E)
+                : const Color(0xFF1B385E),
           ),
         ),
-        trailing: Icon(Icons.chevron_right, color: isDestructive ? const Color(0xFFE53E3E) : Colors.grey, size: 20),
-        onTap: () {},
+        trailing: Icon(Icons.chevron_right,
+            color: isDestructive ? const Color(0xFFE53E3E) : Colors.grey,
+            size: 20),
+        onTap: onTap,
       ),
     );
   }
