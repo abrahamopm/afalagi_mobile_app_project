@@ -180,6 +180,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
               _buildMenuItem(Icons.business_outlined, 'Agency Details', false, () {
                 context.push('/agency-details');
               }),
+              _buildMenuItem(Icons.label_outline, 'Tag Management', false, () {
+                context.push('/tag-management');
+              }),
+              _buildMenuItem(Icons.history_outlined, 'Viewing History', false, () {
+                context.push('/viewing-history');
+              }),
               _buildMenuItem(Icons.help_outline, 'Help & Support', false, () {}),
               _buildMenuItem(Icons.delete_outline, 'Delete Account', true, () {
                 context.push('/delete-account');

@@ -1,4 +1,5 @@
 import 'package:afalagi/core/theme/theme.dart';
+import 'package:afalagi/core/widgets/button.dart';
 import 'package:afalagi/core/widgets/image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -314,19 +315,9 @@ class CompactViewingCard extends StatelessWidget {
               ),
               Row(
                 children: [
-                  IconButton(
-                    onPressed: onEdit,
-                    icon: Icon(Icons.edit_outlined, color: AppTheme.primaryColor, size: 20),
-                    constraints: const BoxConstraints(),
-                    padding: EdgeInsets.zero,
-                  ),
-                  const SizedBox(width: 16),
-                  IconButton(
-                    onPressed: onDelete,
-                    icon: Icon(CupertinoIcons.delete, color: Colors.red[400], size: 20),
-                    constraints: const BoxConstraints(),
-                    padding: EdgeInsets.zero,
-                  ),
+                  SecondaryButton(icon: Icons.edit_outlined, label: "Edit", onTap: onEdit),
+                  const SizedBox(width: 8),
+                  SecondaryButton(icon: Icons.delete_outline, label: "Delete", onTap: onDelete, isDestructive: true),
                 ],
               ),
             ],

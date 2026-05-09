@@ -17,6 +17,7 @@ import 'features/profile management/screens/profile_screen.dart';
 import 'features/profile management/screens/delete_account_screen.dart';
 import 'features/profile management/screens/personal_info_screen.dart';
 import 'features/profile management/screens/agency_details_screen.dart';
+import 'features/tags/screens/tag_management_screen.dart';
 
 import 'core/widgets/shell_scaffold.dart';
 
@@ -94,6 +95,10 @@ class AppRoutes {
           GoRoute(
             path: '/agency-details',
             builder: (context, state) => const AgencyDetailsScreen(),
+          ),
+          GoRoute(
+            path: '/tag-management',
+            builder: (context, state) => const TagManagementScreen(),
           ),
           /*
           GoRoute(

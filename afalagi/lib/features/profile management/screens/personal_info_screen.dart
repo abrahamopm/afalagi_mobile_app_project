@@ -1,5 +1,6 @@
 import 'package:afalagi/core/theme/theme.dart';
 import 'package:afalagi/core/widgets/button.dart';
+import 'package:afalagi/core/widgets/input.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -76,13 +77,13 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
               ),
               const SizedBox(height: 40),
 
-              _buildField("FULL NAME", _nameController),
+              CustomTextField(label: "FULL NAME", controller: _nameController),
               const SizedBox(height: 24),
-              _buildField("PHONE NUMBER", _phoneController),
+              CustomTextField(label: "PHONE NUMBER", controller: _phoneController),
               const SizedBox(height: 24),
-              _buildField("EMAIL ADDRESS", _emailController),
+              CustomTextField(label: "EMAIL ADDRESS", controller: _emailController),
               const SizedBox(height: 24),
-              _buildField("PROFESSIONAL BIO", _bioController, maxLines: 4),
+              CustomTextField(label: "PROFESSIONAL BIO", controller: _bioController, maxLines: 4),
 
               const SizedBox(height: 48),
               CustomButton(
@@ -98,48 +99,6 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildField(String label, TextEditingController controller, {int maxLines = 1}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.bold,
-            color: Colors.grey,
-            letterSpacing: 0.5,
-          ),
-        ),
-        const SizedBox(height: 8),
-        TextFormField(
-          controller: controller,
-          maxLines: maxLines,
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: const Color(0xFFF1F4F9),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide.none,
-            ),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-          ),
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-            color: Color(0xFF1B385E),
-          ),
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Required field';
-            }
-            return null;
-          },
-        ),
-      ],
     );
   }
 }
