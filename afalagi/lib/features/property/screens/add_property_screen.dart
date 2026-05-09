@@ -1,6 +1,8 @@
 import 'package:afalagi/core/theme/theme.dart';
 import 'package:afalagi/core/widgets/button.dart';
 import 'package:afalagi/core/widgets/input.dart';
+import 'package:afalagi/features/property/models/property_model.dart';
+import 'package:afalagi/features/property/property_service.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -13,6 +15,16 @@ class AddPropertyScreen extends StatefulWidget {
 
 class _AddPropertyScreenState extends State<AddPropertyScreen> {
   final _formKey = GlobalKey<FormState>();
+  final _titleController = TextEditingController();
+  final _descriptionController = TextEditingController();
+  final _priceController = TextEditingController();
+  final _addressController = TextEditingController();
+  final _cityController = TextEditingController();
+  final _zipController = TextEditingController();
+  final _bedroomsController = TextEditingController();
+  final _bathroomsController = TextEditingController();
+  final _sqmController = TextEditingController();
+  
   final List<String> _selectedTags = [];
   bool _isAvailable = true;
 
@@ -25,6 +37,20 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
     "Parking",
     "Furnished"
   ];
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _descriptionController.dispose();
+    _priceController.dispose();
+    _addressController.dispose();
+    _cityController.dispose();
+    _zipController.dispose();
+    _bedroomsController.dispose();
+    _bathroomsController.dispose();
+    _sqmController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,23 +106,54 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _buildSectionHeader("Basic Information"),
-                    CustomTextField(label: "Title", hintText: "e.g. Modern Villa in Bole"),
+                    CustomTextField(
+                      label: "Title", 
+                      hintText: "e.g. Modern Villa in Bole",
+                      controller: _titleController,
+                    ),
                     const SizedBox(height: 16),
-                    CustomTextField(label: "Description", hintText: "Describe the property...", maxLines: 3),
+                    CustomTextField(
+                      label: "Description", 
+                      hintText: "Describe property...", 
+                      maxLines: 3,
+                      controller: _descriptionController,
+                    ),
 
                     const SizedBox(height: 24),
                     _buildSectionHeader("Price Input Section"),
-                    CustomTextField(label: "Price", hintText: "e.g. 1500000", keyboardType: TextInputType.number, prefixText: " birr "),
+                    CustomTextField(
+                      label: "Price", 
+                      hintText: "e.g. 1500000", 
+                      keyboardType: TextInputType.number, 
+                      prefixText: " birr ",
+                      controller: _priceController,
+                    ),
 
                     const SizedBox(height: 24),
                     _buildSectionHeader("Location Details"),
-                    CustomTextField(label: "Address", hintText: "e.g. Churchill Ave"),
+                    CustomTextField(
+                      label: "Address", 
+                      hintText: "e.g. Churchill Ave",
+                      controller: _addressController,
+                    ),
                     const SizedBox(height: 12),
                     Row(
                       children: [
-                        Expanded(child: CustomTextField(label: "City", hintText: "e.g. Addis")),
+                        Expanded(
+                          child: CustomTextField(
+                            label: "City", 
+                            hintText: "e.g. Addis",
+                            controller: _cityController,
+                          ),
+                        ),
                         const SizedBox(width: 12),
-                        Expanded(child: CustomTextField(label: "Zip Code", hintText: "e.g. 1000")),
+                        Expanded(
+                          child: CustomTextField(
+                            label: "Zip Code", 
+                            hintText: "e.g. 1000",
+                            controller: _zipController,
+                          ),
+                        ),
                       ],
                     ),
 
@@ -104,11 +161,32 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
                     _buildSectionHeader("Rooms & Layout"),
                     Row(
                       children: [
-                        Expanded(child: CustomTextField(label: "Bedrooms", hintText: "3", keyboardType: TextInputType.number)),
+                        Expanded(
+                          child: CustomTextField(
+                            label: "Bedrooms", 
+                            hintText: "3", 
+                            keyboardType: TextInputType.number,
+                            controller: _bedroomsController,
+                          ),
+                        ),
                         const SizedBox(width: 12),
-                        Expanded(child: CustomTextField(label: "Bathrooms", hintText: "2", keyboardType: TextInputType.number)),
+                        Expanded(
+                          child: CustomTextField(
+                            label: "Bathrooms", 
+                            hintText: "2", 
+                            keyboardType: TextInputType.number,
+                            controller: _bathroomsController,
+                          ),
+                        ),
                         const SizedBox(width: 12),
-                        Expanded(child: CustomTextField(label: "SQM", hintText: "120", keyboardType: TextInputType.number)),
+                        Expanded(
+                          child: CustomTextField(
+                            label: "SQM", 
+                            hintText: "120", 
+                            keyboardType: TextInputType.number,
+                            controller: _sqmController,
+                          ),
+                        ),
                       ],
                     ),
 
@@ -158,7 +236,22 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
                       text: "Save Property",
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
-                          // TODO: Save logic
+                          final newProperty = Property(
+                            id: DateTime.now().millisecondsSinceEpoch.toString(),
+                            title: _titleController.text.trim(),
+                            description: _descriptionController.text.trim(),
+                            price: double.tryParse(_priceController.text) ?? 0,
+                            location: "${_addressController.text.trim()}, ${_cityController.text.trim()}",
+                            beds: int.tryParse(_bedroomsController.text) ?? 0,
+                            baths: int.tryParse(_bathroomsController.text) ?? 0,
+                            sqft: int.tryParse(_sqmController.text) ?? 0,
+                            imageUrl: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&q=80&w=1200',
+                          );
+                          
+                          PropertyService.addProperty(newProperty);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Property added successfully')),
+                          );
                           context.pop();
                         }
                       },

@@ -1,39 +1,48 @@
 import 'package:afalagi/core/widgets/propery_card.dart';
+import 'package:afalagi/features/property/models/property_model.dart';
+import 'package:afalagi/features/property/property_service.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../models/property_model.dart';
 
-class PropertyListScreen extends StatelessWidget {
+class PropertyListScreen extends StatefulWidget {
   const PropertyListScreen({super.key});
 
   @override
+  State<PropertyListScreen> createState() => _PropertyListScreenState();
+}
+
+class _PropertyListScreenState extends State<PropertyListScreen> {
+  void _deleteProperty(String id) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Property'),
+        content: const Text('Are you sure you want to delete this property?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              setState(() {
+                PropertyService.deleteProperty(id);
+              });
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Property deleted successfully')),
+              );
+            },
+            child: const Text('Delete', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final properties = [
-      Property(
-        id: '1',
-        title: 'Luxury Villa',
-        location: 'Beachfront',
-        imageUrl:
-            'https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&q=80&w=1200',
-        description: 'A beautiful beachfront villa with stunning views.',
-        price: 1000000,
-        beds: 4,
-        baths: 3,
-        sqft: 2500,
-      ),
-      Property(
-        id: '2',
-        title: 'Modern Apartment',
-        location: 'City Center',
-        imageUrl:
-            'https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&q=80&w=1200',
-        description: 'A modern apartment in the heart of the city.',
-        price: 500000,
-        beds: 2,
-        baths: 2,
-        sqft: 1200,
-      ),
-    ];
+    final properties = PropertyService.getProperties();
 
     return Scaffold(
       body: ListView.builder(
@@ -45,7 +54,7 @@ class PropertyListScreen extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 16),
             child: PropertyCard(
               property: property,
-              onDelete: () {},
+              onDelete: () => _deleteProperty(property.id),
               onTap: () {
                 context.go('/property-detail', extra: property);
               },
