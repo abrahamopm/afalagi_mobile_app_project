@@ -83,7 +83,7 @@ class SignupScreen extends StatelessWidget {
               TextField(
                 obscureText: true,
                 decoration: InputDecoration(
-                  hintText: "********",
+                  hintText: "••••••••",
                   prefixIcon: const Icon(Icons.lock),
                   suffixIcon: const Icon(Icons.visibility),
                   filled: true,

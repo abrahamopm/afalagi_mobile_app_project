@@ -64,7 +64,7 @@ class LoginScreen extends StatelessWidget {
               TextField(
                 obscureText: true,
                 decoration: InputDecoration(
-                  hintText: "********",
+                  hintText: "••••••••",
                   prefixIcon: const Icon(Icons.lock),
                   filled: true,
                   fillColor: Colors.grey[300],
