@@ -11,8 +11,7 @@ import 'features/property/models/property_model.dart';
 import 'features/client/screens/client_list_screen.dart';
 import 'features/client/screens/client_detail_screen.dart';
 import 'features/client/models/client_model.dart';
-import 'features/viewing/screens/log_viewing_screen.dart';
-import 'features/viewing/screens/viewing_history_screen.dart';
+import 'features/viewing/routes/viewing_routes.dart';
 import 'features/appointment/screens/dashboard_screen.dart';
 import 'features/appointment/screens/appointment_screen.dart';
 import 'features/appointment/screens/profile_screen.dart';
@@ -72,20 +71,7 @@ class AppRoutes {
             builder: (context, state) =>
                 ClientDetailScreen(client: state.extra as Client),
           ),
-          GoRoute(
-            path: '/log-viewing',
-            builder: (context, state) {
-              final args = state.extra as Map<String, dynamic>?;
-              return LogViewingScreen(
-                propertyId: args?['propertyId'],
-                clientId: args?['clientId'],
-              );
-            },
-          ),
-          GoRoute(
-            path: '/viewing-history',
-            builder: (context, state) => const ViewingHistoryScreen(),
-          ),
+          ...ViewingRoutes.routes,
           GoRoute(
             path: '/appointments',
             builder: (context, state) => const AppointmentScreen(),
