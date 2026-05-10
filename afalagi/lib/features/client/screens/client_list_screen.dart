@@ -14,9 +14,13 @@ class _ClientListScreenState extends State<ClientListScreen> {
   final TextEditingController _searchController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _areaController = TextEditingController();
+  final TextEditingController _budgetController = TextEditingController();
   
   String _searchQuery = '';
   String _selectedPriority = 'MODERATE';
+  int _selectedInterest = 3;
+  int? _expandedIndex;
 
   final List<Map<String, dynamic>> _clients = [
     {
@@ -26,28 +30,32 @@ class _ClientListScreenState extends State<ClientListScreen> {
       'priority': 'VIP',
       'interest': 5,
       'area': 'Bole, Penthouse',
-      'budget': '45M – 60M ETB'
+      'budget': '45M – 60M ETB',
+      'image': 'assets/images/client_avatar_1.png'
     },
     {
       'id': 'c2',
       'name': 'Sara Haile',
       'phone': '+251 92 887 6654',
       'priority': 'MODERATE',
-      'interest': 3
+      'interest': 3,
+      'image': 'assets/images/generic_avatar.png'
     },
     {
       'id': 'c3',
       'name': 'Abebe Yosef',
       'phone': '+251 94 332 1198',
       'priority': 'HIGH',
-      'interest': 4
+      'interest': 4,
+      'image': 'assets/images/generic_avatar.png'
     },
     {
       'id': 'c4',
       'name': 'Martha Tadesse',
       'phone': '+251 91 554 3321',
       'priority': 'MODERATE',
-      'interest': 2
+      'interest': 2,
+      'image': 'assets/images/generic_avatar.png'
     },
   ];
 
@@ -56,6 +64,8 @@ class _ClientListScreenState extends State<ClientListScreen> {
     _searchController.dispose();
     _nameController.dispose();
     _phoneController.dispose();
+    _areaController.dispose();
+    _budgetController.dispose();
     super.dispose();
   }
 
@@ -71,59 +81,207 @@ class _ClientListScreenState extends State<ClientListScreen> {
     if (client != null) {
       _nameController.text = client['name'];
       _phoneController.text = client['phone'];
+      _areaController.text = client['area'] ?? '';
+      _budgetController.text = client['budget'] ?? '';
       _selectedPriority = client['priority'];
+      _selectedInterest = client['interest'] ?? 3;
     } else {
       _nameController.clear();
       _phoneController.clear();
+      _areaController.clear();
+      _budgetController.clear();
       _selectedPriority = 'MODERATE';
+      _selectedInterest = 3;
     }
 
     showDialog(
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setDialogState) => AlertDialog(
-          title: Text(client == null ? 'New Acquisition' : 'Edit Client'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(controller: _nameController, decoration: const InputDecoration(labelText: 'Full Name')),
-              TextField(controller: _phoneController, decoration: const InputDecoration(labelText: 'Phone Number')),
-              const SizedBox(height: 16),
-              DropdownButton<String>(
-                value: _selectedPriority,
-                isExpanded: true,
-                items: ['VIP', 'HIGH', 'MODERATE', 'LOW'].map((p) => DropdownMenuItem(value: p, child: Text(p))).toList(),
-                onChanged: (val) => setDialogState(() => _selectedPriority = val!),
-              ),
-            ],
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          title: Text(
+            client == null ? 'New Acquisition' : 'Edit Client',
+            style: TextStyle(
+                color: AppTheme.primaryColor, fontWeight: FontWeight.bold),
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Image Upload Placeholder
+                Center(
+                  child: GestureDetector(
+                    onTap: () {
+                      // Placeholder for Image Picker logic
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Image picker will open here')),
+                      );
+                    },
+                    child: Container(
+                      height: 100,
+                      width: 100,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF1F4F9),
+                        borderRadius: BorderRadius.circular(50),
+                        border: Border.all(color: Colors.grey[300]!, width: 2),
+                      ),
+                      child: const Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.add_a_photo, color: Colors.grey, size: 30),
+                          SizedBox(height: 4),
+                          Text(
+                            "ADD PHOTO",
+                            style: TextStyle(fontSize: 8, fontWeight: FontWeight.bold, color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
+                _buildPopupLabel("CLIENT NAME"),
+                TextField(
+                    controller: _nameController,
+                    decoration:
+                        _buildPopupInputDecoration('e.g. Dawit Mengistu')),
+                const SizedBox(height: 16),
+                _buildPopupLabel("PHONE NUMBER"),
+                TextField(
+                    controller: _phoneController,
+                    keyboardType: TextInputType.phone,
+                    decoration:
+                        _buildPopupInputDecoration('e.g. +251 9...')),
+                const SizedBox(height: 16),
+                _buildPopupLabel("TARGET AREA"),
+                TextField(
+                    controller: _areaController,
+                    decoration:
+                        _buildPopupInputDecoration('e.g. Bole, Penthouse')),
+                const SizedBox(height: 16),
+                _buildPopupLabel("BUDGET SCALE"),
+                TextField(
+                    controller: _budgetController,
+                    decoration:
+                        _buildPopupInputDecoration('e.g. 45M – 60M ETB')),
+                const SizedBox(height: 16),
+                _buildPopupLabel("INTEREST LEVEL"),
+                Row(
+                  children: List.generate(5, (i) {
+                    return IconButton(
+                      onPressed: () =>
+                          setDialogState(() => _selectedInterest = i + 1),
+                      icon: Icon(
+                        i < _selectedInterest ? Icons.star : Icons.star_border,
+                        color: Colors.amber,
+                      ),
+                    );
+                  }),
+                ),
+                const SizedBox(height: 16),
+                _buildPopupLabel("PRIORITY STATUS"),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF1F4F9),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<String>(
+                      value: _selectedPriority,
+                      isExpanded: true,
+                      items: ['VIP', 'HIGH', 'MODERATE', 'LOW']
+                          .map((p) => DropdownMenuItem(value: p, child: Text(p)))
+                          .toList(),
+                      onChanged: (val) =>
+                          setDialogState(() => _selectedPriority = val!),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
-            TextButton(
-              onPressed: () {
-                setState(() {
-                  final newClient = {
-                    'id': client?['id'] ?? DateTime.now().toString(),
-                    'name': _nameController.text,
-                    'phone': _phoneController.text,
-                    'priority': _selectedPriority,
-                    'interest': client?['interest'] ?? 3,
-                    'area': client?['area'] ?? 'N/A',
-                    'budget': client?['budget'] ?? 'N/A',
-                  };
-                  if (index != null) {
-                    _clients[index] = newClient;
-                  } else {
-                    _clients.insert(0, newClient);
-                  }
-                });
-                Navigator.pop(context);
-              },
-              child: const Text('Save'),
+            Column(
+              children: [
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppTheme.primaryColor,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12)),
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        final newClient = {
+                          'id': client?['id'] ?? DateTime.now().toString(),
+                          'name': _nameController.text,
+                          'phone': _phoneController.text,
+                          'priority': _selectedPriority,
+                          'interest': _selectedInterest,
+                          'image': 'assets/images/generic_avatar.png',
+                          'area': _areaController.text.isEmpty
+                              ? 'N/A'
+                              : _areaController.text,
+                          'budget': _budgetController.text.isEmpty
+                              ? 'N/A'
+                              : _budgetController.text,
+                        };
+                        if (index != null) {
+                          _clients[index] = newClient;
+                        } else {
+                          _clients.insert(0, newClient);
+                        }
+                      });
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Save Client',
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Cancel',
+                      style: TextStyle(color: Colors.grey)),
+                ),
+              ],
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildPopupLabel(String text) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: Text(
+        text,
+        style: TextStyle(
+          fontSize: 10,
+          fontWeight: FontWeight.bold,
+          color: Colors.blueGrey[400],
+          letterSpacing: 0.5,
+        ),
+      ),
+    );
+  }
+
+  InputDecoration _buildPopupInputDecoration(String hint) {
+    return InputDecoration(
+      hintText: hint,
+      filled: true,
+      fillColor: const Color(0xFFF1F4F9),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide.none,
+      ),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
     );
   }
 
@@ -229,7 +387,7 @@ class _ClientListScreenState extends State<ClientListScreen> {
                     ClipRRect(
                       borderRadius: BorderRadius.circular(16),
                       child: CustomImages.resilientImage(
-                          'assets/images/client_avatar_1.png',
+                          client['image'] ?? 'assets/images/generic_avatar.png',
                           width: 80,
                           height: 80,
                           fit: BoxFit.cover),
@@ -261,6 +419,21 @@ class _ClientListScreenState extends State<ClientListScreen> {
                   ],
                 ),
                 const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                        children: List.generate(
+                            5,
+                            (i) => Icon(
+                                i < (client['interest'] ?? 0)
+                                    ? Icons.star
+                                    : Icons.star_border,
+                                color: Colors.amber,
+                                size: 20))),
+                  ],
+                ),
+                const SizedBox(height: 12),
                 Row(children: [
                   Expanded(child: _buildInfoBox('TARGET AREA', client['area'])),
                   const SizedBox(width: 12),
@@ -276,67 +449,115 @@ class _ClientListScreenState extends State<ClientListScreen> {
 
   Widget _buildClientCard(
       BuildContext context, Map<String, dynamic> client, int index) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-                color: Colors.black.withValues(alpha: 0.02),
-                blurRadius: 10,
-                offset: const Offset(0, 4))
-          ]),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              ClipOval(
-                  child: CustomImages.resilientImage(
-                      'assets/images/generic_avatar.png',
-                      width: 48,
-                      height: 48)),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(client['name'],
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 15)),
-                      Text(client['phone'],
-                          style: const TextStyle(color: Colors.grey, fontSize: 12)),
-                    ]),
-              ),
-              _buildClientMenu(client, index),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            decoration: BoxDecoration(
-                color: const Color(0xFFF8F9FA),
-                borderRadius: BorderRadius.circular(12)),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    bool isExpanded = _expandedIndex == index;
+
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _expandedIndex = isExpanded ? null : index;
+        });
+      },
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        margin: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.02),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4))
+            ]),
+        child: Column(
+          children: [
+            Row(
               children: [
-                Row(
-                    children: List.generate(
-                        5,
-                        (i) => Icon(
-                            i < client['interest'] ? Icons.star : Icons.star_border,
-                            color: const Color(0xFF964B00),
-                            size: 16))),
-                Text(client['priority'],
-                    style: const TextStyle(
-                        fontSize: 10,
-                        color: Colors.grey,
-                        fontWeight: FontWeight.bold)),
+                ClipOval(
+                    child: CustomImages.resilientImage(
+                        client['image'] ?? 'assets/images/generic_avatar.png',
+                        width: 48,
+                        height: 48)),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(client['name'],
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 15)),
+                        Text(client['phone'],
+                            style: const TextStyle(
+                                color: Colors.grey, fontSize: 12)),
+                      ]),
+                ),
+                _buildClientMenu(client, index),
               ],
             ),
-          ),
-        ],
+            if (isExpanded) ...[
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  Expanded(
+                      child: _buildInfoBox(
+                          'TARGET AREA', client['area'] ?? 'N/A')),
+                  const SizedBox(width: 8),
+                  Expanded(
+                      child: _buildInfoBox('BUDGET', client['budget'] ?? 'N/A')),
+                ],
+              ),
+              const SizedBox(height: 12),
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                decoration: BoxDecoration(
+                    color: const Color(0xFFF8F9FA),
+                    borderRadius: BorderRadius.circular(12)),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                        children: List.generate(
+                            5,
+                            (i) => Icon(
+                                i < (client['interest'] ?? 0)
+                                    ? Icons.star
+                                    : Icons.star_border,
+                                color: Colors.amber,
+                                size: 16))),
+                    Text(client['priority'],
+                        style: const TextStyle(
+                            fontSize: 10,
+                            color: Colors.grey,
+                            fontWeight: FontWeight.bold)),
+                  ],
+                ),
+              ),
+            ] else ...[
+              const SizedBox(height: 12),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                      children: List.generate(
+                          5,
+                          (i) => Icon(
+                              i < (client['interest'] ?? 0)
+                                  ? Icons.star
+                                  : Icons.star_border,
+                              color: Colors.amber,
+                              size: 16))),
+                  Text(client['priority'],
+                      style: const TextStyle(
+                          fontSize: 10,
+                          color: Colors.grey,
+                          fontWeight: FontWeight.bold)),
+                ],
+              ),
+            ],
+          ],
+        ),
       ),
     );
   }

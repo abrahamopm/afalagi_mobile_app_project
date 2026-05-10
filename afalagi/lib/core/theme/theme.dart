@@ -17,6 +17,7 @@ class AppTheme {
         800: primaryColor.withValues(alpha: 0.9),
         900: primaryColor.withValues(alpha: 1.0),
       }),
+      fontFamily: 'Figtree',
       useMaterial3: true,
       appBarTheme: const AppBarTheme(elevation: 0),
       elevatedButtonTheme: ElevatedButtonThemeData(
