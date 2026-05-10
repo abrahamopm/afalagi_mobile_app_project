@@ -197,7 +197,7 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
                       subtitle: Text(_isAvailable ? "Available" : "Sold/Rented"),
                       value: _isAvailable,
                       onChanged: (val) => setState(() => _isAvailable = val),
-                      activeColor: AppTheme.primaryColor,
+                      activeThumbColor: AppTheme.primaryColor,
                     ),
 
                     const SizedBox(height: 24),
@@ -219,7 +219,7 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
                               }
                             });
                           },
-                          selectedColor: AppTheme.primaryColor.withOpacity(0.2),
+                          selectedColor: AppTheme.primaryColor.withValues(alpha: 0.2),
                           checkmarkColor: AppTheme.primaryColor,
                           labelStyle: TextStyle(
                             color: isSelected

@@ -11,9 +11,17 @@ class ShellScaffold extends StatelessWidget {
     if (location.startsWith('/dashboard')) return 0;
     if (location.startsWith('/properties')) return 1;
     if (location.startsWith('/property-detail')) return 1;
+    if (location.startsWith('/add-property')) return 1;
+    if (location.startsWith('/edit-property')) return 1;
     if (location.startsWith('/clients')) return 2;
+    if (location.startsWith('/client-detail')) return 2;
     if (location.startsWith('/viewing-history')) return 3;
+    if (location.startsWith('/log-viewing')) return 3;
     if (location.startsWith('/profile')) return 4;
+    if (location.startsWith('/delete-account')) return 4;
+    if (location.startsWith('/personal-info')) return 4;
+    if (location.startsWith('/agency-details')) return 4;
+    if (location.startsWith('/tag-management')) return 4;
     return 0;
   }
 

@@ -26,19 +26,8 @@ class _EditPropertyScreenState extends State<EditPropertyScreen> {
   late final TextEditingController _bedroomsController;
   late final TextEditingController _bathroomsController;
   late final TextEditingController _sqmController;
-  
-  final List<String> _selectedTags = [];
   bool _isAvailable = true;
 
-  final List<String> _availableTags = [
-    "Luxury",
-    "Modern",
-    "Garden",
-    "Pool",
-    "Security",
-    "Parking",
-    "Furnished"
-  ];
 
   @override
   void initState() {
@@ -228,7 +217,7 @@ class _EditPropertyScreenState extends State<EditPropertyScreen> {
                       subtitle: Text(_isAvailable ? "Available" : "Sold/Rented"),
                       value: _isAvailable,
                       onChanged: (val) => setState(() => _isAvailable = val),
-                      activeColor: AppTheme.primaryColor,
+                      activeThumbColor: AppTheme.primaryColor,
                     ),
 
                     const SizedBox(height: 40),

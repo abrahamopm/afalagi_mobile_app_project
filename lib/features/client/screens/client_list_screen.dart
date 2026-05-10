@@ -166,20 +166,6 @@ class _ClientListScreenState extends State<ClientListScreen> {
                     decoration:
                         _buildPopupInputDecoration('e.g. 45M – 60M ETB')),
                 const SizedBox(height: 16),
-                _buildPopupLabel("INTEREST LEVEL"),
-                Row(
-                  children: List.generate(5, (i) {
-                    return IconButton(
-                      onPressed: () =>
-                          setDialogState(() => _selectedInterest = i + 1),
-                      icon: Icon(
-                        i < _selectedInterest ? Icons.star : Icons.star_border,
-                        color: Colors.amber,
-                      ),
-                    );
-                  }),
-                ),
-                const SizedBox(height: 16),
                 _buildPopupLabel("PRIORITY STATUS"),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12),

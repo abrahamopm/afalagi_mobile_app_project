@@ -12,6 +12,7 @@ class PropertyService {
       beds: 4,
       baths: 3,
       sqft: 2500,
+      tags: ['Luxury', 'Villa'],
     ),
     Property(
       id: '2',
@@ -23,6 +24,7 @@ class PropertyService {
       beds: 2,
       baths: 2,
       sqft: 1200,
+      tags: ['Modern'],
     ),
   ];
 

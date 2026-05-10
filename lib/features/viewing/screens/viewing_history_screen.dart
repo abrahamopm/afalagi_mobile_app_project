@@ -35,27 +35,57 @@ class _ViewingHistoryScreenState extends State<ViewingHistoryScreen> {
     }
   }
 
-  void _deleteViewing(String id) {
-    showCupertinoDialog(
+  Future<void> _deleteViewing(String id) async {
+    final confirmed = await _showPlatformConfirmation(
+      title: 'Delete Viewing',
+      content: 'Are you sure you want to delete this viewing log?',
+    );
+
+    if (confirmed == true) {
+      setState(() {
+        ViewingService.deleteViewing(id);
+        _loadViewings();
+      });
+    }
+  }
+
+  Future<bool?> _showPlatformConfirmation({required String title, required String content}) {
+    final platform = Theme.of(context).platform;
+
+    if (platform == TargetPlatform.iOS || platform == TargetPlatform.macOS) {
+      return showCupertinoDialog<bool>(
+        context: context,
+        builder: (context) => CupertinoAlertDialog(
+          title: Text(title),
+          content: Text(content),
+          actions: [
+            CupertinoDialogAction(
+              child: const Text('Cancel'),
+              onPressed: () => Navigator.of(context).pop(false),
+            ),
+            CupertinoDialogAction(
+              isDestructiveAction: true,
+              child: const Text('Delete'),
+              onPressed: () => Navigator.of(context).pop(true),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return showDialog<bool>(
       context: context,
-      builder: (context) => CupertinoAlertDialog(
-        title: const Text('Delete Viewing'),
-        content: const Text('Are you sure you want to delete this viewing log?'),
+      builder: (context) => AlertDialog(
+        title: Text(title),
+        content: Text(content),
         actions: [
-          CupertinoDialogAction(
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
             child: const Text('Cancel'),
-            onPressed: () => Navigator.pop(context),
           ),
-          CupertinoDialogAction(
-            isDestructiveAction: true,
-            child: const Text('Delete'),
-            onPressed: () {
-              setState(() {
-                ViewingService.deleteViewing(id);
-                _loadViewings();
-              });
-              Navigator.pop(context);
-            },
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('Delete', style: TextStyle(color: Colors.red)),
           ),
         ],
       ),

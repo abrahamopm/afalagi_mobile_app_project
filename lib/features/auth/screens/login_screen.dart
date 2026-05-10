@@ -1,6 +1,6 @@
 import 'package:afalagi/core/widgets/button.dart';
 import 'package:afalagi/core/widgets/image.dart';
-import 'package:afalagi/core/theme/theme.dart';
+
 import 'package:afalagi/core/widgets/input.dart';
 import 'package:afalagi/core/util/validators.dart';
 import 'package:flutter/material.dart';

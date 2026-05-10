@@ -1,4 +1,5 @@
 import 'package:afalagi/core/theme/theme.dart';
+import 'package:afalagi/core/widgets/rating_bar.dart';
 import 'package:afalagi/features/viewing/models/viewing_model.dart';
 import 'package:afalagi/features/viewing/viewing_service.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +10,12 @@ class LogViewingScreen extends StatefulWidget {
   final String? clientId;
   final Viewing? viewing;
 
-  const LogViewingScreen({super.key, this.propertyId, this.clientId, this.viewing});
+  const LogViewingScreen({
+    super.key,
+    this.propertyId,
+    this.clientId,
+    this.viewing,
+  });
 
   @override
   State<LogViewingScreen> createState() => _LogViewingScreenState();
@@ -18,6 +24,7 @@ class LogViewingScreen extends StatefulWidget {
 class _LogViewingScreenState extends State<LogViewingScreen> {
   late TextEditingController _dateController;
   late TextEditingController _notesController;
+  int _interestScore = 0;
   late String _propertyId;
   late String _clientId;
   late String _propertyTitle;
@@ -33,7 +40,8 @@ class _LogViewingScreenState extends State<LogViewingScreen> {
     _notesController = TextEditingController(text: widget.viewing?.notes ?? '');
     _propertyId = widget.viewing?.propertyId ?? widget.propertyId ?? 'p1';
     _clientId = widget.viewing?.clientId ?? widget.clientId ?? 'c1';
-    _propertyTitle = widget.viewing?.propertyTitle ?? 'Bole High-Rise Penthouse';
+    _propertyTitle =
+        widget.viewing?.propertyTitle ?? 'Bole High-Rise Penthouse';
     _clientName = widget.viewing?.clientName ?? 'Almaz Abraham';
     _imageUrl = widget.viewing?.imageUrl ?? 'assets/images/bole_penthouse.png';
     _price = widget.viewing?.price ?? '18.9M';
@@ -49,9 +57,9 @@ class _LogViewingScreenState extends State<LogViewingScreen> {
 
   void _saveViewing() {
     if (_dateController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter a date')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Please enter a date')));
       return;
     }
 
@@ -62,9 +70,9 @@ class _LogViewingScreenState extends State<LogViewingScreen> {
         notes: _notesController.text,
       );
       ViewingService.updateViewing(updatedViewing);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Viewing log updated')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Viewing log updated')));
     } else {
       // Add new
       final newViewing = Viewing(
@@ -80,9 +88,9 @@ class _LogViewingScreenState extends State<LogViewingScreen> {
         notes: _notesController.text,
       );
       ViewingService.addViewing(newViewing);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Viewing log saved')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Viewing log saved')));
     }
     context.pop();
   }
@@ -94,10 +102,17 @@ class _LogViewingScreenState extends State<LogViewingScreen> {
       appBar: AppBar(
         title: Text(
           widget.viewing != null ? 'Edit Viewing Log' : 'Log New Viewing',
-          style: TextStyle(color: AppTheme.primaryColor, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            color: AppTheme.primaryColor,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_new, color: AppTheme.primaryColor, size: 20),
+          icon: Icon(
+            Icons.arrow_back_ios_new,
+            color: AppTheme.primaryColor,
+            size: 20,
+          ),
           onPressed: () => context.pop(),
         ),
         backgroundColor: Colors.white,
@@ -108,9 +123,17 @@ class _LogViewingScreenState extends State<LogViewingScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildInfoCard('Property Information', _propertyTitle, Icons.apartment),
+            _buildInfoCard(
+              'Property Information',
+              _propertyTitle,
+              Icons.apartment,
+            ),
             const SizedBox(height: 16),
-            _buildInfoCard('Client Information', _clientName, Icons.person_outline),
+            _buildInfoCard(
+              'Client Information',
+              _clientName,
+              Icons.person_outline,
+            ),
             const SizedBox(height: 32),
             Text(
               'VIEWING DETAILS',
@@ -136,17 +159,47 @@ class _LogViewingScreenState extends State<LogViewingScreen> {
               hint: 'Add some details about the viewing...',
               maxLines: 4,
             ),
+            const SizedBox(height: 32),
+            Text(
+              'INTEREST LEVEL',
+              style: TextStyle(
+                color: AppTheme.primaryColor,
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Row(
+              children: List.generate(5, (i) {
+                return IconButton(
+                  onPressed: () => setState(() => _interestScore = i + 1),
+                  icon: Icon(
+                    i < _interestScore ? Icons.star : Icons.star_border,
+                    color: Colors.amber,
+                    size: 32,
+                  ),
+                );
+              }),
+            ),
             const SizedBox(height: 40),
             ElevatedButton(
               onPressed: _saveViewing,
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppTheme.primaryColor,
                 minimumSize: const Size(double.infinity, 56),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
               ),
               child: Text(
-                widget.viewing != null ? 'Update Viewing Log' : 'Save Viewing Log',
-                style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                widget.viewing != null
+                    ? 'Update Viewing Log'
+                    : 'Save Viewing Log',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ],
@@ -180,11 +233,19 @@ class _LogViewingScreenState extends State<LogViewingScreen> {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(fontSize: 12, color: Colors.grey, fontWeight: FontWeight.w500),
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
                 Text(
                   subtitle,
-                  style: TextStyle(color: AppTheme.primaryColor, fontSize: 15, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    color: AppTheme.primaryColor,
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),
                   overflow: TextOverflow.ellipsis,
                 ),
               ],
@@ -207,7 +268,11 @@ class _LogViewingScreenState extends State<LogViewingScreen> {
       children: [
         Text(
           label,
-          style: TextStyle(color: AppTheme.primaryColor, fontSize: 14, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            color: AppTheme.primaryColor,
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         const SizedBox(height: 8),
         TextField(

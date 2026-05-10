@@ -17,15 +17,18 @@ class DashboardScreen extends StatelessWidget {
         children: [
           _buildWelcomeHeader(),
           const SizedBox(height: 24),
-          _buildStatsCards(),
+          _buildStatsCards(context),
           const SizedBox(height: 32),
           _buildSectionHeader('Quick Actions'),
           const SizedBox(height: 16),
           _buildQuickActions(context),
           const SizedBox(height: 32),
-          _buildSectionHeader('Recent Activity', onActionTap: () => context.push('/viewing-history')),
+          _buildSectionHeader(
+            'Recent Activity',
+            onActionTap: () => context.push('/viewing-history'),
+          ),
           const SizedBox(height: 16),
-          _buildRecentActivityList(),
+          _buildRecentActivityList(context),
           const SizedBox(height: 24),
         ],
       ),
@@ -48,46 +51,51 @@ class DashboardScreen extends StatelessWidget {
         const SizedBox(height: 4),
         Text(
           'Your portfolio overview for today in Addis Ababa.',
-          style: TextStyle(
-            fontSize: 14,
-            color: Colors.grey[600],
-            height: 1.4,
-          ),
+          style: TextStyle(fontSize: 14, color: Colors.grey[600], height: 1.4),
         ),
       ],
     );
   }
 
-  Widget _buildStatsCards() {
+  Widget _buildStatsCards(BuildContext context) {
     return Column(
       children: [
-        StatCard(
-          title: 'Total Properties',
-          value: '42',
-          icon: Icons.business_center,
-          iconBgColor: Color(0xFFE0F2F1),
-          iconColor: Color(0xFF005A6E),
-          badgeText: '+12%',
+        GestureDetector(
+          onTap: () => context.push('/properties'),
+          child: StatCard(
+            title: 'Total Properties',
+            value: '42',
+            icon: Icons.business_center,
+            iconBgColor: const Color(0xFFE0F2F1),
+            iconColor: const Color(0xFF005A6E),
+            badgeText: '+12%',
+          ),
         ),
         const SizedBox(height: 16),
-        StatCard(
-          title: 'Active Clients',
-          value: '128',
-          icon: Icons.people_outline,
-          iconBgColor: Color(0xFFF3F4F6),
-          iconColor: AppTheme.primaryColor,
-          badgeText: 'ACTIVE',
-          badgeBgColor: Color(0xFFE8F5E9),
-          badgeTextColor: Colors.green,
-          showAvatars: true,
+        GestureDetector(
+          onTap: () => context.push('/clients'),
+          child: StatCard(
+            title: 'Active Clients',
+            value: '128',
+            icon: Icons.people_outline,
+            iconBgColor: const Color(0xFFF3F4F6),
+            iconColor: AppTheme.primaryColor,
+            badgeText: 'ACTIVE',
+            badgeBgColor: const Color(0xFFE8F5E9),
+            badgeTextColor: Colors.green,
+            showAvatars: true,
+          ),
         ),
         const SizedBox(height: 16),
-        StatCard(
-          title: "Today's Viewings",
-          value: '6',
-          icon: Icons.calendar_today_outlined,
-          iconBgColor: Color(0xFFFFF9C4),
-          iconColor: Color(0xFFB8860B),
+        GestureDetector(
+          onTap: () => context.push('/viewing-history'),
+          child: StatCard(
+            title: "Today's Viewings",
+            value: '6',
+            icon: Icons.calendar_today_outlined,
+            iconBgColor: const Color(0xFFFFF9C4),
+            iconColor: const Color(0xFFB8860B),
+          ),
         ),
       ],
     );
@@ -151,104 +159,123 @@ class DashboardScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildRecentActivityList() {
+  Widget _buildRecentActivityList(BuildContext context) {
     return Column(
       children: [
         _buildActivityTile(
+          context,
           'Koye Feche Penthouse',
           'Listing updated to ETB 12,500,000',
           '3h ago',
           Icons.apartment,
           const Color(0xFFB8860B),
+          onTap: () => context.push('/properties'),
         ),
         const SizedBox(height: 12),
         _buildActivityTile(
+          context,
           'Abebe Kebede',
           'Inquired about Bole High-Rise',
           '5h ago',
           Icons.person_outline,
           const Color(0xFFE0F2F1),
           iconColor: const Color(0xFF005A6E),
+          onTap: () => context.push('/clients'),
         ),
         const SizedBox(height: 12),
         _buildActivityTile(
+          context,
           'Bole Apartment',
           'New viewing scheduled for 2:00 PM',
           '1d ago',
           Icons.calendar_month_outlined,
           const Color(0xFFE3F2FD),
           iconColor: Colors.blue,
+          onTap: () => context.push('/viewing-history'),
         ),
       ],
     );
   }
 
   Widget _buildActivityTile(
+    BuildContext context,
     String title,
     String subtitle,
     String time,
     IconData icon,
     Color iconBg, {
     Color iconColor = Colors.white,
+    VoidCallback? onTap,
   }) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.grey.shade100),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.01),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: iconBg,
-              borderRadius: BorderRadius.circular(15),
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Colors.grey.shade100),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.02),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
             ),
-            child: Icon(icon, color: iconColor, size: 22),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15,
-                    color: AppTheme.primaryColor,
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: iconBg,
+                borderRadius: BorderRadius.circular(14),
+              ),
+              child: Icon(icon, color: iconColor, size: 20),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                      color: AppTheme.primaryColor,
+                    ),
                   ),
+                  const SizedBox(height: 2),
+                  Text(
+                    subtitle,
+                    style: TextStyle(fontSize: 13, color: Colors.grey[600]),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 8),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                const Icon(
+                  Icons.arrow_forward_ios,
+                  size: 12,
+                  color: Colors.grey,
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 8),
                 Text(
-                  subtitle,
+                  time.toUpperCase(),
                   style: TextStyle(
-                    color: Colors.grey[600],
-                    fontSize: 12,
-                    height: 1.2,
+                    fontSize: 9,
+                    color: Colors.grey[400],
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ],
             ),
-          ),
-          Text(
-            time,
-            style: TextStyle(
-              color: Colors.grey[400],
-              fontSize: 10,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
