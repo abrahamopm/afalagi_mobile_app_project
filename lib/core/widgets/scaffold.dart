@@ -1,4 +1,4 @@
-import 'package:afalagi/core/theme/theme.dart%20';
+import 'package:afalagi/core/theme/theme.dart';
 import 'package:afalagi/core/widgets/image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

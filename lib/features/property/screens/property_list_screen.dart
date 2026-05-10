@@ -1,5 +1,5 @@
 import 'package:afalagi/core/widgets/propery_card.dart';
-import 'package:afalagi/features/property/models/property_model.dart';
+
 import 'package:afalagi/features/property/property_service.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';

@@ -190,7 +190,7 @@ class _TagManagementScreenState extends State<TagManagementScreen> {
             // Tag List
             ..._filteredTags.asMap().entries.map((entry) {
               return _buildTagCard(entry.value, entry.key);
-            }).toList(),
+            }),
             
             const SizedBox(height: 24),
           ],
