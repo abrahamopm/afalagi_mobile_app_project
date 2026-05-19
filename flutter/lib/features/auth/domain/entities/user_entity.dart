@@ -2,6 +2,7 @@ class UserEntity {
   final String id;
   final String name;
   final String email;
+  final String role;
   final String phone;
   final String agencyName;
   final String agencyLicense;
@@ -16,6 +17,7 @@ class UserEntity {
     required this.id,
     required this.name,
     required this.email,
+    this.role = 'user',
     this.phone = '',
     this.agencyName = '',
     this.agencyLicense = '',
@@ -31,6 +33,7 @@ class UserEntity {
     String? id,
     String? name,
     String? email,
+    String? role,
     String? phone,
     String? agencyName,
     String? agencyLicense,
@@ -45,6 +48,7 @@ class UserEntity {
       id: id ?? this.id,
       name: name ?? this.name,
       email: email ?? this.email,
+      role: role ?? this.role,
       phone: phone ?? this.phone,
       agencyName: agencyName ?? this.agencyName,
       agencyLicense: agencyLicense ?? this.agencyLicense,
@@ -65,6 +69,7 @@ class UserEntity {
           id == other.id &&
           name == other.name &&
           email == other.email &&
+          role == other.role &&
           phone == other.phone &&
           agencyName == other.agencyName &&
           agencyLicense == other.agencyLicense &&
@@ -80,6 +85,7 @@ class UserEntity {
       id.hashCode ^
       name.hashCode ^
       email.hashCode ^
+      role.hashCode ^
       phone.hashCode ^
       agencyName.hashCode ^
       agencyLicense.hashCode ^
