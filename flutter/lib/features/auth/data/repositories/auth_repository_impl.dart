@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import '../../../../core/constants/constants.dart';
+import '../../../../core/constants/Constants.dart';
 import '../../../../core/errors/exceptions.dart';
 import '../../../../core/database/database_helper.dart';
 import '../../domain/repositories/auth_repository.dart';

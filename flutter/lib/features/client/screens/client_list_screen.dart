@@ -1,4 +1,5 @@
 import 'package:afalagi/core/theme/theme.dart';
+import 'package:afalagi/core/widgets/afalagi_dialog.dart';
 import 'package:afalagi/core/widgets/button.dart';
 import 'package:afalagi/core/widgets/image.dart';
 import 'package:afalagi/features/client/domain/entities/client_entity.dart';
@@ -68,7 +69,7 @@ class _ClientListScreenState extends ConsumerState<ClientListScreen> {
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setDialogState) => AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          shape: AppTheme.compactDialogShape,
           title: Text(
             client == null ? 'New Acquisition' : 'Edit Client',
             style: TextStyle(
@@ -245,36 +246,23 @@ class _ClientListScreenState extends ConsumerState<ClientListScreen> {
     );
   }
 
-  void _deleteClient(ClientEntity client) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Delete Client'),
-        content: const Text('Remove this client from your portfolio?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () async {
-              final messenger = ScaffoldMessenger.of(context);
-              Navigator.pop(context);
-              try {
-                await ref
-                    .read(clientListProvider.notifier)
-                    .deleteClient(client.id);
-              } catch (e) {
-                messenger.showSnackBar(
-                  SnackBar(content: Text('Error: $e')),
-                );
-              }
-            },
-            child: const Text('Delete', style: TextStyle(color: AppColors.danger)),
-          ),
-        ],
-      ),
+  Future<void> _deleteClient(ClientEntity client) async {
+    final confirmed = await AfalagiDialog.showConfirm(
+      context,
+      title: 'Delete Client',
+      content: 'Remove this client from your portfolio?',
     );
+    if (confirmed != true || !mounted) return;
+
+    try {
+      await ref.read(clientListProvider.notifier).deleteClient(client.id);
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e')),
+        );
+      }
+    }
   }
 
   @override
