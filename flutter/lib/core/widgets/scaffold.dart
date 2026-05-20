@@ -5,14 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class CustomScaffold {
-  static AppBar appBar(BuildContext context) {
+  static AppBar appBar(BuildContext context, {Widget? title}) {
     return AppBar(
-      title: InkWell(
-        onTap: () {
-          context.go('/dashboard');
-        },
-        child: CustomImages.appLogo(height: 40),
-      ),
+      title: title ??
+          InkWell(
+            onTap: () {
+              context.go('/dashboard');
+            },
+            child: CustomImages.appLogo(height: 40),
+          ),
       actions: [Icon(CupertinoIcons.bell), SizedBox(width: 20)],
     );
   }
