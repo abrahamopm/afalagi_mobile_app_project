@@ -1,8 +1,11 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import '../database/database_helper.dart';
 import '../network/auth_interceptor.dart';
 import '../network/dio_client.dart';
+import '../network/network_info.dart';
 
 final secureStorageProvider = Provider<FlutterSecureStorage>((ref) {
   return const FlutterSecureStorage(
@@ -21,4 +24,16 @@ final dioProvider = Provider<Dio>((ref) {
 final dioClientProvider = Provider<DioClient>((ref) {
   final dio = ref.watch(dioProvider);
   return DioClient(dio);
+});
+
+final connectivityProvider = Provider<Connectivity>((ref) {
+  return Connectivity();
+});
+
+final networkInfoProvider = Provider<NetworkInfo>((ref) {
+  return NetworkInfoImpl(ref.watch(connectivityProvider));
+});
+
+final databaseProvider = Provider<DatabaseHelper>((ref) {
+  return DatabaseHelper.instance;
 });
