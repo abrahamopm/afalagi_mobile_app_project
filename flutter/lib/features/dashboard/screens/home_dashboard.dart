@@ -6,7 +6,7 @@ import 'package:afalagi/core/widgets/button.dart';
 import 'package:go_router/go_router.dart';
 import '../../auth/providers/auth_provider.dart';
 import '../providers/dashboard_provider.dart';
-import '../data/repositories/dashboard_repository.dart';
+import '../domain/entities/dashboard_stats.dart';
 
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});

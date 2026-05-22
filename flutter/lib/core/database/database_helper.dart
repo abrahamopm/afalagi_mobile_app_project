@@ -49,8 +49,7 @@ class DatabaseHelper {
         ${DatabaseTables.colPropIsAvailable} INTEGER NOT NULL,
         ${DatabaseTables.colPropTags} TEXT NOT NULL
       )
-    '''' + ');' // Adding semicolon for standard formatting
-    );
+    ''');
 
     // 3. Clients table
     await db.execute('''

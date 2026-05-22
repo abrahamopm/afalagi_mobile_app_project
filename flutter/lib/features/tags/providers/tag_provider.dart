@@ -12,7 +12,7 @@ import '../domain/usecases/update_tag.dart';
 import '../models/tag_model.dart';
 
 final tagLocalDSProvider = Provider<TagLocalDS>((ref) {
-  final dbHelper = ref.watch(dbHelperProvider);
+  final dbHelper = ref.watch(databaseProvider);
   return TagLocalDS(dbHelper);
 });
 

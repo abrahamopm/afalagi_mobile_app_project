@@ -12,7 +12,7 @@ import '../domain/usecases/update_viewing.dart';
 import '../models/viewing_model.dart';
 
 final viewingLocalDSProvider = Provider<ViewingLocalDS>((ref) {
-  final dbHelper = ref.watch(dbHelperProvider);
+  final dbHelper = ref.watch(databaseProvider);
   return ViewingLocalDS(dbHelper);
 });
 

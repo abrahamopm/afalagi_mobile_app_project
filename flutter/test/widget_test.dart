@@ -1,30 +1,30 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:afalagi/main.dart';
+import 'package:afalagi/features/property/data/models/property_model.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const AfalagiApp());
+  group('PropertyModel Tests', () {
+    test('should parse correctly from json', () {
+      final json = {
+        'id': '1',
+        'title': 'Luxury Villa',
+        'description': 'A beautiful luxury villa by the beach',
+        'location': 'Miami, FL',
+        'imageUrl': 'assets/images/villa.png',
+        'price': 1200000.0,
+        'beds': 4,
+        'baths': 3,
+        'sqft': 3500,
+        'isAvailable': true,
+        'tags': ['Beachfront', 'Pool'],
+      };
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+      final model = PropertyModel.fromJson(json);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+      expect(model.id, '1');
+      expect(model.title, 'Luxury Villa');
+      expect(model.price, 1200000.0);
+      expect(model.tags.length, 2);
+      expect(model.formattedPrice, '1,200,000');
+    });
   });
 }

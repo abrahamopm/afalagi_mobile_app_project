@@ -13,7 +13,7 @@ import '../domain/usecases/update_property.dart';
 import '../models/property_model.dart';
 
 final propertyLocalDSProvider = Provider<PropertyLocalDS>((ref) {
-  final dbHelper = ref.watch(dbHelperProvider);
+  final dbHelper = ref.watch(databaseProvider);
   return PropertyLocalDS(dbHelper);
 });
 

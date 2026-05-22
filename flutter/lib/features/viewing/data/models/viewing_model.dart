@@ -1,4 +1,4 @@
-import '../../../domain/entities/viewing_entity.dart';
+import '../../domain/entities/viewing_entity.dart';
 import '../../../../core/database/database_tables.dart';
 
 class ViewingModel extends ViewingEntity {

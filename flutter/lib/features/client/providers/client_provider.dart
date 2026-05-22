@@ -12,7 +12,7 @@ import '../domain/usecases/update_client.dart';
 import '../models/client_model.dart';
 
 final clientLocalDSProvider = Provider<ClientLocalDS>((ref) {
-  final dbHelper = ref.watch(dbHelperProvider);
+  final dbHelper = ref.watch(databaseProvider);
   return ClientLocalDS(dbHelper);
 });
 

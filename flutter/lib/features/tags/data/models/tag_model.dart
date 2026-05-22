@@ -1,4 +1,4 @@
-import '../../../domain/entities/tag_entity.dart';
+import '../../domain/entities/tag_entity.dart';
 import '../../../../core/database/database_tables.dart';
 
 class TagModel extends TagEntity {

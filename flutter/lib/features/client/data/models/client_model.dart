@@ -1,5 +1,5 @@
 import 'dart:convert';
-import '../../../domain/entities/client_entity.dart';
+import '../../domain/entities/client_entity.dart';
 import '../../../../core/database/database_tables.dart';
 
 class ClientModel extends ClientEntity {

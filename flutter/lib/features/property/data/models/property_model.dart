@@ -1,5 +1,5 @@
 import 'dart:convert';
-import '../../../domain/entities/property_entity.dart';
+import '../../domain/entities/property_entity.dart';
 import '../../../../core/database/database_tables.dart';
 
 class PropertyModel extends PropertyEntity {

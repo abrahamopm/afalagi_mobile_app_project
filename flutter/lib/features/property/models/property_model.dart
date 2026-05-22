@@ -1,4 +1,4 @@
-import '../../domain/entities/property_entity.dart';
+import '../domain/entities/property_entity.dart';
 import '../../../../core/util/format.dart';
 
 class Property extends PropertyEntity {

@@ -10,7 +10,6 @@ import '../network/network_info.dart';
 final secureStorageProvider = Provider<FlutterSecureStorage>((ref) {
   return const FlutterSecureStorage(
     aOptions: AndroidOptions(encryptedSharedPreferences: true),
-    lOptions: LinuxOptions(useSecretBox: true),
   );
 });
 
