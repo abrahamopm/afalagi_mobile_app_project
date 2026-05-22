@@ -1,11 +1,11 @@
 import 'package:afalagi/core/theme/theme.dart';
-import 'package:afalagi/core/widgets/rating_bar.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:afalagi/features/viewing/models/viewing_model.dart';
-import 'package:afalagi/features/viewing/viewing_service.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../providers/viewing_provider.dart';
 
-class LogViewingScreen extends StatefulWidget {
+class LogViewingScreen extends ConsumerStatefulWidget {
   final String? propertyId;
   final String? clientId;
   final Viewing? viewing;
@@ -18,10 +18,10 @@ class LogViewingScreen extends StatefulWidget {
   });
 
   @override
-  State<LogViewingScreen> createState() => _LogViewingScreenState();
+  ConsumerState<LogViewingScreen> createState() => _LogViewingScreenState();
 }
 
-class _LogViewingScreenState extends State<LogViewingScreen> {
+class _LogViewingScreenState extends ConsumerState<LogViewingScreen> {
   late TextEditingController _dateController;
   late TextEditingController _notesController;
   int _interestScore = 0;
@@ -32,14 +32,15 @@ class _LogViewingScreenState extends State<LogViewingScreen> {
   late String _imageUrl;
   late String _price;
   late String _status;
+  bool _isLoading = false;
 
   @override
   void initState() {
     super.initState();
     _dateController = TextEditingController(text: widget.viewing?.date ?? '');
     _notesController = TextEditingController(text: widget.viewing?.notes ?? '');
-    _propertyId = widget.viewing?.propertyId ?? widget.propertyId ?? 'p1';
-    _clientId = widget.viewing?.clientId ?? widget.clientId ?? 'c1';
+    _propertyId = widget.viewing?.propertyId ?? widget.propertyId ?? '';
+    _clientId = widget.viewing?.clientId ?? widget.clientId ?? '';
     _propertyTitle =
         widget.viewing?.propertyTitle ?? 'Bole High-Rise Penthouse';
     _clientName = widget.viewing?.clientName ?? 'Almaz Abraham';
@@ -55,7 +56,7 @@ class _LogViewingScreenState extends State<LogViewingScreen> {
     super.dispose();
   }
 
-  void _saveViewing() {
+  Future<void> _saveViewing() async {
     if (_dateController.text.isEmpty) {
       ScaffoldMessenger.of(
         context,
@@ -63,36 +64,60 @@ class _LogViewingScreenState extends State<LogViewingScreen> {
       return;
     }
 
-    if (widget.viewing != null) {
-      // Update existing
-      final updatedViewing = widget.viewing!.copyWith(
-        date: _dateController.text,
-        notes: _notesController.text,
-      );
-      ViewingService.updateViewing(updatedViewing);
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Viewing log updated')));
-    } else {
-      // Add new
-      final newViewing = Viewing(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        propertyId: _propertyId,
-        clientId: _clientId,
-        propertyTitle: _propertyTitle,
-        clientName: _clientName,
-        imageUrl: _imageUrl,
-        date: _dateController.text,
-        status: _status,
-        price: _price,
-        notes: _notesController.text,
-      );
-      ViewingService.addViewing(newViewing);
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Viewing log saved')));
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      if (widget.viewing != null) {
+        // Update existing
+        final updatedViewing = widget.viewing!.copyWith(
+          date: _dateController.text.trim(),
+          notes: _notesController.text.trim(),
+        );
+        await ref.read(viewingListProvider.notifier).updateViewing(widget.viewing!.id, updatedViewing);
+        if (mounted) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text('Viewing log updated')));
+        }
+      } else {
+        // Add new
+        final newViewing = Viewing(
+          id: '',
+          propertyId: _propertyId,
+          clientId: _clientId,
+          propertyTitle: _propertyTitle,
+          clientName: _clientName,
+          imageUrl: _imageUrl,
+          date: _dateController.text.trim(),
+          status: _status,
+          price: _price,
+          notes: _notesController.text.trim(),
+        );
+        await ref.read(viewingListProvider.notifier).addViewing(newViewing);
+        if (mounted) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text('Viewing log saved')));
+        }
+      }
+      if (mounted) {
+        context.pop();
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: ${e.toString()}')),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
-    context.pop();
   }
 
   @override
@@ -118,93 +143,95 @@ class _LogViewingScreenState extends State<LogViewingScreen> {
         backgroundColor: Colors.white,
         elevation: 0,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildInfoCard(
-              'Property Information',
-              _propertyTitle,
-              Icons.apartment,
-            ),
-            const SizedBox(height: 16),
-            _buildInfoCard(
-              'Client Information',
-              _clientName,
-              Icons.person_outline,
-            ),
-            const SizedBox(height: 32),
-            Text(
-              'VIEWING DETAILS',
-              style: TextStyle(
-                color: Colors.blueGrey,
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 1.2,
-              ),
-            ),
-            const SizedBox(height: 16),
-            _buildTextField(
-              controller: _dateController,
-              label: 'Date & Time',
-              icon: Icons.calendar_today_outlined,
-              hint: 'Select date',
-            ),
-            const SizedBox(height: 16),
-            _buildTextField(
-              controller: _notesController,
-              label: 'Notes',
-              icon: Icons.notes,
-              hint: 'Add some details about the viewing...',
-              maxLines: 4,
-            ),
-            const SizedBox(height: 32),
-            Text(
-              'INTEREST LEVEL',
-              style: TextStyle(
-                color: AppTheme.primaryColor,
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: List.generate(5, (i) {
-                return IconButton(
-                  onPressed: () => setState(() => _interestScore = i + 1),
-                  icon: Icon(
-                    i < _interestScore ? Icons.star : Icons.star_border,
-                    color: Colors.amber,
-                    size: 32,
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildInfoCard(
+                    'Property Information',
+                    _propertyTitle,
+                    Icons.apartment,
                   ),
-                );
-              }),
-            ),
-            const SizedBox(height: 40),
-            ElevatedButton(
-              onPressed: _saveViewing,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppTheme.primaryColor,
-                minimumSize: const Size(double.infinity, 56),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
+                  const SizedBox(height: 16),
+                  _buildInfoCard(
+                    'Client Information',
+                    _clientName,
+                    Icons.person_outline,
+                  ),
+                  const SizedBox(height: 32),
+                  Text(
+                    'VIEWING DETAILS',
+                    style: const TextStyle(
+                      color: Colors.blueGrey,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.2,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  _buildTextField(
+                    controller: _dateController,
+                    label: 'Date & Time',
+                    icon: Icons.calendar_today_outlined,
+                    hint: 'Select date',
+                  ),
+                  const SizedBox(height: 16),
+                  _buildTextField(
+                    controller: _notesController,
+                    label: 'Notes',
+                    icon: Icons.notes,
+                    hint: 'Add some details about the viewing...',
+                    maxLines: 4,
+                  ),
+                  const SizedBox(height: 32),
+                  Text(
+                    'INTEREST LEVEL',
+                    style: TextStyle(
+                      color: AppTheme.primaryColor,
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: List.generate(5, (i) {
+                      return IconButton(
+                        onPressed: () => setState(() => _interestScore = i + 1),
+                        icon: Icon(
+                          i < _interestScore ? Icons.star : Icons.star_border,
+                          color: Colors.amber,
+                          size: 32,
+                        ),
+                      );
+                    }),
+                  ),
+                  const SizedBox(height: 40),
+                  ElevatedButton(
+                    onPressed: _saveViewing,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppTheme.primaryColor,
+                      minimumSize: const Size(double.infinity, 56),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                    child: Text(
+                      widget.viewing != null
+                          ? 'Update Viewing Log'
+                          : 'Save Viewing Log',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              child: Text(
-                widget.viewing != null
-                    ? 'Update Viewing Log'
-                    : 'Save Viewing Log',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
             ),
-          ],
-        ),
-      ),
     );
   }
 

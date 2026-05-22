@@ -1,0 +1,130 @@
+import 'package:dio/dio.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import '../../../../core/constants/constants.dart';
+import '../../../../core/errors/exceptions.dart';
+import '../models/user_model.dart';
+
+class AuthRepository {
+  final Dio _dio;
+  final FlutterSecureStorage _secureStorage;
+
+  AuthRepository(this._dio, this._secureStorage);
+
+  Future<UserModel> login(String email, String password) async {
+    try {
+      final response = await _dio.post(
+        AppConstants.authLogin,
+        data: {'email': email, 'password': password},
+      );
+
+      final data = response.data;
+      if (data['success'] == true) {
+        final token = data['token'];
+        await _secureStorage.write(key: 'jwt_token', value: token);
+        return UserModel.fromJson(data['data']);
+      } else {
+        throw ServerException(message: data['error'] ?? 'Login failed');
+      }
+    } on DioException catch (e) {
+      final message = e.response?.data?['error'] ?? 'Network error occurred';
+      throw ServerException(message: message, statusCode: e.response?.statusCode);
+    }
+  }
+
+  Future<UserModel> signup({
+    required String name,
+    required String email,
+    required String password,
+    String phone = '',
+    String agencyName = '',
+    String agencyLicense = '',
+  }) async {
+    try {
+      final response = await _dio.post(
+        AppConstants.authRegister,
+        data: {
+          'name': name,
+          'email': email,
+          'password': password,
+          'phone': phone,
+          'agencyName': agencyName,
+          'agencyLicense': agencyLicense,
+        },
+      );
+
+      final data = response.data;
+      if (data['success'] == true) {
+        final token = data['token'];
+        await _secureStorage.write(key: 'jwt_token', value: token);
+        return UserModel.fromJson(data['data']);
+      } else {
+        throw ServerException(message: data['error'] ?? 'Registration failed');
+      }
+    } on DioException catch (e) {
+      final message = e.response?.data?['error'] ?? 'Network error occurred';
+      throw ServerException(message: message, statusCode: e.response?.statusCode);
+    }
+  }
+
+  Future<UserModel?> getMe() async {
+    try {
+      final token = await _secureStorage.read(key: 'jwt_token');
+      if (token == null || token.isEmpty) return null;
+
+      final response = await _dio.get(AppConstants.authMe);
+      final data = response.data;
+      if (data['success'] == true) {
+        return UserModel.fromJson(data['data']);
+      } else {
+        throw ServerException(message: data['error'] ?? 'Failed to retrieve profile');
+      }
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401) {
+        // Token is invalid/expired
+        await logout();
+        return null;
+      }
+      final message = e.response?.data?['error'] ?? 'Network error occurred';
+      throw ServerException(message: message, statusCode: e.response?.statusCode);
+    }
+  }
+
+  Future<UserModel> updateProfile(Map<String, dynamic> updateData) async {
+    try {
+      final response = await _dio.put(AppConstants.authMe, data: updateData);
+      final data = response.data;
+      if (data['success'] == true) {
+        return UserModel.fromJson(data['data']);
+      } else {
+        throw ServerException(message: data['error'] ?? 'Failed to update profile');
+      }
+    } on DioException catch (e) {
+      final message = e.response?.data?['error'] ?? 'Network error occurred';
+      throw ServerException(message: message, statusCode: e.response?.statusCode);
+    }
+  }
+
+  Future<void> deleteAccount() async {
+    try {
+      final response = await _dio.delete(AppConstants.authMe);
+      final data = response.data;
+      if (data['success'] == true) {
+        await logout();
+      } else {
+        throw ServerException(message: data['error'] ?? 'Failed to delete account');
+      }
+    } on DioException catch (e) {
+      final message = e.response?.data?['error'] ?? 'Network error occurred';
+      throw ServerException(message: message, statusCode: e.response?.statusCode);
+    }
+  }
+
+  Future<void> logout() async {
+    await _secureStorage.delete(key: 'jwt_token');
+  }
+
+  Future<bool> isAuthenticated() async {
+    final token = await _secureStorage.read(key: 'jwt_token');
+    return token != null && token.isNotEmpty;
+  }
+}

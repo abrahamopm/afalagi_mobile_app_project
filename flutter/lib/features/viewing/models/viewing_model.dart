@@ -23,6 +23,60 @@ class Viewing {
     this.notes = '',
   });
 
+  factory Viewing.fromJson(Map<String, dynamic> json) {
+    String propId = '';
+    String propTitle = 'Unknown Property';
+    String propImg = 'assets/images/generic_property.png';
+    String propPrice = '';
+
+    if (json['property'] != null) {
+      if (json['property'] is Map<String, dynamic>) {
+        final propMap = json['property'] as Map<String, dynamic>;
+        propId = propMap['id'] ?? propMap['_id'] ?? '';
+        propTitle = propMap['title'] ?? 'Unknown Property';
+        propImg = propMap['imageUrl'] ?? 'assets/images/generic_property.png';
+        propPrice = propMap['price'] != null ? '\$${propMap['price']}' : '';
+      } else {
+        propId = json['property'].toString();
+      }
+    }
+
+    String cliId = '';
+    String cliName = 'Unknown Client';
+    if (json['client'] != null) {
+      if (json['client'] is Map<String, dynamic>) {
+        final cliMap = json['client'] as Map<String, dynamic>;
+        cliId = cliMap['id'] ?? cliMap['_id'] ?? '';
+        cliName = cliMap['name'] ?? 'Unknown Client';
+      } else {
+        cliId = json['client'].toString();
+      }
+    }
+
+    return Viewing(
+      id: json['id'] ?? json['_id'] ?? '',
+      propertyId: propId,
+      clientId: cliId,
+      propertyTitle: propTitle,
+      clientName: cliName,
+      imageUrl: propImg,
+      date: json['date'] ?? '',
+      status: json['status'] ?? 'Recent',
+      price: propPrice,
+      notes: json['notes'] ?? '',
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'property': propertyId,
+      'client': clientId,
+      'date': date,
+      'status': status,
+      'notes': notes,
+    };
+  }
+
   Viewing copyWith({
     String? id,
     String? propertyId,

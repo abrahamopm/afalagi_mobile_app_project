@@ -6,6 +6,9 @@ export interface IUser extends Document {
   email: string;
   role: 'user' | 'admin';
   password?: string;
+  phone?: string;
+  agencyName?: string;
+  agencyLicense?: string;
   createdAt: Date;
   matchPassword(password: string): Promise<boolean>;
 }
@@ -34,6 +37,18 @@ const UserSchema: Schema = new Schema({
     required: [true, 'Please add a password'],
     minlength: 6,
     select: false
+  },
+  phone: {
+    type: String,
+    default: ''
+  },
+  agencyName: {
+    type: String,
+    default: ''
+  },
+  agencyLicense: {
+    type: String,
+    default: ''
   },
   createdAt: {
     type: Date,

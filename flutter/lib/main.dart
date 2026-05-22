@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'routes.dart';
 import 'core/theme/theme.dart';
 
 void main() {
-  runApp(const AfalagiApp());
+  runApp(
+    const ProviderScope(
+      child: AfalagiApp(),
+    ),
+  );
 }
 
 class AfalagiApp extends StatelessWidget {

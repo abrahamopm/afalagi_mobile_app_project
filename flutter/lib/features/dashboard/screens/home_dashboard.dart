@@ -1,47 +1,83 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:afalagi/core/theme/theme.dart';
 import 'package:afalagi/core/widgets/stat_card.dart';
 import 'package:afalagi/core/widgets/button.dart';
-import 'package:afalagi/features/property/property_service.dart';
 import 'package:go_router/go_router.dart';
+import '../../auth/providers/auth_provider.dart';
+import '../providers/dashboard_provider.dart';
+import '../data/repositories/dashboard_repository.dart';
 
-class DashboardScreen extends StatelessWidget {
+class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildWelcomeHeader(),
-          const SizedBox(height: 24),
-          _buildStatsCards(context),
-          const SizedBox(height: 32),
-          _buildSectionHeader('Quick Actions'),
-          const SizedBox(height: 16),
-          _buildQuickActions(context),
-          const SizedBox(height: 32),
-          _buildSectionHeader(
-            'Recent Activity',
-            onActionTap: () => context.push('/viewings'),
-          ),
-          const SizedBox(height: 16),
-          _buildRecentActivityList(context),
-          const SizedBox(height: 24),
-        ],
+  Widget build(BuildContext context, WidgetRef ref) {
+    final statsAsync = ref.watch(dashboardStatsProvider);
+    final authState = ref.watch(authStateProvider);
+    final agentName = authState.value?.name ?? 'Agent';
+
+    return RefreshIndicator(
+      onRefresh: () => ref.read(dashboardStatsProvider.notifier).refresh(),
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildWelcomeHeader(agentName),
+            const SizedBox(height: 24),
+            
+            statsAsync.when(
+              data: (stats) => _buildStatsCards(context, stats),
+              loading: () => const Center(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 32),
+                  child: CircularProgressIndicator(),
+                ),
+              ),
+              error: (error, _) => Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 32),
+                  child: Text(
+                    'Error: ${error.toString()}',
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 32),
+            _buildSectionHeader('Quick Actions'),
+            const SizedBox(height: 16),
+            _buildQuickActions(context),
+            const SizedBox(height: 32),
+            
+            _buildSectionHeader(
+              'Recent Activity',
+              onActionTap: () => context.push('/viewings'),
+            ),
+            const SizedBox(height: 16),
+
+            statsAsync.when(
+              data: (stats) => _buildRecentActivityList(context, stats.recentActivity),
+              loading: () => const SizedBox.shrink(),
+              error: (_, __) => const SizedBox.shrink(),
+            ),
+            
+            const SizedBox(height: 24),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildWelcomeHeader() {
+  Widget _buildWelcomeHeader(String name) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Morning, Dawit',
+          'Morning, $name',
           style: TextStyle(
             fontSize: 28,
             fontWeight: FontWeight.bold,
@@ -58,18 +94,18 @@ class DashboardScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildStatsCards(BuildContext context) {
+  Widget _buildStatsCards(BuildContext context, DashboardStats stats) {
     return Column(
       children: [
         GestureDetector(
           onTap: () => context.push('/properties'),
           child: StatCard(
             title: 'Total Properties',
-            value: '42',
+            value: stats.propertyCount.toString(),
             icon: Icons.business_center,
             iconBgColor: const Color(0xFFE0F2F1),
             iconColor: const Color(0xFF005A6E),
-            badgeText: '+12%',
+            badgeText: 'VIEW',
           ),
         ),
         const SizedBox(height: 16),
@@ -77,7 +113,7 @@ class DashboardScreen extends StatelessWidget {
           onTap: () => context.push('/clients'),
           child: StatCard(
             title: 'Active Clients',
-            value: '128',
+            value: stats.clientCount.toString(),
             icon: Icons.people_outline,
             iconBgColor: const Color(0xFFF3F4F6),
             iconColor: AppTheme.primaryColor,
@@ -92,7 +128,7 @@ class DashboardScreen extends StatelessWidget {
           onTap: () => context.push('/viewings'),
           child: StatCard(
             title: "Today's Viewings",
-            value: '6',
+            value: stats.todayViewingCount.toString(),
             icon: Icons.calendar_today_outlined,
             iconBgColor: const Color(0xFFFFF9C4),
             iconColor: const Color(0xFFB8860B),
@@ -160,49 +196,55 @@ class DashboardScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildRecentActivityList(BuildContext context) {
-    final properties = PropertyService.getProperties();
+  Widget _buildRecentActivityList(BuildContext context, List<DashboardActivity> activities) {
+    if (activities.isEmpty) {
+      return Container(
+        height: 100,
+        alignment: Alignment.center,
+        child: const Text(
+          'No recent activity to show.',
+          style: TextStyle(color: Colors.grey, fontSize: 14),
+        ),
+      );
+    }
 
     return Column(
-      children: [
-        _buildActivityTile(
-          context,
-          'Luxury Villa',
-          'Listing updated to ETB 12,500,000',
-          '3h ago',
-          Icons.apartment,
-          const Color(0xFFB8860B),
-          onTap: () {
-            final p = properties.firstWhere((p) => p.id == '1', orElse: () => properties.first);
-            context.push('/property-detail', extra: p);
-          },
-        ),
-        const SizedBox(height: 12),
-        _buildActivityTile(
-          context,
-          'Abebe Kebede',
-          'Inquired about Modern Apartment',
-          '5h ago',
-          Icons.person_outline,
-          const Color(0xFFE0F2F1),
-          iconColor: const Color(0xFF005A6E),
-          onTap: () => context.push('/clients'),
-        ),
-        const SizedBox(height: 12),
-        _buildActivityTile(
-          context,
-          'Modern Apartment',
-          'New viewing scheduled for 2:00 PM',
-          '1d ago',
-          Icons.calendar_month_outlined,
-          const Color(0xFFE3F2FD),
-          iconColor: Colors.blue,
-          onTap: () {
-            final p = properties.firstWhere((p) => p.id == '2', orElse: () => properties.first);
-            context.push('/property-detail', extra: p);
-          },
-        ),
-      ],
+      children: activities.map((activity) {
+        IconData icon;
+        Color color;
+        if (activity.type == 'property') {
+          icon = Icons.apartment;
+          color = const Color(0xFF005A6E);
+        } else if (activity.type == 'client') {
+          icon = Icons.person_outline;
+          color = AppTheme.primaryColor;
+        } else {
+          icon = Icons.calendar_month_outlined;
+          color = const Color(0xFFB8860B);
+        }
+
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 12),
+          child: _buildActivityTile(
+            context,
+            activity.title,
+            activity.description,
+            activity.time,
+            icon,
+            color.withValues(alpha: 0.1),
+            iconColor: color,
+            onTap: () {
+              if (activity.type == 'property') {
+                context.push('/properties');
+              } else if (activity.type == 'client') {
+                context.push('/clients');
+              } else {
+                context.push('/viewings');
+              }
+            },
+          ),
+        );
+      }).toList(),
     );
   }
 

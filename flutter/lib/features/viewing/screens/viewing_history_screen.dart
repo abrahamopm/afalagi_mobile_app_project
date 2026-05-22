@@ -1,38 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:afalagi/features/viewing/models/viewing_model.dart';
-import 'package:afalagi/features/viewing/viewing_service.dart';
 import 'package:afalagi/features/viewing/widgets/viewing_cards.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
+import '../providers/viewing_provider.dart';
 
-class ViewingHistoryScreen extends StatefulWidget {
+class ViewingHistoryScreen extends ConsumerStatefulWidget {
   final String? propertyId;
   final String? clientId;
 
   const ViewingHistoryScreen({super.key, this.propertyId, this.clientId});
 
   @override
-  State<ViewingHistoryScreen> createState() => _ViewingHistoryScreenState();
+  ConsumerState<ViewingHistoryScreen> createState() => _ViewingHistoryScreenState();
 }
 
-class _ViewingHistoryScreenState extends State<ViewingHistoryScreen> {
-  late List<Viewing> _viewings;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadViewings();
-  }
-
-  void _loadViewings() {
-    _viewings = ViewingService.getViewings();
-    if (widget.propertyId != null) {
-      _viewings = _viewings.where((v) => v.propertyId == widget.propertyId).toList();
-    }
-    if (widget.clientId != null) {
-      _viewings = _viewings.where((v) => v.clientId == widget.clientId).toList();
-    }
-  }
+class _ViewingHistoryScreenState extends ConsumerState<ViewingHistoryScreen> {
 
   Future<void> _deleteViewing(String id) async {
     final confirmed = await _showPlatformConfirmation(
@@ -41,10 +25,20 @@ class _ViewingHistoryScreenState extends State<ViewingHistoryScreen> {
     );
 
     if (confirmed == true) {
-      setState(() {
-        ViewingService.deleteViewing(id);
-        _loadViewings();
-      });
+      try {
+        await ref.read(viewingListProvider.notifier).deleteViewing(id);
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Viewing log deleted successfully')),
+          );
+        }
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Error: ${e.toString()}')),
+          );
+        }
+      }
     }
   }
 
@@ -92,64 +86,97 @@ class _ViewingHistoryScreenState extends State<ViewingHistoryScreen> {
   }
 
   void _editViewing(Viewing viewing) {
-    context.push('/log-viewing', extra: viewing).then((_) {
-      setState(() {
-        _loadViewings();
-      });
-    });
+    context.push('/log-viewing', extra: viewing);
   }
 
   @override
   Widget build(BuildContext context) {
+    final viewingsAsync = ref.watch(viewingListProvider);
+
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'MARKET INSIGHTS',
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
-                color: Colors.grey,
-                letterSpacing: 1.2,
-              ),
-            ),
-            const SizedBox(height: 4),
-            const Text(
-              'Activity Log',
-              style: TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Figtree',
-                color: Color(0xFF1B385E),
-              ),
-            ),
-            const SizedBox(height: 32),
-
-            if (_viewings.isEmpty)
-              const Center(
-                child: Padding(
-                  padding: EdgeInsets.only(top: 100),
-                  child: Text("No viewing activity found."),
+      body: RefreshIndicator(
+        onRefresh: () => ref.read(viewingListProvider.notifier).refresh(),
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'MARKET INSIGHTS',
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey,
+                  letterSpacing: 1.2,
                 ),
-              )
-            else
-              _buildBentoGrid(),
-            
-            const SizedBox(height: 40),
-          ],
+              ),
+              const SizedBox(height: 4),
+              const Text(
+                'Activity Log',
+                style: TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Figtree',
+                  color: Color(0xFF1B385E),
+                ),
+              ),
+              const SizedBox(height: 32),
+
+              viewingsAsync.when(
+                data: (viewings) {
+                  var filtered = viewings;
+                  if (widget.propertyId != null) {
+                    filtered = filtered.where((v) => v.propertyId == widget.propertyId).toList();
+                  }
+                  if (widget.clientId != null) {
+                    filtered = filtered.where((v) => v.clientId == widget.clientId).toList();
+                  }
+
+                  if (filtered.isEmpty) {
+                    return const Center(
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 100),
+                        child: Text(
+                          "No viewing activity found.",
+                          style: TextStyle(color: Colors.grey, fontSize: 16),
+                        ),
+                      ),
+                    );
+                  }
+
+                  return _buildBentoGrid(filtered);
+                },
+                loading: () => const Center(
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 100),
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
+                error: (error, _) => Center(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 100),
+                    child: Text(
+                      'Error: ${error.toString()}',
+                      style: const TextStyle(color: Colors.red),
+                    ),
+                  ),
+                ),
+              ),
+              
+              const SizedBox(height: 40),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildBentoGrid() {
+  Widget _buildBentoGrid(List<Viewing> viewings) {
     // Featured Item (Recent)
-    final featured = _viewings.first;
-    final others = _viewings.skip(1).toList();
+    final featured = viewings.first;
+    final others = viewings.skip(1).toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -171,33 +198,35 @@ class _ViewingHistoryScreenState extends State<ViewingHistoryScreen> {
           onDelete: () => _deleteViewing(featured.id),
         ),
 
-        const SizedBox(height: 32),
-        const Text(
-          'HISTORY',
-          style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.grey, letterSpacing: 0.5),
-        ),
-        const SizedBox(height: 12),
+        if (others.isNotEmpty) ...[
+          const SizedBox(height: 32),
+          const Text(
+            'HISTORY',
+            style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.grey, letterSpacing: 0.5),
+          ),
+          const SizedBox(height: 12),
 
-        // Bento Style List/Grid
-        ListView.separated(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: others.length,
-          separatorBuilder: (context, index) => const SizedBox(height: 16),
-          itemBuilder: (context, index) {
-            final viewing = others[index];
-            return CompactViewingCard(
-              imageUrl: viewing.imageUrl,
-              title: viewing.propertyTitle,
-              clientName: viewing.clientName,
-              price: viewing.price,
-              date: viewing.date,
-              status: viewing.status,
-              onEdit: () => _editViewing(viewing),
-              onDelete: () => _deleteViewing(viewing.id),
-            );
-          },
-        ),
+          // Bento Style List/Grid
+          ListView.separated(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: others.length,
+            separatorBuilder: (context, index) => const SizedBox(height: 16),
+            itemBuilder: (context, index) {
+              final viewing = others[index];
+              return CompactViewingCard(
+                imageUrl: viewing.imageUrl,
+                title: viewing.propertyTitle,
+                clientName: viewing.clientName,
+                price: viewing.price,
+                date: viewing.date,
+                status: viewing.status,
+                onEdit: () => _editViewing(viewing),
+                onDelete: () => _deleteViewing(viewing.id),
+              );
+            },
+          ),
+        ],
       ],
     );
   }

@@ -12,10 +12,10 @@ import 'features/client/screens/client_detail_screen.dart';
 import 'features/client/models/client_model.dart';
 import 'features/viewing/routes/viewing_routes.dart';
 import 'features/dashboard/screens/home_dashboard.dart';
-import 'features/profile management/screens/profile_screen.dart';
-import 'features/profile management/screens/delete_account_screen.dart';
-import 'features/profile management/screens/personal_info_screen.dart';
-import 'features/profile management/screens/agency_details_screen.dart';
+import 'features/profile/screens/profile_screen.dart';
+import 'features/profile/screens/delete_account_screen.dart';
+import 'features/profile/screens/personal_info_screen.dart';
+import 'features/profile/screens/agency_details_screen.dart';
 import 'features/tags/screens/tag_management_screen.dart';
 
 import 'core/widgets/shell_scaffold.dart';
