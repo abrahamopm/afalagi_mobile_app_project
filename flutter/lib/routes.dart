@@ -17,6 +17,10 @@ import 'features/profile/screens/delete_account_screen.dart';
 import 'features/profile/screens/personal_info_screen.dart';
 import 'features/profile/screens/agency_details_screen.dart';
 import 'features/tags/screens/tag_management_screen.dart';
+import 'features/admin/screens/admin_shell_scaffold.dart';
+import 'features/admin/screens/admin_dashboard_screen.dart';
+import 'features/admin/screens/admin_users_screen.dart';
+import 'features/admin/screens/admin_properties_screen.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:afalagi/features/auth/providers/auth_provider.dart';
