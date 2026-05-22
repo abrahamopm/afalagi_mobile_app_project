@@ -1,19 +1,22 @@
-import express, { Request, Response } from 'express';
-import cors from 'cors';
+import app from './app';
+import connectDB from './config/db';
 import dotenv from 'dotenv';
 
+// Load env vars
 dotenv.config();
 
-const app = express();
-const port = process.env.PORT || 5000;
+// Connect to database
+connectDB();
 
-app.use(cors());
-app.use(express.json());
+const PORT = process.env.PORT || 5000;
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Afalagi Backend is running!');
+const server = app.listen(PORT, () => {
+  console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
 });
 
-app.listen(port, () => {
-  console.log(`[server]: Server is running at http://localhost:${port}`);
+// Handle unhandled promise rejections
+process.on('unhandledRejection', (err: any) => {
+  console.log(`Error: ${err.message}`);
+  // Close server & exit process
+  server.close(() => process.exit(1));
 });
