@@ -4,7 +4,7 @@ import 'package:afalagi/features/viewing/screens/log_viewing_screen.dart';
 import 'package:go_router/go_router.dart';
 
 class ViewingRoutes {
-  static const String viewingHistory = '/viewing-history';
+  static const String viewingHistory = '/viewings';
   static const String logViewing = '/log-viewing';
 
   static List<RouteBase> routes = [

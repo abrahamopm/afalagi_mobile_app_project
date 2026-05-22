@@ -5,7 +5,6 @@ import 'features/auth/screens/login_screen.dart';
 import 'features/auth/screens/signup_screen.dart';
 import 'features/property/screens/property_list_screen.dart';
 import 'features/property/screens/add_property_screen.dart';
-import 'features/property/screens/edit_property_screen.dart';
 import 'features/property/screens/property_detail_screen.dart';
 import 'features/property/models/property_model.dart';
 import 'features/client/screens/client_list_screen.dart';
@@ -62,7 +61,7 @@ class AppRoutes {
           GoRoute(
             path: '/edit-property',
             builder: (context, state) =>
-                EditPropertyScreen(property: state.extra as Property),
+                AddPropertyScreen(property: state.extra as Property),
           ),
           GoRoute(
             path: '/clients',

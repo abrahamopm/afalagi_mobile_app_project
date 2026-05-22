@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:afalagi/core/theme/theme.dart';
 import 'package:afalagi/core/widgets/stat_card.dart';
 import 'package:afalagi/core/widgets/button.dart';
+import 'package:afalagi/features/property/property_service.dart';
 import 'package:go_router/go_router.dart';
 
 class DashboardScreen extends StatelessWidget {
@@ -25,7 +26,7 @@ class DashboardScreen extends StatelessWidget {
           const SizedBox(height: 32),
           _buildSectionHeader(
             'Recent Activity',
-            onActionTap: () => context.push('/viewing-history'),
+            onActionTap: () => context.push('/viewings'),
           ),
           const SizedBox(height: 16),
           _buildRecentActivityList(context),
@@ -88,7 +89,7 @@ class DashboardScreen extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         GestureDetector(
-          onTap: () => context.push('/viewing-history'),
+          onTap: () => context.push('/viewings'),
           child: StatCard(
             title: "Today's Viewings",
             value: '6',
@@ -160,22 +161,27 @@ class DashboardScreen extends StatelessWidget {
   }
 
   Widget _buildRecentActivityList(BuildContext context) {
+    final properties = PropertyService.getProperties();
+
     return Column(
       children: [
         _buildActivityTile(
           context,
-          'Koye Feche Penthouse',
+          'Luxury Villa',
           'Listing updated to ETB 12,500,000',
           '3h ago',
           Icons.apartment,
           const Color(0xFFB8860B),
-          onTap: () => context.push('/properties'),
+          onTap: () {
+            final p = properties.firstWhere((p) => p.id == '1', orElse: () => properties.first);
+            context.push('/property-detail', extra: p);
+          },
         ),
         const SizedBox(height: 12),
         _buildActivityTile(
           context,
           'Abebe Kebede',
-          'Inquired about Bole High-Rise',
+          'Inquired about Modern Apartment',
           '5h ago',
           Icons.person_outline,
           const Color(0xFFE0F2F1),
@@ -185,13 +191,16 @@ class DashboardScreen extends StatelessWidget {
         const SizedBox(height: 12),
         _buildActivityTile(
           context,
-          'Bole Apartment',
+          'Modern Apartment',
           'New viewing scheduled for 2:00 PM',
           '1d ago',
           Icons.calendar_month_outlined,
           const Color(0xFFE3F2FD),
           iconColor: Colors.blue,
-          onTap: () => context.push('/viewing-history'),
+          onTap: () {
+            final p = properties.firstWhere((p) => p.id == '2', orElse: () => properties.first);
+            context.push('/property-detail', extra: p);
+          },
         ),
       ],
     );

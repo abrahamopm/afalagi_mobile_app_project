@@ -1,0 +1,29 @@
+# IDE files
+.vscode/
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Environment variables
+.env
+.env.*
+
+# Node dependencies and build artifacts (handled in backend/ normally, but good to have here too)
+node_modules/
+dist/
+
+# Flutter build artifacts and logs
+build/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+*.log

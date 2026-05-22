@@ -1,4 +1,4 @@
-import 'package:afalagi/core/widgets/propery_card.dart';
+import 'package:afalagi/core/widgets/property_card.dart';
 
 import 'package:afalagi/features/property/property_service.dart';
 import 'package:afalagi/features/tags/tags_service.dart';
@@ -148,8 +148,11 @@ class _PropertyListScreenState extends State<PropertyListScreen> {
             child: PropertyCard(
               property: property,
               onDelete: () => _deleteProperty(property.id),
+              onEdit: () {
+                context.push('/edit-property', extra: property);
+              },
               onTap: () {
-                context.go('/property-detail', extra: property);
+                context.push('/property-detail', extra: property);
               },
             ),
           );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:afalagi/core/widgets/scaffold.dart';
+import 'package:afalagi/core/widgets/feature_navigation_bar.dart';
 
 class ShellScaffold extends StatelessWidget {
   final Widget child;
@@ -15,7 +16,7 @@ class ShellScaffold extends StatelessWidget {
     if (location.startsWith('/edit-property')) return 1;
     if (location.startsWith('/clients')) return 2;
     if (location.startsWith('/client-detail')) return 2;
-    if (location.startsWith('/viewing-history')) return 3;
+    if (location.startsWith('/viewings')) return 3;
     if (location.startsWith('/log-viewing')) return 3;
     if (location.startsWith('/profile')) return 4;
     if (location.startsWith('/delete-account')) return 4;
@@ -37,7 +38,7 @@ class ShellScaffold extends StatelessWidget {
         context.go('/clients');
         break;
       case 3:
-        context.go('/viewing-history');
+        context.go('/viewings');
         break;
       case 4:
         context.go('/profile');
@@ -47,9 +48,17 @@ class ShellScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final String location = GoRouterState.of(context).uri.toString();
+    final bool showTopNav = location.startsWith('/viewings');
+
     return Scaffold(
       appBar: CustomScaffold.appBar(context),
-      body: child,
+      body: Column(
+        children: [
+          if (showTopNav) FeatureNavigationBar(currentLocation: location),
+          Expanded(child: child),
+        ],
+      ),
       bottomNavigationBar: CustomScaffold.bottomNavigationBar(
         (index) => _onItemTapped(index, context),
         _getCurrentIndex(context),

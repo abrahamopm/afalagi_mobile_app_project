@@ -131,15 +131,6 @@ class _TagManagementScreenState extends State<TagManagementScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: const Text(
-          'Tag Management',
-          style: TextStyle(fontFamily: 'Figtree', fontWeight: FontWeight.bold, fontSize: 18),
-        ),
-        elevation: 0,
-        backgroundColor: Colors.white,
-        foregroundColor: AppTheme.primaryColor,
-      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24.0),
         child: Column(

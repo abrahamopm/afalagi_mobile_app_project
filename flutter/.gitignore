@@ -1,13 +1,83 @@
-# OS files
-.DS_Store
-Thumb.db
+# https://dart.dev/guides/libraries/private-files
+# Created by `flutter create` template.
 
-# IDE files
-.idea/
-.vscode/
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.project
+.settings/
+.toolong/
+/build/
+
+# IntelliJ related
 *.iml
 *.ipr
 *.iws
+.idea/
 
-# Logs
-*.log
+# The .vscode folder contains launch configuration and tasks you actually want to
+# keep. But it also contains settings, which you usually want to keep per-machine.
+#
+# .vscode/settings.json
+
+# Flutter/Dart/Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
+**/ios/Flutter/App.framework
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/flutter_export_environment.sh
+**/ios/Flutter/flutter_settings.gsconfig
+**/ios/GeneratedPluginRegistrant.h
+**/ios/GeneratedPluginRegistrant.m
+**/android/local.properties
+**/android/key.properties
+**/android/app/src/main/res/raw/ggms_google_services.json
+**/android/app/google-services.json
+**/android/app/src/main/assets/google-services.json
+**/android/app/src/debug/res/values/google_maps_api.xml
+**/android/app/src/release/res/values/google_maps_api.xml
+**/android/app/src/main/res/values/google_maps_api.xml
+**/android/app/src/main/res/values/strings.xml
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+/web/stack_trace_mapper.js
+
+# Symbol tarballs
+/symbols/
+
+# Executable distributions
+*.apk
+*.aab
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Ephemeral binaries
+/linux/flutter/ephemeral/
+/windows/flutter/ephemeral/
+
+# Mac-specific
+.DS_Store
+
+# Windows-specific
+Thumbs.db
+desktop.ini
+
+# Platform-specific ephemeral files
+/linux/flutter/ephemeral/
+/windows/flutter/ephemeral/
+/macos/Flutter/ephemeral/
+/ios/Flutter/ephemeral/
+

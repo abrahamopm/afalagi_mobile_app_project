@@ -7,7 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class AddPropertyScreen extends StatefulWidget {
-  const AddPropertyScreen({super.key});
+  final Property? property;
+  const AddPropertyScreen({super.key, this.property});
 
   @override
   State<AddPropertyScreen> createState() => _AddPropertyScreenState();
@@ -27,6 +28,31 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
   
   final List<String> _selectedTags = [];
   bool _isAvailable = true;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.property != null) {
+      _titleController.text = widget.property!.title;
+      _descriptionController.text = widget.property!.description;
+      _priceController.text = widget.property!.price.toString();
+      
+      // Parse location: "Address, City"
+      final locationParts = widget.property!.location.split(',');
+      if (locationParts.length >= 2) {
+        _addressController.text = locationParts[0].trim();
+        _cityController.text = locationParts[1].trim();
+      } else {
+        _addressController.text = widget.property!.location;
+      }
+      
+      _bedroomsController.text = widget.property!.beds.toString();
+      _bathroomsController.text = widget.property!.baths.toString();
+      _sqmController.text = widget.property!.sqft.toString();
+      _isAvailable = widget.property!.isAvailable;
+      _selectedTags.addAll(widget.property!.tags);
+    }
+  }
 
   final List<String> _availableTags = [
     "Luxury",
@@ -57,9 +83,9 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
-        title: const Text(
-          'Add Property',
-          style: TextStyle(
+        title: Text(
+          widget.property != null ? 'Edit Property' : 'Add Property',
+          style: const TextStyle(
             fontFamily: 'Figtree',
             fontWeight: FontWeight.bold,
             fontSize: 18,
@@ -85,19 +111,39 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
                   color: Colors.grey[200],
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(color: Colors.grey[300]!, width: 1),
+                  image: widget.property != null
+                      ? DecorationImage(
+                          image: widget.property!.imageUrl.startsWith('http')
+                              ? NetworkImage(widget.property!.imageUrl)
+                              : AssetImage(widget.property!.imageUrl) as ImageProvider,
+                          fit: BoxFit.cover,
+                        )
+                      : null,
                 ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.add_a_photo_outlined,
-                        size: 48, color: Colors.grey[600]),
-                    const SizedBox(height: 8),
-                    Text(
-                      "Upload Property Visuals",
-                      style: TextStyle(color: Colors.grey[600]),
-                    ),
-                  ],
-                ),
+                child: widget.property == null
+                    ? Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.add_a_photo_outlined,
+                              size: 48, color: Colors.grey[600]),
+                          const SizedBox(height: 8),
+                          Text(
+                            "Upload Property Visuals",
+                            style: TextStyle(color: Colors.grey[600]),
+                          ),
+                        ],
+                      )
+                    : Align(
+                        alignment: Alignment.bottomRight,
+                        child: Padding(
+                          padding: const EdgeInsets.all(12),
+                          child: CircleAvatar(
+                            backgroundColor: Colors.white,
+                            radius: 20,
+                            child: Icon(Icons.camera_alt_outlined, color: AppTheme.primaryColor),
+                          ),
+                        ),
+                      ),
               ),
 
               Padding(
@@ -233,11 +279,11 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
 
                     const SizedBox(height: 40),
                     CustomButton(
-                      text: "Save Property",
+                      text: widget.property != null ? "Update Property" : "Save Property",
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
-                          final newProperty = Property(
-                            id: DateTime.now().millisecondsSinceEpoch.toString(),
+                          final propertyData = Property(
+                            id: widget.property?.id ?? DateTime.now().millisecondsSinceEpoch.toString(),
                             title: _titleController.text.trim(),
                             description: _descriptionController.text.trim(),
                             price: double.tryParse(_priceController.text) ?? 0,
@@ -245,13 +291,22 @@ class _AddPropertyScreenState extends State<AddPropertyScreen> {
                             beds: int.tryParse(_bedroomsController.text) ?? 0,
                             baths: int.tryParse(_bathroomsController.text) ?? 0,
                             sqft: int.tryParse(_sqmController.text) ?? 0,
-                            imageUrl: 'assets/images/luxury_villa.png',
+                            imageUrl: widget.property?.imageUrl ?? 'assets/images/luxury_villa.png',
+                            isAvailable: _isAvailable,
+                            tags: List.from(_selectedTags),
                           );
                           
-                          PropertyService.addProperty(newProperty);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Property added successfully')),
-                          );
+                          if (widget.property != null) {
+                            PropertyService.updateProperty(propertyData);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Property updated successfully')),
+                            );
+                          } else {
+                            PropertyService.addProperty(propertyData);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Property added successfully')),
+                            );
+                          }
                           context.pop();
                         }
                       },

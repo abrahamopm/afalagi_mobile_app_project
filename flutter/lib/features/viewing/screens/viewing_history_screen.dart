@@ -1,9 +1,8 @@
-import 'package:afalagi/core/theme/theme.dart';
+import 'package:flutter/material.dart';
 import 'package:afalagi/features/viewing/models/viewing_model.dart';
 import 'package:afalagi/features/viewing/viewing_service.dart';
 import 'package:afalagi/features/viewing/widgets/viewing_cards.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class ViewingHistoryScreen extends StatefulWidget {
@@ -104,15 +103,6 @@ class _ViewingHistoryScreenState extends State<ViewingHistoryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: const Text(
-          'Viewings',
-          style: TextStyle(fontFamily: 'Figtree', fontWeight: FontWeight.bold, fontSize: 18),
-        ),
-        elevation: 0,
-        backgroundColor: Colors.white,
-        foregroundColor: AppTheme.primaryColor,
-      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24.0),
         child: Column(

@@ -6,12 +6,14 @@ import 'package:afalagi/core/theme/theme.dart';
 class PropertyCard extends StatelessWidget {
   final Property property;
   final VoidCallback? onDelete;
+  final VoidCallback? onEdit;
   final VoidCallback? onTap;
 
   const PropertyCard({
     super.key,
     required this.property,
     this.onDelete,
+    this.onEdit,
     this.onTap,
   });
 
@@ -80,20 +82,41 @@ class PropertyCard extends StatelessWidget {
                   Positioned(
                     top: 16,
                     right: 16,
-                    child: GestureDetector(
-                      onTap: onDelete,
-                      child: Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
+                    child: Row(
+                      children: [
+                        if (onEdit != null)
+                          GestureDetector(
+                            onTap: onEdit,
+                            child: Container(
+                              margin: const EdgeInsets.only(right: 8),
+                              padding: const EdgeInsets.all(8),
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                Icons.edit_outlined,
+                                color: AppTheme.primaryColor,
+                                size: 20,
+                              ),
+                            ),
+                          ),
+                        GestureDetector(
+                          onTap: onDelete,
+                          child: Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: const BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.delete_outline,
+                              color: Colors.red,
+                              size: 20,
+                            ),
+                          ),
                         ),
-                        child: const Icon(
-                          Icons.delete_outline,
-                          color: Colors.red,
-                          size: 20,
-                        ),
-                      ),
+                      ],
                     ),
                   ),
                   Positioned(
