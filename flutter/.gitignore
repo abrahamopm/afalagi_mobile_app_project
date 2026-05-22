@@ -1,0 +1,13 @@
+# OS files
+.DS_Store
+Thumb.db
+
+# IDE files
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# Logs
+*.log

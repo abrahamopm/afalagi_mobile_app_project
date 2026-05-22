@@ -3,6 +3,13 @@
 ## Project Description
 Afalagi is a back-office productivity tool built for independent real estate agents. It helps manage property portfolios and track the buyer's journey by logging house viewings, recording client feedback, and monitoring interest levels, replacing messy notebooks with a clean, data-driven system.
 
+## Project Structure
+
+This repository is organized as a monorepo:
+
+-   **/flutter**: Contains the mobile application source code (Flutter).
+-   **/backend**: Contains the server-side API and database logic (Node.js).
+
 ## CRUD Features (minimum)
 
 ### CRUD 1. Property Portfolio Management
