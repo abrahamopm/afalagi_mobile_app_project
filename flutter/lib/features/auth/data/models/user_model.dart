@@ -1,18 +1,13 @@
-class UserModel {
-  final String id;
-  final String name;
-  final String email;
-  final String phone;
-  final String agencyName;
-  final String agencyLicense;
+import '../../domain/entities/user_entity.dart';
 
-  UserModel({
-    required this.id,
-    required this.name,
-    required this.email,
-    this.phone = '',
-    this.agencyName = '',
-    this.agencyLicense = '',
+class UserModel extends UserEntity {
+  const UserModel({
+    required super.id,
+    required super.name,
+    required super.email,
+    super.phone,
+    super.agencyName,
+    super.agencyLicense,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -37,21 +32,14 @@ class UserModel {
     };
   }
 
-  UserModel copyWith({
-    String? id,
-    String? name,
-    String? email,
-    String? phone,
-    String? agencyName,
-    String? agencyLicense,
-  }) {
+  factory UserModel.fromEntity(UserEntity entity) {
     return UserModel(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      email: email ?? this.email,
-      phone: phone ?? this.phone,
-      agencyName: agencyName ?? this.agencyName,
-      agencyLicense: agencyLicense ?? this.agencyLicense,
+      id: entity.id,
+      name: entity.name,
+      email: entity.email,
+      phone: entity.phone,
+      agencyName: entity.agencyName,
+      agencyLicense: entity.agencyLicense,
     );
   }
 }
