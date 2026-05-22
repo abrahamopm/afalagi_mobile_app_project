@@ -1,25 +1,33 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:afalagi/core/usecases/usecase.dart';
 import '../../../../core/providers/core_providers.dart';
-import '../data/repositories/dashboard_repository.dart';
+import '../data/repositories/dashboard_repository_impl.dart';
+import '../domain/entities/dashboard_stats.dart';
+import '../domain/repositories/dashboard_repository.dart';
+import '../domain/usecases/get_stats.dart';
 
 final dashboardRepositoryProvider = Provider<DashboardRepository>((ref) {
   final dio = ref.watch(dioProvider);
-  return DashboardRepository(dio);
+  return DashboardRepositoryImpl(dio);
+});
+
+final getStatsUseCaseProvider = Provider<GetStats>((ref) {
+  final repository = ref.watch(dashboardRepositoryProvider);
+  return GetStats(repository);
 });
 
 class DashboardNotifier extends AsyncNotifier<DashboardStats> {
-  late final DashboardRepository _repository;
-
   @override
   Future<DashboardStats> build() async {
-    _repository = ref.watch(dashboardRepositoryProvider);
-    return _repository.getStats();
+    final getStats = ref.watch(getStatsUseCaseProvider);
+    return getStats(NoParams());
   }
 
   Future<void> refresh() async {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
-      return _repository.getStats();
+      final getStats = ref.read(getStatsUseCaseProvider);
+      return getStats(NoParams());
     });
   }
 }

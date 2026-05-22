@@ -1,24 +1,16 @@
-class Client {
-  final String id;
-  final String name;
-  final String phone;
-  final String priority; // 'VIP' | 'HIGH' | 'MODERATE' | 'LOW'
-  final int interest; // 1-5
-  final String area;
-  final String budget;
-  final String image;
-  final List<String> tags;
+import '../domain/entities/client_entity.dart';
 
-  Client({
-    required this.id,
-    required this.name,
-    required this.phone,
-    this.priority = 'MODERATE',
-    this.interest = 3,
-    this.area = '',
-    this.budget = '',
-    this.image = 'assets/images/generic_avatar.png',
-    this.tags = const [],
+class Client extends ClientEntity {
+  const Client({
+    required super.id,
+    required super.name,
+    required super.phone,
+    super.priority,
+    super.interest,
+    super.area,
+    super.budget,
+    super.image,
+    super.tags,
   });
 
   factory Client.fromJson(Map<String, dynamic> json) {

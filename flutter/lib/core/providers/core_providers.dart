@@ -37,3 +37,16 @@ final networkInfoProvider = Provider<NetworkInfo>((ref) {
 final databaseProvider = Provider<DatabaseHelper>((ref) {
   return DatabaseHelper.instance;
 });
+
+final connectivityStreamProvider = StreamProvider<List<ConnectivityResult>>((ref) {
+  return ref.watch(connectivityProvider).onConnectivityChanged;
+});
+
+final isConnectedStateProvider = Provider<bool>((ref) {
+  final connectivityState = ref.watch(connectivityStreamProvider);
+  return connectivityState.when(
+    data: (results) => !results.contains(ConnectivityResult.none),
+    error: (_, __) => true,
+    loading: () => true,
+  );
+});

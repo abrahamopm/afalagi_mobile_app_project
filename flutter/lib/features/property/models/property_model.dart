@@ -1,30 +1,19 @@
-import 'package:afalagi/core/util/format.dart';
+import '../../domain/entities/property_entity.dart';
+import '../../../../core/util/format.dart';
 
-class Property {
-  final String id;
-  final String title;
-  final String description;
-  final String location;
-  final String imageUrl;
-  final double price;
-  final int beds;
-  final int baths;
-  final int sqft;
-  final bool isAvailable;
-  final List<String> tags;
-
-  Property({
-    required this.id,
-    required this.title,
-    required this.description,
-    required this.location,
-    required this.imageUrl,
-    required this.price,
-    required this.beds,
-    required this.baths,
-    required this.sqft,
-    this.isAvailable = true,
-    this.tags = const [],
+class Property extends PropertyEntity {
+  const Property({
+    required super.id,
+    required super.title,
+    required super.description,
+    required super.location,
+    required super.imageUrl,
+    required super.price,
+    required super.beds,
+    required super.baths,
+    required super.sqft,
+    super.isAvailable,
+    super.tags,
   });
 
   String get formattedPrice {

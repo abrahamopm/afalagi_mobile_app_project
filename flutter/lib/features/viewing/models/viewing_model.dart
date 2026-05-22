@@ -1,26 +1,17 @@
-class Viewing {
-  final String id;
-  final String propertyId;
-  final String clientId;
-  final String propertyTitle;
-  final String clientName;
-  final String imageUrl;
-  final String date;
-  final String status;
-  final String price;
-  final String notes;
+import '../domain/entities/viewing_entity.dart';
 
-  Viewing({
-    required this.id,
-    required this.propertyId,
-    required this.clientId,
-    required this.propertyTitle,
-    required this.clientName,
-    required this.imageUrl,
-    required this.date,
-    required this.status,
-    required this.price,
-    this.notes = '',
+class Viewing extends ViewingEntity {
+  const Viewing({
+    required super.id,
+    required super.propertyId,
+    required super.clientId,
+    required super.propertyTitle,
+    required super.clientName,
+    required super.imageUrl,
+    required super.date,
+    required super.status,
+    required super.price,
+    super.notes,
   });
 
   factory Viewing.fromJson(Map<String, dynamic> json) {
