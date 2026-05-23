@@ -1,7 +1,18 @@
+import 'dart:io';
+import 'package:flutter/foundation.dart';
+
 class AppConstants {
   // Use http://10.0.2.2:5000/api/v1 for Android emulator to reference localhost backend
-  // Use http://localhost:5000/api/v1 for iOS simulator
-  static const String baseUrl = 'http://10.0.2.2:5000/api/v1';
+  // Use http://localhost:5000/api/v1 for desktop/web
+  static String get baseUrl {
+    if (kIsWeb) {
+      return 'http://localhost:5000/api/v1';
+    }
+    if (Platform.isAndroid) {
+      return 'http://10.0.2.2:5000/api/v1';
+    }
+    return 'http://localhost:5000/api/v1';
+  }
 
   // Endpoints
   static const String authRegister = '/auth/register';
