@@ -11,10 +11,9 @@ class TagRepositoryImpl extends CachedRepository<TagEntity, TagModel>
   TagRepositoryImpl({
     required TagRemoteDS remote,
     required TagLocalDS local,
-    required NetworkInfo networkInfo,
+    required super.networkInfo,
   }) : super(
           remote: remote,
           local: local,
-          networkInfo: networkInfo,
         );
 }

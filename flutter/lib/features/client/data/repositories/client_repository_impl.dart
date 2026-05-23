@@ -11,10 +11,9 @@ class ClientRepositoryImpl extends CachedRepository<ClientEntity, ClientModel>
   ClientRepositoryImpl({
     required ClientRemoteDS remote,
     required ClientLocalDS local,
-    required NetworkInfo networkInfo,
+    required super.networkInfo,
   }) : super(
           remote: remote,
           local: local,
-          networkInfo: networkInfo,
         );
 }

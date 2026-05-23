@@ -39,7 +39,7 @@ class OfflineBanner extends ConsumerWidget {
             },
             style: TextButton.styleFrom(
               foregroundColor: Colors.white,
-              backgroundColor: Colors.white.withOpacity(0.2),
+              backgroundColor: Colors.white.withValues(alpha: 0.2),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(4),
               ),

@@ -9,7 +9,7 @@ import '../network/network_info.dart';
 
 final secureStorageProvider = Provider<FlutterSecureStorage>((ref) {
   return const FlutterSecureStorage(
-    aOptions: AndroidOptions(encryptedSharedPreferences: true),
+    aOptions: AndroidOptions(),
   );
 });
 
@@ -45,7 +45,7 @@ final isConnectedStateProvider = Provider<bool>((ref) {
   final connectivityState = ref.watch(connectivityStreamProvider);
   return connectivityState.when(
     data: (results) => !results.contains(ConnectivityResult.none),
-    error: (_, __) => true,
+    error: (_, _) => true,
     loading: () => true,
   );
 });

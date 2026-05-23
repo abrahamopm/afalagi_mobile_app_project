@@ -11,10 +11,9 @@ class PropertyRepositoryImpl extends CachedRepository<PropertyEntity, PropertyMo
   PropertyRepositoryImpl({
     required PropertyRemoteDS remote,
     required PropertyLocalDS local,
-    required NetworkInfo networkInfo,
+    required super.networkInfo,
   }) : super(
           remote: remote,
           local: local,
-          networkInfo: networkInfo,
         );
 }

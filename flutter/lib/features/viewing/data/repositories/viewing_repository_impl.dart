@@ -11,10 +11,9 @@ class ViewingRepositoryImpl extends CachedRepository<ViewingEntity, ViewingModel
   ViewingRepositoryImpl({
     required ViewingRemoteDS remote,
     required ViewingLocalDS local,
-    required NetworkInfo networkInfo,
+    required super.networkInfo,
   }) : super(
           remote: remote,
           local: local,
-          networkInfo: networkInfo,
         );
 }
