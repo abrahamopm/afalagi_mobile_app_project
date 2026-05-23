@@ -40,3 +40,4 @@ build/
 **/windows/flutter/generated_plugin_registrant.h
 **/windows/flutter/generated_plugins.cmake
 flutter/android/.kotlin/sessions/kotlin-compiler-7539098473768466388.salive
+design.json
