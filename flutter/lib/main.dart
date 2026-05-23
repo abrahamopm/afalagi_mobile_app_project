@@ -21,16 +21,18 @@ void main() {
   );
 }
 
-class AfalagiApp extends StatelessWidget {
+class AfalagiApp extends ConsumerWidget {
   const AfalagiApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final router = ref.watch(routerProvider);
+    
     return MaterialApp.router(
       title: 'Afalagi Mobile',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
-      routerConfig: AppRoutes.router,
+      routerConfig: router,
     );
   }
 }

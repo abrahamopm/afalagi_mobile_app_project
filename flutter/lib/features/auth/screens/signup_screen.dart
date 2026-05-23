@@ -2,18 +2,21 @@ import 'package:afalagi/core/widgets/button.dart';
 import 'package:afalagi/core/widgets/input.dart';
 import 'package:afalagi/core/util/validators.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:afalagi/core/theme/theme.dart';
 import 'package:go_router/go_router.dart';
 import 'package:afalagi/core/widgets/image.dart';
 
-class SignupScreen extends StatefulWidget {
+import '../providers/auth_provider.dart';
+
+class SignupScreen extends ConsumerStatefulWidget {
   const SignupScreen({super.key});
 
   @override
-  State<SignupScreen> createState() => _SignupScreenState();
+  ConsumerState<SignupScreen> createState() => _SignupScreenState();
 }
 
-class _SignupScreenState extends State<SignupScreen> {
+class _SignupScreenState extends ConsumerState<SignupScreen> {
   final _formKey = GlobalKey<FormState>();
   final _fullNameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -35,7 +38,7 @@ class _SignupScreenState extends State<SignupScreen> {
     });
   }
 
-  void _handleSignup() {
+  Future<void> _handleSignup() async {
     if (_formKey.currentState!.validate()) {
       if (!_agreeToTerms) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -43,12 +46,31 @@ class _SignupScreenState extends State<SignupScreen> {
         );
         return;
       }
-      context.go('/dashboard');
+      
+      await ref.read(authStateProvider.notifier).signup(
+        name: _fullNameController.text.trim(),
+        email: _emailController.text.trim(),
+        password: _passwordController.text,
+      );
+
+      if (mounted) {
+        final authState = ref.read(authStateProvider);
+        if (authState.hasError) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(authState.error.toString())),
+          );
+        } else if (authState.value != null) {
+          context.go('/dashboard');
+        }
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final authState = ref.watch(authStateProvider);
+    final isLoading = authState.isLoading;
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
@@ -75,6 +97,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 controller: _fullNameController,
                 prefixIcon: const Icon(Icons.person_outline, size: 20),
                 validator: Validators.validateFullName,
+                enabled: !isLoading,
               ),
               const SizedBox(height: 24),
               CustomTextField(
@@ -84,6 +107,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 keyboardType: TextInputType.emailAddress,
                 prefixIcon: const Icon(Icons.email_outlined, size: 20),
                 validator: Validators.validateEmail,
+                enabled: !isLoading,
               ),
               const SizedBox(height: 24),
               CustomTextField(
@@ -98,13 +122,14 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
                 onSuffixIconTap: _togglePasswordVisibility,
                 validator: Validators.validatePassword,
+                enabled: !isLoading,
               ),
               const SizedBox(height: 10),
               Row(
                 children: [
                   Checkbox(
                     value: _agreeToTerms,
-                    onChanged: (value) {
+                    onChanged: isLoading ? null : (value) {
                       setState(() {
                         _agreeToTerms = value ?? false;
                       });
@@ -141,8 +166,8 @@ class _SignupScreenState extends State<SignupScreen> {
               SizedBox(
                 width: double.infinity,
                 child: CustomButton(
-                  text: "Sign Up",
-                  onPressed: _handleSignup,
+                  text: isLoading ? "Signing Up..." : "Sign Up",
+                  onPressed: isLoading ? () {} : _handleSignup,
                 ),
               ),
               const SizedBox(height: 15),
@@ -151,7 +176,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 children: [
                   const Text("Already have an account? "),
                   GestureDetector(
-                    onTap: () => context.pop(),
+                    onTap: isLoading ? null : () => context.pop(),
                     child: const Text(
                       "Sign In",
                       style: TextStyle(

@@ -4,16 +4,19 @@ import 'package:afalagi/core/widgets/image.dart';
 import 'package:afalagi/core/widgets/input.dart';
 import 'package:afalagi/core/util/validators.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-class LoginScreen extends StatefulWidget {
+import '../providers/auth_provider.dart';
+
+class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -33,14 +36,32 @@ class _LoginScreenState extends State<LoginScreen> {
     });
   }
 
-  void _handleLogin() {
+  Future<void> _handleLogin() async {
     if (_formKey.currentState!.validate()) {
-      context.go('/dashboard');
+      await ref.read(authStateProvider.notifier).login(
+            _emailController.text.trim(),
+            _passwordController.text,
+          );
+      if (mounted) {
+        final authState = ref.read(authStateProvider);
+        if (authState.hasError) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(authState.error.toString())),
+          );
+        } else if (authState.value != null) {
+          // Navigation handled by GoRouter's redirect based on auth state, 
+          // or we can fallback to context.go('/dashboard');
+          context.go('/dashboard');
+        }
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final authState = ref.watch(authStateProvider);
+    final isLoading = authState.isLoading;
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
@@ -71,6 +92,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 keyboardType: TextInputType.emailAddress,
                 prefixIcon: const Icon(Icons.email_outlined, size: 20),
                 validator: Validators.validateEmail,
+                enabled: !isLoading,
               ),
               const SizedBox(height: 24),
               CustomTextField(
@@ -85,13 +107,14 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 onSuffixIconTap: _togglePasswordVisibility,
                 validator: Validators.validatePassword,
+                enabled: !isLoading,
               ),
               const SizedBox(height: 10),
               Row(
                 children: [
                   Switch(
                     value: _rememberMe,
-                    onChanged: (value) {
+                    onChanged: isLoading ? null : (value) {
                       setState(() {
                         _rememberMe = value;
                       });
@@ -104,8 +127,8 @@ class _LoginScreenState extends State<LoginScreen> {
               SizedBox(
                 width: double.infinity,
                 child: CustomButton(
-                  text: "Sign in",
-                  onPressed: _handleLogin,
+                  text: isLoading ? "Signing in..." : "Sign in",
+                  onPressed: isLoading ? () {} : _handleLogin,
                 ),
               ),
               const SizedBox(height: 15),
@@ -114,7 +137,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   const Text("Not a member? "),
                   GestureDetector(
-                    onTap: () => context.push('/signup'),
+                    onTap: isLoading ? null : () => context.push('/signup'),
                     child: const Text(
                       "Sign Up",
                       style: TextStyle(

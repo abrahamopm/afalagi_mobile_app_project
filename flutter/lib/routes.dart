@@ -18,17 +18,37 @@ import 'features/profile/screens/personal_info_screen.dart';
 import 'features/profile/screens/agency_details_screen.dart';
 import 'features/tags/screens/tag_management_screen.dart';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:afalagi/features/auth/providers/auth_provider.dart';
+
 import 'core/widgets/shell_scaffold.dart';
 
-class AppRoutes {
-  static final GlobalKey<NavigatorState> _rootNavigatorKey =
-      GlobalKey<NavigatorState>();
-  static final GlobalKey<NavigatorState> _shellNavigatorKey =
-      GlobalKey<NavigatorState>();
-
-  static final router = GoRouter(
-    navigatorKey: _rootNavigatorKey,
+final routerProvider = Provider<GoRouter>((ref) {
+  final authState = ref.watch(authStateProvider);
+  
+  return GoRouter(
     initialLocation: '/',
+    redirect: (context, state) {
+      // If authState is still loading or hasn't finished initial build, don't redirect yet
+      if (authState.isLoading) return null;
+
+      final isAuth = authState.value != null;
+      
+      final isSplash = state.uri.path == '/';
+      final isLoggingIn = state.uri.path == '/login';
+      final isSigningUp = state.uri.path == '/signup';
+
+      if (!isAuth) {
+        if (!isLoggingIn && !isSigningUp && !isSplash) {
+          return '/login';
+        }
+      } else {
+        if (isLoggingIn || isSigningUp || isSplash) {
+          return '/dashboard';
+        }
+      }
+      return null;
+    },
     routes: [
       GoRoute(path: '/', builder: (context, state) => const SplashScreen()),
       GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
@@ -38,7 +58,6 @@ class AppRoutes {
       ),
 
       ShellRoute(
-        navigatorKey: _shellNavigatorKey,
         builder: (context, state, child) => ShellScaffold(child: child),
         routes: [
           GoRoute(
@@ -97,4 +116,4 @@ class AppRoutes {
       ),
     ],
   );
-}
+});
