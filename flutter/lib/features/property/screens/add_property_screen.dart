@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:afalagi/core/theme/theme.dart';
 import 'package:afalagi/core/widgets/button.dart';
 import 'package:afalagi/core/widgets/input.dart';
@@ -5,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:afalagi/features/property/domain/entities/property_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 import '../providers/property_provider.dart';
 
 class AddPropertyScreen extends ConsumerStatefulWidget {
@@ -30,6 +32,7 @@ class _AddPropertyScreenState extends ConsumerState<AddPropertyScreen> {
   final List<String> _selectedTags = [];
   bool _isAvailable = true;
   bool _isLoading = false;
+  String? _pickedBase64Image;
 
   @override
   void initState() {
@@ -96,7 +99,7 @@ class _AddPropertyScreenState extends ConsumerState<AddPropertyScreen> {
       beds: int.tryParse(_bedroomsController.text) ?? 0,
       baths: int.tryParse(_bathroomsController.text) ?? 0,
       sqft: int.tryParse(_sqmController.text) ?? 0,
-      imageUrl: widget.property?.imageUrl ?? 'assets/images/generic_property.png',
+      imageUrl: _pickedBase64Image ?? widget.property?.imageUrl ?? 'assets/images/generic_property.png',
       isAvailable: _isAvailable,
       tags: List.from(_selectedTags),
     );
@@ -161,47 +164,48 @@ class _AddPropertyScreenState extends ConsumerState<AddPropertyScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      height: 200,
-                      width: double.infinity,
-                      margin: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[200],
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: Colors.grey[300]!, width: 1),
-                        image: widget.property != null
-                            ? DecorationImage(
-                                image: widget.property!.imageUrl.startsWith('http')
-                                    ? NetworkImage(widget.property!.imageUrl)
-                                    : AssetImage(widget.property!.imageUrl) as ImageProvider,
-                                fit: BoxFit.cover,
+                    GestureDetector(
+                      onTap: _showImagePickerOptions,
+                      child: Container(
+                        height: 200,
+                        width: double.infinity,
+                        margin: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: Colors.grey[300]!, width: 1),
+                          image: (widget.property != null || _pickedBase64Image != null)
+                              ? DecorationImage(
+                                  image: _getImageProvider(),
+                                  fit: BoxFit.cover,
+                                )
+                              : null,
+                        ),
+                        child: (widget.property == null && _pickedBase64Image == null)
+                            ? Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.add_a_photo_outlined,
+                                      size: 48, color: Colors.grey[600]),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    "Upload Property Visuals",
+                                    style: TextStyle(color: Colors.grey[600]),
+                                  ),
+                                ],
                               )
-                            : null,
-                      ),
-                      child: widget.property == null
-                          ? Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Icons.add_a_photo_outlined,
-                                    size: 48, color: Colors.grey[600]),
-                                const SizedBox(height: 8),
-                                Text(
-                                  "Upload Property Visuals",
-                                  style: TextStyle(color: Colors.grey[600]),
-                                ),
-                              ],
-                            )
-                          : Align(
-                              alignment: Alignment.bottomRight,
-                              child: Padding(
-                                padding: const EdgeInsets.all(12),
-                                child: CircleAvatar(
-                                  backgroundColor: Colors.white,
-                                  radius: 20,
-                                  child: Icon(Icons.camera_alt_outlined, color: AppTheme.primaryColor),
+                            : Align(
+                                alignment: Alignment.bottomRight,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(12),
+                                  child: CircleAvatar(
+                                    backgroundColor: Colors.white,
+                                    radius: 20,
+                                    child: Icon(Icons.camera_alt_outlined, color: AppTheme.primaryColor),
+                                  ),
                                 ),
                               ),
-                            ),
+                      ),
                     ),
 
                     Padding(
@@ -361,6 +365,90 @@ class _AddPropertyScreenState extends ConsumerState<AddPropertyScreen> {
           fontWeight: FontWeight.bold,
           color: Colors.grey[600],
           letterSpacing: 1.2,
+        ),
+      ),
+    );
+  }
+
+  ImageProvider _getImageProvider() {
+    if (_pickedBase64Image != null) {
+      final base64Str = _pickedBase64Image!.contains(',')
+          ? _pickedBase64Image!.split(',').last
+          : _pickedBase64Image!;
+      return MemoryImage(base64Decode(base64Str));
+    }
+    
+    if (widget.property != null) {
+      final imgUrl = widget.property!.imageUrl;
+      if (imgUrl.startsWith('data:image') || (!imgUrl.startsWith('http') && imgUrl.length > 100)) {
+        final base64Str = imgUrl.contains(',') ? imgUrl.split(',').last : imgUrl;
+        try {
+          return MemoryImage(base64Decode(base64Str));
+        } catch (_) {}
+      }
+      
+      if (imgUrl.startsWith('http') || imgUrl.startsWith('https')) {
+        return NetworkImage(imgUrl);
+      }
+      
+      return AssetImage(imgUrl);
+    }
+    
+    return const AssetImage('assets/images/generic_property.png');
+  }
+
+  Future<void> _pickImage(ImageSource source) async {
+    final picker = ImagePicker();
+    try {
+      final XFile? image = await picker.pickImage(
+        source: source,
+        imageQuality: 50,
+        maxWidth: 800,
+      );
+      if (image != null) {
+        final bytes = await image.readAsBytes();
+        final base64String = base64Encode(bytes);
+        final mimeType = image.name.endsWith('png') ? 'image/png' : 'image/jpeg';
+        setState(() {
+          _pickedBase64Image = 'data:$mimeType;base64,$base64String';
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to pick image: $e')),
+        );
+      }
+    }
+  }
+
+  void _showImagePickerOptions() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => SafeArea(
+        child: Wrap(
+          children: [
+            ListTile(
+              leading: Icon(Icons.photo_library_outlined, color: AppTheme.primaryColor),
+              title: const Text('Choose from Gallery'),
+              onTap: () {
+                Navigator.of(context).pop();
+                _pickImage(ImageSource.gallery);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.camera_alt_outlined, color: AppTheme.primaryColor),
+              title: const Text('Take a Photo'),
+              onTap: () {
+                Navigator.of(context).pop();
+                _pickImage(ImageSource.camera);
+              },
+            ),
+          ],
         ),
       ),
     );
