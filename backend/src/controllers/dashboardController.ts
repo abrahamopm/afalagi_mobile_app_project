@@ -16,16 +16,12 @@ export const getDashboardStats = async (req: AuthRequest, res: Response, next: N
     const clientCount = await Client.countDocuments({ user: userId });
     const viewingCount = await Viewing.countDocuments({ user: userId });
 
-    // Calculate "today's viewings" (simple mock or filtering for today)
+    // Count viewings scheduled for today (matches the viewing date field, not createdAt)
     const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const tomorrow = new Date(today);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-
-    // Let's check viewings created or scheduled for today
+    const todayStr = today.toISOString().split('T')[0];
     const todayViewingCount = await Viewing.countDocuments({
       user: userId,
-      createdAt: { $gte: today, $lt: tomorrow },
+      date: { $regex: `^${todayStr}` },
     });
 
     // Generate recent activity list dynamically by combining recent items
@@ -79,7 +75,7 @@ export const getDashboardStats = async (req: AuthRequest, res: Response, next: N
         propertyCount,
         clientCount,
         viewingCount,
-        todayViewingCount: todayViewingCount || Math.min(viewingCount, 2), // Fallback to 1-2 for aesthetics if new db is clean
+        todayViewingCount,
         recentActivity: finalActivityFeed,
       },
     });

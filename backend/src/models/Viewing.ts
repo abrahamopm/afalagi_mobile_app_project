@@ -7,6 +7,7 @@ export interface IViewing extends Document {
   date: string;
   status: string;
   notes?: string;
+  interestScore: number;
   createdAt: Date;
 }
 
@@ -37,6 +38,12 @@ const ViewingSchema: Schema = new Schema({
   notes: {
     type: String,
     default: '',
+  },
+  interestScore: {
+    type: Number,
+    min: 0,
+    max: 5,
+    default: 0,
   },
   createdAt: {
     type: Date,

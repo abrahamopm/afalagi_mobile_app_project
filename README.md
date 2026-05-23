@@ -19,21 +19,29 @@ Add, view, update, and delete properties with details like location, price, room
 Log viewings, record client feedback, assign Interest Scores (1–5 stars), and track interactions between clients and properties.
 
 ### CRUD 3. Categories / Tags Management
-Users (agents) can create, edit, delete, and manage custom categories or tags (e.g., "Villa", "Apartment", "Bole", "Luxury", "Under Construction", "Rental", etc.). These categories/tags can be assigned to Properties, Clients, or Viewings for better organization and filtering.
+Users (agents) can create, edit, delete, and manage custom categories or tags (e.g., "Villa", "Apartment", "Bole", "Luxury", "Under Construction", "Rental", etc.). These categories/tags can be assigned to Properties and Clients for organization and filtering. Property list screens support tag-based filters.
 
 * Create new category/tag
-* Assign categories to items (properties, viewings, etc.)
+* Assign categories to items (properties, clients)
 * Edit existing categories
-* Delete categories (with proper handling of references)
+* Delete categories (with proper handling of references on properties)
 
 ## Design Approach
 
 The project follows modern architectural patterns to ensure scalability, maintainability, and a premium user experience.
 
-Afalagi implements a robust security layer to protect sensitive lead and property data:
-- **Identity Management**: A dedicated authentication system handling user registration, secure login, and session persistence.
-- **Authorization**: Role-based access control ensuring agents can only access and modify their own property portfolios and client interaction history.
-- **Data Privacy**: Built-in features for permanent account deletion and sensitive data scrubbing, adhering to modern privacy standards.
+### Authentication & data isolation
+- **Identity Management**: Registration, secure login (JWT), and session persistence via `/auth/me`.
+- **Per-agent data isolation**: API queries scope all properties, clients, viewings, and tags to the authenticated user. Agents cannot access another agent's portfolio.
+- **Offline reads**: The mobile app caches portfolio data locally and serves it when offline. **Writes require a network connection** (create/update/delete are not queued offline).
+- **Data Privacy**: Account deletion (`DELETE /auth/me`) permanently removes the user and cascades deletion of their properties, clients, viewings, and tags.
+
+> **Note:** The backend stores a `role` field on users (`user` | `admin`) for future use, but the current API does not enforce role-based permissions beyond per-user ownership.
+
+## Running locally
+
+1. Start MongoDB and the API from `/backend` (default `http://localhost:5000`).
+2. Run the Flutter app from `/flutter`. The default API base URL targets the Android emulator host (`http://10.0.2.2:5000/api/v1`). Adjust `flutter/lib/core/constants/constants.dart` for physical devices or iOS simulators.
 
 ## Team Members
 
