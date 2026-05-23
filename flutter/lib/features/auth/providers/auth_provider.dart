@@ -11,10 +11,12 @@ import '../domain/usecases/logout_usecase.dart';
 import '../domain/usecases/signup_usecase.dart';
 import '../domain/usecases/update_profile.dart';
 
+import '../../../../core/database/database_helper.dart';
+
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
   final dio = ref.watch(dioProvider);
   final secureStorage = ref.watch(secureStorageProvider);
-  return AuthRepositoryImpl(dio, secureStorage);
+  return AuthRepositoryImpl(dio, secureStorage, DatabaseHelper.instance);
 });
 
 final getMeUseCaseProvider = Provider<GetCurrentUser>((ref) {

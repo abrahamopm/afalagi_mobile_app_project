@@ -5,6 +5,7 @@ import {
   getMe,
   updateProfile,
   deleteAccount,
+  logoutUser,
 } from '../controllers/authController';
 import { protect } from '../middleware/authMiddleware';
 
@@ -12,6 +13,7 @@ const router = express.Router();
 
 router.post('/register', registerUser);
 router.post('/login', loginUser);
+router.post('/logout', protect as any, logoutUser as any);
 
 router.route('/me')
   .get(protect as any, getMe as any)

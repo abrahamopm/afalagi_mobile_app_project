@@ -2,14 +2,16 @@ import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../../../../core/constants/constants.dart';
 import '../../../../core/errors/exceptions.dart';
+import '../../../../core/database/database_helper.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../models/user_model.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final Dio _dio;
   final FlutterSecureStorage _secureStorage;
+  final DatabaseHelper _dbHelper;
 
-  AuthRepositoryImpl(this._dio, this._secureStorage);
+  AuthRepositoryImpl(this._dio, this._secureStorage, this._dbHelper);
 
   @override
   Future<UserModel> login(String email, String password) async {
@@ -126,7 +128,16 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<void> logout() async {
+    // 1. First attempt to call backend logout endpoint, ignoring errors if backend is unreachable
+    try {
+      await _dio.post('${AppConstants.baseUrl}/auth/logout');
+    } catch (e) {
+      // Ignore network errors on logout, we still want to clean up local state
+    }
+    // 2. Clear token
     await _secureStorage.delete(key: 'jwt_token');
+    // 3. Clear SQLite tables to ensure strict Cache-First strategy doesn't leak data
+    await _dbHelper.clearAllTables();
   }
 
   @override

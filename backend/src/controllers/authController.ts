@@ -174,3 +174,19 @@ export const deleteAccount = async (req: AuthRequest, res: Response, next: NextF
     next(err);
   }
 };
+
+// @desc    Logout user / clear session
+// @route   POST /api/v1/auth/logout
+// @access  Private
+export const logoutUser = async (req: AuthRequest, res: Response, next: NextFunction) => {
+  try {
+    // In a stateless JWT setup, logout is primarily handled by the client dropping the token.
+    // Here we just return a success response.
+    res.json({
+      success: true,
+      message: 'Logged out successfully',
+    });
+  } catch (err) {
+    next(err);
+  }
+};

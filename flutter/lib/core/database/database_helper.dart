@@ -93,6 +93,17 @@ class DatabaseHelper {
     ''');
   }
 
+  Future<void> clearAllTables() async {
+    final db = await instance.database;
+    await db.transaction((txn) async {
+      await txn.delete(DatabaseTables.properties);
+      await txn.delete(DatabaseTables.clients);
+      await txn.delete(DatabaseTables.viewings);
+      await txn.delete(DatabaseTables.tags);
+      await txn.delete(DatabaseTables.cacheMetadata);
+    });
+  }
+
   Future<void> close() async {
     final db = _database;
     if (db != null) {

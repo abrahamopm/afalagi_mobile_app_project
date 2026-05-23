@@ -92,7 +92,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 keyboardType: TextInputType.emailAddress,
                 prefixIcon: const Icon(Icons.email_outlined, size: 20),
                 validator: Validators.validateEmail,
-                enabled: !isLoading,
               ),
               const SizedBox(height: 24),
               CustomTextField(
@@ -107,7 +106,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
                 onSuffixIconTap: _togglePasswordVisibility,
                 validator: Validators.validatePassword,
-                enabled: !isLoading,
               ),
               const SizedBox(height: 10),
               Row(

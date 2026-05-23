@@ -97,7 +97,6 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                 controller: _fullNameController,
                 prefixIcon: const Icon(Icons.person_outline, size: 20),
                 validator: Validators.validateFullName,
-                enabled: !isLoading,
               ),
               const SizedBox(height: 24),
               CustomTextField(
@@ -107,7 +106,6 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                 keyboardType: TextInputType.emailAddress,
                 prefixIcon: const Icon(Icons.email_outlined, size: 20),
                 validator: Validators.validateEmail,
-                enabled: !isLoading,
               ),
               const SizedBox(height: 24),
               CustomTextField(
@@ -122,7 +120,6 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                 ),
                 onSuffixIconTap: _togglePasswordVisibility,
                 validator: Validators.validatePassword,
-                enabled: !isLoading,
               ),
               const SizedBox(height: 10),
               Row(
