@@ -22,7 +22,7 @@ async function main() {
   }
 
   try {
-    await mongoose.connect(mongoUri, { serverSelectionTimeoutMS: 8000 });
+    await mongoose.connect(mongoUri, { connectTimeoutMS: 8000, serverSelectionTimeoutMS: 8000 } as any);
     console.log('[seed] Connected to MongoDB');
 
     const result = await ensureAdminUser({ forceUpdate: true });

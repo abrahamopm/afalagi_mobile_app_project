@@ -9,7 +9,7 @@ import tagRoutes from './routes/tagRoutes';
 import dashboardRoutes from './routes/dashboardRoutes';
 import adminRoutes from './routes/adminRoutes';
 import errorHandler from './middleware/errorMiddleware';
-
+// Config
 const app = express();
 
 app.use(cors());
