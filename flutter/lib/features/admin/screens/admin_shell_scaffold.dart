@@ -1,42 +1,70 @@
+import 'package:afalagi/core/theme/theme.dart';
+import 'package:afalagi/core/widgets/image.dart';
+import 'package:afalagi/core/widgets/offline_banner.dart';
+import 'package:afalagi/core/widgets/scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:afalagi/core/widgets/scaffold.dart';
-import 'package:afalagi/core/widgets/offline_banner.dart';
 
 class AdminShellScaffold extends StatelessWidget {
   final Widget child;
   const AdminShellScaffold({super.key, required this.child});
 
   int _getCurrentIndex(BuildContext context) {
-    final String location = GoRouterState.of(context).uri.toString();
+    final location = GoRouterState.of(context).uri.toString();
     if (location.startsWith('/admin/dashboard')) return 0;
     if (location.startsWith('/admin/users')) return 1;
     if (location.startsWith('/admin/properties')) return 2;
-    if (location.startsWith('/admin/profile')) return 3;
+    if (location.startsWith('/admin/profile') ||
+        location.startsWith('/admin/personal-info') ||
+        location.startsWith('/admin/delete-account') ||
+        location.startsWith('/admin/tag-management')) {
+      return 3;
+    }
     return 0;
+  }
+
+  String _titleForLocation(String location) {
+    if (location.startsWith('/admin/users')) return 'Users';
+    if (location.startsWith('/admin/properties')) return 'Properties';
+    if (location.startsWith('/admin/profile')) return 'Profile';
+    if (location.startsWith('/admin/personal-info')) return 'Personal Info';
+    if (location.startsWith('/admin/delete-account')) return 'Delete Account';
+    if (location.startsWith('/admin/tag-management')) return 'Tag Management';
+    return 'Dashboard';
   }
 
   void _onItemTapped(int index, BuildContext context) {
     switch (index) {
       case 0:
         context.go('/admin/dashboard');
-        break;
       case 1:
         context.go('/admin/users');
-        break;
       case 2:
         context.go('/admin/properties');
-        break;
       case 3:
         context.go('/admin/profile');
-        break;
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final location = GoRouterState.of(context).uri.toString();
+    final title = _titleForLocation(location);
+    final isDashboard = location.startsWith('/admin/dashboard');
+
     return Scaffold(
-      appBar: CustomScaffold.appBar(context, title: const Text('Admin Panel')),
+      appBar: CustomScaffold.appBar(
+        context,
+        title: isDashboard
+            ? InkWell(
+                onTap: () => context.go('/admin/dashboard'),
+                child: CustomImages.appLogo(height: 36),
+              )
+            : Text(
+                title,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+      ),
       body: Column(
         children: [
           const OfflineBanner(),
@@ -47,6 +75,9 @@ class AdminShellScaffold extends StatelessWidget {
         currentIndex: _getCurrentIndex(context),
         onTap: (index) => _onItemTapped(index, context),
         type: BottomNavigationBarType.fixed,
+        selectedItemColor: AppTheme.primaryColor,
+        unselectedItemColor: AppTheme.primaryColor.withValues(alpha: 0.5),
+        showUnselectedLabels: true,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.dashboard_outlined),

@@ -13,6 +13,7 @@ export interface IUser extends Document {
   bio?: string;
   rating?: number;
   isVerified?: boolean;
+  isActive?: boolean;
   managedUnits?: number;
   closingsCount?: number;
   createdAt: Date;
@@ -69,6 +70,10 @@ const UserSchema: Schema = new Schema({
     default: 4.9
   },
   isVerified: {
+    type: Boolean,
+    default: true
+  },
+  isActive: {
     type: Boolean,
     default: true
   },

@@ -43,6 +43,25 @@ The project follows modern architectural patterns to ensure scalability, maintai
 1. Start MongoDB and the API from `/backend` (default `http://localhost:5000`).
 2. Run the Flutter app from `/flutter`. The default API base URL targets the Android emulator host (`http://10.0.2.2:5000/api/v1`). Adjust `flutter/lib/core/constants/constants.dart` for physical devices or iOS simulators.
 
+### Admin login (local development)
+
+1. With MongoDB running, seed an admin user from `/backend`:
+
+   ```bash
+   node scripts/seedAdmin.js
+   ```
+
+2. Sign in on the mobile app with:
+
+   | Field | Value |
+   | :--- | :--- |
+   | Email | `admin@afalagi.com` |
+   | Password | `Admin123!` |
+
+3. After login you are routed to the **Admin Panel** (dashboard, users, properties, profile). Agent accounts use the standard agent shell at `/dashboard`.
+
+To use different credentials, set `ADMIN_EMAIL`, `ADMIN_PASSWORD`, and optionally `ADMIN_NAME` before running the seed script.
+
 ## Team Members
 
 | Full Name | ID |

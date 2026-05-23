@@ -13,6 +13,7 @@ class UserModel extends UserEntity {
     super.bio,
     super.rating,
     super.isVerified,
+    super.isActive,
     super.managedUnits,
     super.closingsCount,
   });
@@ -30,6 +31,7 @@ class UserModel extends UserEntity {
       bio: json['bio'] ?? '',
       rating: (json['rating'] as num?)?.toDouble() ?? 4.9,
       isVerified: json['isVerified'] ?? true,
+      isActive: json['isActive'] ?? true,
       managedUnits: json['managedUnits'] as int? ?? 24,
       closingsCount: json['closingsCount'] as int? ?? 128,
     );
@@ -48,6 +50,7 @@ class UserModel extends UserEntity {
       'bio': bio,
       'rating': rating,
       'isVerified': isVerified,
+      'isActive': isActive,
       'managedUnits': managedUnits,
       'closingsCount': closingsCount,
     };
@@ -66,6 +69,7 @@ class UserModel extends UserEntity {
       bio: entity.bio,
       rating: entity.rating,
       isVerified: entity.isVerified,
+      isActive: entity.isActive,
       managedUnits: entity.managedUnits,
       closingsCount: entity.closingsCount,
     );

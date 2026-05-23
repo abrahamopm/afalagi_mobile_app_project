@@ -10,6 +10,7 @@ class UserEntity {
   final String bio;
   final double rating;
   final bool isVerified;
+  final bool isActive;
   final int managedUnits;
   final int closingsCount;
 
@@ -25,6 +26,7 @@ class UserEntity {
     this.bio = '',
     this.rating = 4.9,
     this.isVerified = true,
+    this.isActive = true,
     this.managedUnits = 24,
     this.closingsCount = 128,
   });
@@ -41,6 +43,7 @@ class UserEntity {
     String? bio,
     double? rating,
     bool? isVerified,
+    bool? isActive,
     int? managedUnits,
     int? closingsCount,
   }) {
@@ -56,6 +59,7 @@ class UserEntity {
       bio: bio ?? this.bio,
       rating: rating ?? this.rating,
       isVerified: isVerified ?? this.isVerified,
+      isActive: isActive ?? this.isActive,
       managedUnits: managedUnits ?? this.managedUnits,
       closingsCount: closingsCount ?? this.closingsCount,
     );
@@ -77,6 +81,7 @@ class UserEntity {
           bio == other.bio &&
           rating == other.rating &&
           isVerified == other.isVerified &&
+          isActive == other.isActive &&
           managedUnits == other.managedUnits &&
           closingsCount == other.closingsCount;
 
@@ -93,6 +98,7 @@ class UserEntity {
       bio.hashCode ^
       rating.hashCode ^
       isVerified.hashCode ^
+      isActive.hashCode ^
       managedUnits.hashCode ^
       closingsCount.hashCode;
 }

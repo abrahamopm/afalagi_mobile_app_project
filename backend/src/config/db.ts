@@ -1,4 +1,28 @@
 import mongoose from 'mongoose';
+import User from '../models/User';
+
+const seedAdmin = async () => {
+  const email = process.env.ADMIN_EMAIL || 'admin@afalagi.com';
+  const password = process.env.ADMIN_PASSWORD || 'Admin123!';
+  const name = process.env.ADMIN_NAME || 'Afalagi Admin';
+
+  try {
+    const adminExists = await User.findOne({ email });
+    if (!adminExists) {
+      await User.create({
+        name,
+        email,
+        password,
+        role: 'admin',
+        isVerified: true,
+        isActive: true,
+      });
+      console.log(`✅ Default admin created: ${email}`);
+    }
+  } catch (error) {
+    console.error('Error seeding admin:', error);
+  }
+};
 
 const connectDB = async () => {
   try {
@@ -17,6 +41,11 @@ const connectDB = async () => {
     }
     const conn = await mongoose.connect(mongoUri!);
     console.log(`MongoDB Connected: ${conn.connection.host}`);
+
+    // Seed admin for development
+    if (process.env.NODE_ENV === 'development') {
+      await seedAdmin();
+    }
   } catch (err: any) {
     console.error(`Error: ${err.message}`);
     process.exit(1);

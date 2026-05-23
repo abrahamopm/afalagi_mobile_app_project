@@ -46,9 +46,10 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   void _navigate() {
     Timer(const Duration(seconds: 3), () {
       if (mounted && GoRouterState.of(context).uri.path == '/') {
-        final isAuth = ref.read(isAuthenticatedProvider);
-        if (isAuth) {
-          context.go('/dashboard');
+        final authState = ref.read(authStateProvider);
+        if (authState.value != null) {
+          final role = authState.value!.role;
+          context.go(role == 'admin' ? '/admin/dashboard' : '/dashboard');
         } else {
           context.go('/login');
         }

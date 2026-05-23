@@ -28,4 +28,8 @@ class AppConstants {
   static const String viewings = '/viewings';
   static const String tags = '/tags';
   static const String dashboardStats = '/dashboard/stats';
+
+  static const String adminStats = '/admin/stats';
+  static const String adminUsers = '/admin/users';
+  static const String adminProperties = '/admin/properties';
 }

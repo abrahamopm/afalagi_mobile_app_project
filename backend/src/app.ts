@@ -7,6 +7,7 @@ import clientRoutes from './routes/clientRoutes';
 import viewingRoutes from './routes/viewingRoutes';
 import tagRoutes from './routes/tagRoutes';
 import dashboardRoutes from './routes/dashboardRoutes';
+import adminRoutes from './routes/adminRoutes';
 import errorHandler from './middleware/errorMiddleware';
 
 const app = express();
@@ -23,6 +24,7 @@ app.use('/api/v1/clients', clientRoutes);
 app.use('/api/v1/viewings', viewingRoutes);
 app.use('/api/v1/tags', tagRoutes);
 app.use('/api/v1/dashboard', dashboardRoutes);
+app.use('/api/v1/admin', adminRoutes);
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Afalagi Backend is running!');

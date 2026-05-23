@@ -21,6 +21,7 @@ import 'features/admin/screens/admin_shell_scaffold.dart';
 import 'features/admin/screens/admin_dashboard_screen.dart';
 import 'features/admin/screens/admin_users_screen.dart';
 import 'features/admin/screens/admin_properties_screen.dart';
+import 'features/admin/screens/admin_profile_screen.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:afalagi/features/auth/providers/auth_provider.dart';
@@ -158,7 +159,19 @@ final routerProvider = Provider<GoRouter>((ref) {
           ),
           GoRoute(
             path: '/admin/profile',
-            builder: (context, state) => const ProfileScreen(),
+            builder: (context, state) => const AdminProfileScreen(),
+          ),
+          GoRoute(
+            path: '/admin/personal-info',
+            builder: (context, state) => const PersonalInfoScreen(),
+          ),
+          GoRoute(
+            path: '/admin/delete-account',
+            builder: (context, state) => const DeleteAccountScreen(),
+          ),
+          GoRoute(
+            path: '/admin/tag-management',
+            builder: (context, state) => const TagManagementScreen(),
           ),
         ],
       ),

@@ -1,107 +1,231 @@
-import 'package:flutter/material.dart';
 import 'package:afalagi/core/theme/theme.dart';
+import 'package:afalagi/core/widgets/button.dart';
+import 'package:afalagi/core/widgets/stat_card.dart';
+import 'package:afalagi/features/admin/domain/entities/admin_stats.dart';
+import 'package:afalagi/features/admin/providers/admin_provider.dart';
+import 'package:afalagi/features/admin/widgets/admin_activity_tile.dart';
+import 'package:afalagi/features/admin/widgets/admin_section_header.dart';
+import 'package:afalagi/features/auth/providers/auth_provider.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
-class AdminDashboardScreen extends StatelessWidget {
+class AdminDashboardScreen extends ConsumerWidget {
   const AdminDashboardScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'System Overview',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.primary,
+  Widget build(BuildContext context, WidgetRef ref) {
+    final statsAsync = ref.watch(adminStatsProvider);
+    final adminName = ref.watch(authStateProvider).value?.name ?? 'Admin';
+
+    return RefreshIndicator(
+      onRefresh: () => ref.read(adminStatsProvider.notifier).refresh(),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final isWide = constraints.maxWidth > 600;
+          return SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildWelcomeHeader(adminName),
+                const SizedBox(height: 24),
+                statsAsync.when(
+                  data: (stats) => _buildStatsSection(context, stats, isWide),
+                  loading: () => const Center(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 48),
+                      child: CircularProgressIndicator(),
+                    ),
                   ),
+                  error: (error, _) => _buildErrorState(context, ref, error.toString()),
+                ),
+                const SizedBox(height: 32),
+                const AdminSectionHeader(title: 'QUICK ACTIONS'),
+                const SizedBox(height: 16),
+                _buildQuickActions(context, statsAsync.asData?.value),
+                const SizedBox(height: 32),
+                AdminSectionHeader(
+                  title: 'Recent Activity',
+                  actionLabel: 'View Users',
+                  onActionTap: () => context.go('/admin/users'),
+                ),
+                const SizedBox(height: 16),
+                statsAsync.when(
+                  data: (stats) => _buildActivityList(context, stats.recentActivity),
+                  loading: () => const SizedBox.shrink(),
+                  error: (_, _) => const SizedBox.shrink(),
+                ),
+                const SizedBox(height: 24),
+              ],
             ),
-            const SizedBox(height: 24),
-            _buildStatCard(
-              context,
-              'Total Users',
-              '1,284',
-              Icons.people_alt_rounded,
-              Colors.blue,
-            ),
-            const SizedBox(height: 16),
-            _buildStatCard(
-              context,
-              'Active Properties',
-              '452',
-              Icons.apartment_rounded,
-              Colors.green,
-            ),
-            const SizedBox(height: 16),
-            _buildStatCard(
-              context,
-              'Total Viewings',
-              '3,120',
-              Icons.calendar_today_rounded,
-              Colors.orange,
-            ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
 
-  Widget _buildStatCard(
-    BuildContext context,
-    String title,
-    String value,
-    IconData icon,
-    Color color,
-  ) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppColors.border.withOpacity(0.5)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+  Widget _buildWelcomeHeader(String name) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Hello, $name',
+          style: TextStyle(
+            fontSize: 28,
+            fontWeight: FontWeight.bold,
+            color: AppTheme.primaryColor,
+            letterSpacing: -0.5,
           ),
-        ],
+        ),
+        const SizedBox(height: 4),
+        Text(
+          'Platform overview across all agents in Addis Ababa.',
+          style: TextStyle(fontSize: 14, color: Colors.grey[600], height: 1.4),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildStatsSection(BuildContext context, AdminStats stats, bool isWide) {
+    final cards = [
+      GestureDetector(
+        onTap: () => context.go('/admin/users'),
+        child: StatCard(
+          title: 'Total Users',
+          value: stats.userCount.toString(),
+          icon: Icons.people_alt_rounded,
+          iconBgColor: AppColors.primary.withValues(alpha: 0.1),
+          iconColor: AppColors.primary,
+          badgeText: stats.pendingUsers > 0 ? '${stats.pendingUsers} PENDING' : null,
+          badgeBgColor: AppColors.warning.withValues(alpha: 0.12),
+          badgeTextColor: AppColors.warning,
+        ),
       ),
-      child: Row(
+      GestureDetector(
+        onTap: () => context.go('/admin/properties'),
+        child: StatCard(
+          title: 'Active Properties',
+          value: stats.propertyCount.toString(),
+          icon: Icons.apartment_rounded,
+          iconBgColor: AppColors.success.withValues(alpha: 0.1),
+          iconColor: AppColors.success,
+          badgeText: stats.hiddenProperties > 0 ? '${stats.hiddenProperties} HIDDEN' : 'LIVE',
+        ),
+      ),
+      StatCard(
+        title: 'Total Viewings',
+        value: stats.viewingCount.toString(),
+        icon: Icons.calendar_today_rounded,
+        iconBgColor: AppColors.accent.withValues(alpha: 0.1),
+        iconColor: AppColors.accent,
+        badgeText: 'PLATFORM',
+      ),
+    ];
+
+    if (!isWide) {
+      return Column(
         children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
-              shape: BoxShape.circle,
+          for (var i = 0; i < cards.length; i++) ...[
+            if (i > 0) const SizedBox(height: 16),
+            cards[i],
+          ],
+        ],
+      );
+    }
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        for (var i = 0; i < cards.length; i++)
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.only(right: i < cards.length - 1 ? 12 : 0),
+              child: cards[i],
             ),
-            child: Icon(icon, color: color, size: 28),
           ),
-          const SizedBox(width: 20),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: const TextStyle(
-                  color: AppColors.textGray,
-                  fontSize: 14,
-                ),
-              ),
-              Text(
-                value,
-                style: const TextStyle(
-                  color: AppColors.textHeading,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
+      ],
+    );
+  }
+
+  Widget _buildQuickActions(BuildContext context, AdminStats? stats) {
+    return Column(
+      children: [
+        CustomButton(
+          text: 'Review Pending Users',
+          icon: Icons.verified_user_outlined,
+          onPressed: () => context.go('/admin/users'),
+        ),
+        const SizedBox(height: 12),
+        CustomButton(
+          text: 'Moderate Properties',
+          icon: Icons.home_work_outlined,
+          color: Colors.white,
+          textColor: AppTheme.primaryColor,
+          iconColor: AppTheme.primaryColor,
+          onPressed: () => context.go('/admin/properties'),
+        ),
+        if (stats != null && stats.hiddenProperties > 0) ...[
+          const SizedBox(height: 12),
+          CustomButton(
+            text: '${stats.hiddenProperties} Hidden Listings',
+            icon: Icons.visibility_off_outlined,
+            color: AppColors.warning.withValues(alpha: 0.08),
+            textColor: AppColors.warning,
+            iconColor: AppColors.warning,
+            onPressed: () => context.go('/admin/properties'),
           ),
         ],
+      ],
+    );
+  }
+
+  Widget _buildActivityList(BuildContext context, List<AdminActivity> activities) {
+    if (activities.isEmpty) {
+      return Container(
+        height: 100,
+        alignment: Alignment.center,
+        child: const Text(
+          'No recent platform activity.',
+          style: TextStyle(color: Colors.grey, fontSize: 14),
+        ),
+      );
+    }
+
+    return Column(
+      children: activities.map((activity) {
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 12),
+          child: AdminActivityTile(
+            activity: activity,
+            onTap: () {
+              if (activity.type == 'user') {
+                context.go('/admin/users');
+              } else if (activity.type == 'property') {
+                context.go('/admin/properties');
+              }
+            },
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildErrorState(BuildContext context, WidgetRef ref, String message) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 32),
+        child: Column(
+          children: [
+            Text(message, textAlign: TextAlign.center, style: const TextStyle(color: Colors.red)),
+            const SizedBox(height: 12),
+            TextButton(
+              onPressed: () => ref.read(adminStatsProvider.notifier).refresh(),
+              child: const Text('Retry'),
+            ),
+          ],
+        ),
       ),
     );
   }
