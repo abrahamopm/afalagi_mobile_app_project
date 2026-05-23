@@ -44,6 +44,7 @@ dependencies:
   path: ^1.9.1
   dio: ^5.9.2
   flutter_secure_storage: ^10.2.0
+  sqflite_common_ffi: ^2.3.7+1
 
 dev_dependencies:
   flutter_test:
