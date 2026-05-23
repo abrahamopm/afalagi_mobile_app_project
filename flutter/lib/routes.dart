@@ -20,15 +20,28 @@ import 'features/tags/screens/tag_management_screen.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:afalagi/features/auth/providers/auth_provider.dart';
+import 'package:flutter/material.dart';
 
 import 'core/widgets/shell_scaffold.dart';
 
+class RouterNotifier extends ChangeNotifier {
+  final Ref _ref;
+  RouterNotifier(this._ref) {
+    _ref.listen(authStateProvider, (_, _) => notifyListeners());
+  }
+}
+
+final routerNotifierProvider = Provider((ref) => RouterNotifier(ref));
+
 final routerProvider = Provider<GoRouter>((ref) {
-  final authState = ref.watch(authStateProvider);
-  
+  final notifier = ref.read(routerNotifierProvider);
+
   return GoRouter(
     initialLocation: '/',
+    refreshListenable: notifier,
     redirect: (context, state) {
+      final authState = ref.read(authStateProvider);
+      
       // If authState is still loading or hasn't finished initial build, don't redirect yet
       if (authState.isLoading) return null;
 

@@ -15,26 +15,36 @@ abstract class CachedRepository<Entity, Model extends Entity> {
   });
 
   Future<List<Entity>> getAll() async {
+    if (await networkInfo.isConnected) {
+      try {
+        final items = await remote.getAll();
+        await local.cacheAll(items);
+        return items;
+      } catch (_) {
+        final cached = await local.getCached();
+        if (cached.isNotEmpty) return cached;
+        rethrow;
+      }
+    }
     final cached = await local.getCached();
     if (cached.isNotEmpty) return cached;
-
-    if (await networkInfo.isConnected) {
-      final items = await remote.getAll();
-      await local.cacheAll(items);
-      return items;
-    }
     throw const ServerException(message: 'No internet connection and no cached data.');
   }
 
   Future<Entity> getById(String id) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final item = await remote.getById(id);
+        await local.cacheOne(item);
+        return item;
+      } catch (_) {
+        final cached = await local.getCachedById(id);
+        if (cached != null) return cached;
+        rethrow;
+      }
+    }
     final cached = await local.getCachedById(id);
     if (cached != null) return cached;
-
-    if (await networkInfo.isConnected) {
-      final item = await remote.getById(id);
-      await local.cacheOne(item);
-      return item;
-    }
     throw const ServerException(message: 'No internet connection and no cached data.');
   }
 

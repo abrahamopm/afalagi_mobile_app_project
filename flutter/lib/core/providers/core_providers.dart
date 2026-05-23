@@ -7,6 +7,8 @@ import '../network/auth_interceptor.dart';
 import '../network/dio_client.dart';
 import '../network/network_info.dart';
 
+import 'package:flutter/foundation.dart';
+import '../constants/constants.dart';
 import '../util/safe_secure_storage.dart';
 
 final secureStorageProvider = Provider<FlutterSecureStorage>((ref) {
@@ -18,7 +20,24 @@ final secureStorageProvider = Provider<FlutterSecureStorage>((ref) {
 final dioProvider = Provider<Dio>((ref) {
   final dio = Dio();
   final secureStorage = ref.watch(secureStorageProvider);
+  
+  dio.options.baseUrl = AppConstants.baseUrl;
+  dio.options.connectTimeout = const Duration(seconds: 30);
+  dio.options.receiveTimeout = const Duration(seconds: 30);
+  dio.options.responseType = ResponseType.json;
+  
   dio.interceptors.add(AuthInterceptor(secureStorage));
+  
+  if (kDebugMode) {
+    dio.interceptors.add(LogInterceptor(
+      requestHeader: true,
+      requestBody: true,
+      responseHeader: false,
+      responseBody: true,
+      error: true,
+    ));
+  }
+  
   return dio;
 });
 

@@ -52,6 +52,11 @@ void main() {
     mockRemote = MockPropertyRemoteDS();
     mockLocal = MockPropertyLocalDS();
     mockNetworkInfo = MockNetworkInfo();
+    
+    // Default stubs
+    when(() => mockLocal.getCached()).thenAnswer((_) async => <PropertyModel>[]);
+    when(() => mockLocal.getCachedById(any())).thenAnswer((_) async => null);
+    
     repository = PropertyRepositoryImpl(
       remote: mockRemote,
       local: mockLocal,
