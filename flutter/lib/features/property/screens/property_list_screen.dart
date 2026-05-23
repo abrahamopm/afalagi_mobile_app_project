@@ -107,7 +107,7 @@ class _PropertyListScreenState extends ConsumerState<PropertyListScreen> {
         );
       },
       loading: () => const SizedBox(height: 40, child: Center(child: CircularProgressIndicator())),
-      error: (_, __) => const SizedBox.shrink(),
+      error: (_, _) => const SizedBox.shrink(),
     );
   }
 

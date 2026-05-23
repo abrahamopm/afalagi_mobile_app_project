@@ -1,4 +1,3 @@
-import '../../../../core/network/network_info.dart';
 import '../../../../core/repositories/cached_repository.dart';
 import '../../domain/entities/viewing_entity.dart';
 import '../../domain/repositories/viewing_repository.dart';
