@@ -19,7 +19,12 @@ class AppTheme {
       }),
       fontFamily: 'Figtree',
       useMaterial3: true,
-      appBarTheme: const AppBarTheme(elevation: 0),
+      scaffoldBackgroundColor: Colors.white,
+      appBarTheme: const AppBarTheme(elevation: 0, backgroundColor: Colors.white),
+      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+        backgroundColor: Colors.white,
+        elevation: 0,
+      ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           minimumSize: const Size(double.infinity, 50),
