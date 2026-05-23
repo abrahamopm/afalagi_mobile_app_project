@@ -5,6 +5,9 @@ class AppConstants {
   // Use http://10.0.2.2:5000/api/v1 for Android emulator to reference localhost backend
   // Use http://localhost:5000/api/v1 for desktop/web
   static String get baseUrl {
+    if (kReleaseMode) {
+      return 'https://afalagi-mobile-app-project.onrender.com/api/v1';
+    }
     if (kIsWeb) {
       return 'http://localhost:5000/api/v1';
     }
