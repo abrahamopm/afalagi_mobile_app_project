@@ -12,32 +12,32 @@ import '../constants/Constants.dart';
 import '../util/safe_secure_storage.dart';
 
 final secureStorageProvider = Provider<FlutterSecureStorage>((ref) {
-  return const SafeSecureStorage(
-    aOptions: AndroidOptions(),
-  );
+  return const SafeSecureStorage(aOptions: AndroidOptions());
 });
 
 final dioProvider = Provider<Dio>((ref) {
   final dio = Dio();
   final secureStorage = ref.watch(secureStorageProvider);
-  
+
   dio.options.baseUrl = AppConstants.baseUrl;
   dio.options.connectTimeout = const Duration(seconds: 30);
   dio.options.receiveTimeout = const Duration(seconds: 30);
   dio.options.responseType = ResponseType.json;
-  
+
   dio.interceptors.add(AuthInterceptor(secureStorage));
-  
+
   if (kDebugMode) {
-    dio.interceptors.add(LogInterceptor(
-      requestHeader: true,
-      requestBody: true,
-      responseHeader: false,
-      responseBody: true,
-      error: true,
-    ));
+    dio.interceptors.add(
+      LogInterceptor(
+        requestHeader: true,
+        requestBody: true,
+        responseHeader: false,
+        responseBody: true,
+        error: true,
+      ),
+    );
   }
-  
+
   return dio;
 });
 
@@ -58,7 +58,9 @@ final databaseProvider = Provider<DatabaseHelper>((ref) {
   return DatabaseHelper.instance;
 });
 
-final connectivityStreamProvider = StreamProvider<List<ConnectivityResult>>((ref) {
+final connectivityStreamProvider = StreamProvider<List<ConnectivityResult>>((
+  ref,
+) {
   return ref.watch(connectivityProvider).onConnectivityChanged;
 });
 

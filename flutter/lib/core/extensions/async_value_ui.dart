@@ -9,7 +9,8 @@ extension AsyncValueUI<T> on AsyncValue<T> {
   }) {
     return when(
       data: data,
-      loading: loading ?? () => const Center(child: CircularProgressIndicator()),
+      loading:
+          loading ?? () => const Center(child: CircularProgressIndicator()),
       error: (err, stack) {
         if (onError != null) {
           return onError(err);

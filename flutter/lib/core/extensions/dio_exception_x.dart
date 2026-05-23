@@ -6,7 +6,9 @@ extension DioExceptionX on DioException {
     try {
       if (response != null && response!.data != null) {
         if (response!.data is Map) {
-          return response!.data['error'] ?? response!.data['message'] ?? 'Network error occurred';
+          return response!.data['error'] ??
+              response!.data['message'] ??
+              'Network error occurred';
         }
       }
     } catch (_) {}

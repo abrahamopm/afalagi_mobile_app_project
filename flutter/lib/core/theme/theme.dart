@@ -4,7 +4,9 @@ class AppColors {
   // Primary colors
   static const Color primary = Color(0xFF1E3A5F); // VariableID:38:93
   static const Color accent = Color(0xFFC9A962); // VariableID:67:901
-  static const Color secondary = Color(0xFF2B3234); // VariableID:38:242 (Cancel / Dark Charcoal)
+  static const Color secondary = Color(
+    0xFF2B3234,
+  ); // VariableID:38:242 (Cancel / Dark Charcoal)
   static const Color componentLib = Color(0xFFE6E8EA); // VariableID:38:663
 
   // Background colors
@@ -13,7 +15,9 @@ class AppColors {
   static const Color scaffoldBackground = Colors.white;
 
   // Input & surfaces
-  static const Color inputBackground = Color(0xFFF2F4F6); // Surface Container Low
+  static const Color inputBackground = Color(
+    0xFFF2F4F6,
+  ); // Surface Container Low
   static const Color inputField = Color(0xFFE2E9EC); // Input
   static const Color border = Color(0xFFC4C6CF);
   static const Color horizontalBorder = Color(0x19C4C6CF);
@@ -26,7 +30,9 @@ class AppColors {
   // Text & Labels
   static const Color textDark = Color(0xFF001124); // Form labels
   static const Color textGray = Color(0xFF6B7280); // Placeholders
-  static const Color textHeading = Color(0xFF191C1D); // Confirmation Dialog title
+  static const Color textHeading = Color(
+    0xFF191C1D,
+  ); // Confirmation Dialog title
   static const Color textBody = Color(0xFF3F484C); // Confirmation Dialog body
 }
 
@@ -95,9 +101,7 @@ class AppTheme {
         ),
       ),
       textButtonTheme: TextButtonThemeData(
-        style: TextButton.styleFrom(
-          foregroundColor: colorScheme.primary,
-        ),
+        style: TextButton.styleFrom(foregroundColor: colorScheme.primary),
       ),
       dialogTheme: DialogThemeData(
         backgroundColor: AppColors.scaffoldBackground,
@@ -126,9 +130,7 @@ class AppTheme {
           color: Colors.white,
         ),
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         insetPadding: const EdgeInsets.all(16),
       ),
       bottomSheetTheme: const BottomSheetThemeData(
