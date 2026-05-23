@@ -7,8 +7,10 @@ import '../network/auth_interceptor.dart';
 import '../network/dio_client.dart';
 import '../network/network_info.dart';
 
+import '../util/safe_secure_storage.dart';
+
 final secureStorageProvider = Provider<FlutterSecureStorage>((ref) {
-  return const FlutterSecureStorage(
+  return const SafeSecureStorage(
     aOptions: AndroidOptions(),
   );
 });
