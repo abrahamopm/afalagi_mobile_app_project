@@ -60,7 +60,17 @@ final routerProvider = Provider<GoRouter>((ref) {
           return '/login';
         }
       } else {
+        final user = authState.value!;
         if (isLoggingIn || isSigningUp || isSplash) {
+          return user.role == 'admin' ? '/admin/dashboard' : '/dashboard';
+        }
+
+        // Role-based route protection
+        final isAdminRoute = state.uri.path.startsWith('/admin');
+        if (user.role == 'admin' && !isAdminRoute) {
+          return '/admin/dashboard';
+        }
+        if (user.role != 'admin' && isAdminRoute) {
           return '/dashboard';
         }
       }
