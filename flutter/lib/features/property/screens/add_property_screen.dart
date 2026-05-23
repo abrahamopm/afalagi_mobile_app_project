@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import '../providers/property_provider.dart';
+import '../../tags/providers/tag_provider.dart';
 
 class AddPropertyScreen extends ConsumerStatefulWidget {
   final PropertyEntity? property;
@@ -140,6 +141,19 @@ class _AddPropertyScreenState extends ConsumerState<AddPropertyScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final tagsAsync = ref.watch(tagListProvider);
+    final dynamicTags = tagsAsync.maybeWhen(
+      data: (list) => list.map((e) => e.name).toList(),
+      orElse: () => const <String>[],
+    );
+
+    // Merge static and dynamic tags, keeping uniqueness and order
+    final allTags = {
+      ..._availableTags,
+      ...dynamicTags,
+      ..._selectedTags,
+    }.toList();
+
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
@@ -313,7 +327,7 @@ class _AddPropertyScreenState extends ConsumerState<AddPropertyScreen> {
                           Wrap(
                             spacing: 8,
                             runSpacing: 8,
-                            children: _availableTags.map((tag) {
+                            children: allTags.map((tag) {
                               final isSelected = _selectedTags.contains(tag);
                               return FilterChip(
                                 label: Text(tag),
