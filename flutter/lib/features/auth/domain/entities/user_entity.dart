@@ -5,6 +5,12 @@ class UserEntity {
   final String phone;
   final String agencyName;
   final String agencyLicense;
+  final String profileImage;
+  final String bio;
+  final double rating;
+  final bool isVerified;
+  final int managedUnits;
+  final int closingsCount;
 
   const UserEntity({
     required this.id,
@@ -13,6 +19,12 @@ class UserEntity {
     this.phone = '',
     this.agencyName = '',
     this.agencyLicense = '',
+    this.profileImage = 'assets/images/generic_avatar.png',
+    this.bio = '',
+    this.rating = 4.9,
+    this.isVerified = true,
+    this.managedUnits = 24,
+    this.closingsCount = 128,
   });
 
   UserEntity copyWith({
@@ -22,6 +34,12 @@ class UserEntity {
     String? phone,
     String? agencyName,
     String? agencyLicense,
+    String? profileImage,
+    String? bio,
+    double? rating,
+    bool? isVerified,
+    int? managedUnits,
+    int? closingsCount,
   }) {
     return UserEntity(
       id: id ?? this.id,
@@ -30,6 +48,12 @@ class UserEntity {
       phone: phone ?? this.phone,
       agencyName: agencyName ?? this.agencyName,
       agencyLicense: agencyLicense ?? this.agencyLicense,
+      profileImage: profileImage ?? this.profileImage,
+      bio: bio ?? this.bio,
+      rating: rating ?? this.rating,
+      isVerified: isVerified ?? this.isVerified,
+      managedUnits: managedUnits ?? this.managedUnits,
+      closingsCount: closingsCount ?? this.closingsCount,
     );
   }
 
@@ -43,7 +67,13 @@ class UserEntity {
           email == other.email &&
           phone == other.phone &&
           agencyName == other.agencyName &&
-          agencyLicense == other.agencyLicense;
+          agencyLicense == other.agencyLicense &&
+          profileImage == other.profileImage &&
+          bio == other.bio &&
+          rating == other.rating &&
+          isVerified == other.isVerified &&
+          managedUnits == other.managedUnits &&
+          closingsCount == other.closingsCount;
 
   @override
   int get hashCode =>
@@ -52,5 +82,11 @@ class UserEntity {
       email.hashCode ^
       phone.hashCode ^
       agencyName.hashCode ^
-      agencyLicense.hashCode;
+      agencyLicense.hashCode ^
+      profileImage.hashCode ^
+      bio.hashCode ^
+      rating.hashCode ^
+      isVerified.hashCode ^
+      managedUnits.hashCode ^
+      closingsCount.hashCode;
 }

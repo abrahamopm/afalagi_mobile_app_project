@@ -41,6 +41,12 @@ export const registerUser = async (req: AuthRequest, res: Response, next: NextFu
           phone: user.phone,
           agencyName: user.agencyName,
           agencyLicense: user.agencyLicense,
+          profileImage: user.profileImage,
+          bio: user.bio,
+          rating: user.rating,
+          isVerified: user.isVerified,
+          managedUnits: user.managedUnits,
+          closingsCount: user.closingsCount,
         },
       });
     } else {
@@ -72,6 +78,12 @@ export const loginUser = async (req: AuthRequest, res: Response, next: NextFunct
           phone: user.phone,
           agencyName: user.agencyName,
           agencyLicense: user.agencyLicense,
+          profileImage: user.profileImage,
+          bio: user.bio,
+          rating: user.rating,
+          isVerified: user.isVerified,
+          managedUnits: user.managedUnits,
+          closingsCount: user.closingsCount,
         },
       });
     } else {
@@ -101,6 +113,12 @@ export const getMe = async (req: AuthRequest, res: Response, next: NextFunction)
         phone: req.user.phone,
         agencyName: req.user.agencyName,
         agencyLicense: req.user.agencyLicense,
+        profileImage: req.user.profileImage,
+        bio: req.user.bio,
+        rating: req.user.rating,
+        isVerified: req.user.isVerified,
+        managedUnits: req.user.managedUnits,
+        closingsCount: req.user.closingsCount,
       },
     });
   } catch (err) {
@@ -124,6 +142,8 @@ export const updateProfile = async (req: AuthRequest, res: Response, next: NextF
     user.phone = req.body.phone !== undefined ? req.body.phone : user.phone;
     user.agencyName = req.body.agencyName !== undefined ? req.body.agencyName : user.agencyName;
     user.agencyLicense = req.body.agencyLicense !== undefined ? req.body.agencyLicense : user.agencyLicense;
+    user.profileImage = req.body.profileImage !== undefined ? req.body.profileImage : user.profileImage;
+    user.bio = req.body.bio !== undefined ? req.body.bio : user.bio;
 
     if (req.body.password) {
       user.password = req.body.password;
@@ -140,6 +160,12 @@ export const updateProfile = async (req: AuthRequest, res: Response, next: NextF
         phone: updatedUser.phone,
         agencyName: updatedUser.agencyName,
         agencyLicense: updatedUser.agencyLicense,
+        profileImage: updatedUser.profileImage,
+        bio: updatedUser.bio,
+        rating: updatedUser.rating,
+        isVerified: updatedUser.isVerified,
+        managedUnits: updatedUser.managedUnits,
+        closingsCount: updatedUser.closingsCount,
       },
     });
   } catch (err) {

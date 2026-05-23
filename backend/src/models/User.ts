@@ -9,6 +9,12 @@ export interface IUser extends Document {
   phone?: string;
   agencyName?: string;
   agencyLicense?: string;
+  profileImage?: string;
+  bio?: string;
+  rating?: number;
+  isVerified?: boolean;
+  managedUnits?: number;
+  closingsCount?: number;
   createdAt: Date;
   matchPassword(password: string): Promise<boolean>;
 }
@@ -49,6 +55,30 @@ const UserSchema: Schema = new Schema({
   agencyLicense: {
     type: String,
     default: ''
+  },
+  profileImage: {
+    type: String,
+    default: 'assets/images/generic_avatar.png'
+  },
+  bio: {
+    type: String,
+    default: ''
+  },
+  rating: {
+    type: Number,
+    default: 4.9
+  },
+  isVerified: {
+    type: Boolean,
+    default: true
+  },
+  managedUnits: {
+    type: Number,
+    default: 24
+  },
+  closingsCount: {
+    type: Number,
+    default: 128
   },
   createdAt: {
     type: Date,

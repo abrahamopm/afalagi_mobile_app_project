@@ -8,6 +8,12 @@ class UserModel extends UserEntity {
     super.phone,
     super.agencyName,
     super.agencyLicense,
+    super.profileImage,
+    super.bio,
+    super.rating,
+    super.isVerified,
+    super.managedUnits,
+    super.closingsCount,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -18,6 +24,12 @@ class UserModel extends UserEntity {
       phone: json['phone'] ?? '',
       agencyName: json['agencyName'] ?? '',
       agencyLicense: json['agencyLicense'] ?? '',
+      profileImage: json['profileImage'] ?? 'assets/images/generic_avatar.png',
+      bio: json['bio'] ?? '',
+      rating: (json['rating'] as num?)?.toDouble() ?? 4.9,
+      isVerified: json['isVerified'] ?? true,
+      managedUnits: json['managedUnits'] as int? ?? 24,
+      closingsCount: json['closingsCount'] as int? ?? 128,
     );
   }
 
@@ -29,6 +41,12 @@ class UserModel extends UserEntity {
       'phone': phone,
       'agencyName': agencyName,
       'agencyLicense': agencyLicense,
+      'profileImage': profileImage,
+      'bio': bio,
+      'rating': rating,
+      'isVerified': isVerified,
+      'managedUnits': managedUnits,
+      'closingsCount': closingsCount,
     };
   }
 
@@ -40,6 +58,12 @@ class UserModel extends UserEntity {
       phone: entity.phone,
       agencyName: entity.agencyName,
       agencyLicense: entity.agencyLicense,
+      profileImage: entity.profileImage,
+      bio: entity.bio,
+      rating: entity.rating,
+      isVerified: entity.isVerified,
+      managedUnits: entity.managedUnits,
+      closingsCount: entity.closingsCount,
     );
   }
 }
