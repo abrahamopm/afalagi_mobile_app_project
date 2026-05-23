@@ -1,4 +1,5 @@
 import 'package:afalagi/features/auth/providers/auth_provider.dart';
+import 'package:afalagi/core/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -24,7 +25,7 @@ class LogoutDialog extends ConsumerWidget {
               width: 60,
               height: 60,
               decoration: BoxDecoration(
-                color: const Color(0xFFF25A5A),
+                color: AppColors.danger,
                 borderRadius: BorderRadius.circular(15),
               ),
               child: const Icon(
@@ -39,7 +40,7 @@ class LogoutDialog extends ConsumerWidget {
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF1B385E),
+                color: AppColors.primary,
               ),
             ),
             const SizedBox(height: 12),
@@ -77,8 +78,8 @@ class LogoutDialog extends ConsumerWidget {
             CustomButton(
               text: 'Cancel',
               onPressed: isLoading ? () {} : () => Navigator.pop(context),
-              color: const Color(0xFFE9ECEF),
-              textColor: const Color(0xFF495057),
+              color: AppColors.componentLib,
+              textColor: AppColors.secondary,
             ),
           ],
         ),

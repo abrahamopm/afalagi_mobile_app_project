@@ -84,13 +84,13 @@ class StatCard extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
-                    color: badgeBgColor ?? const Color(0xFFE0F2F1),
+                    color: badgeBgColor ?? AppColors.success.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
                     badgeText!,
                     style: TextStyle(
-                      color: badgeTextColor ?? const Color(0xFF005A6E),
+                      color: badgeTextColor ?? AppColors.success,
                       fontSize: 10,
                       fontWeight: FontWeight.bold,
                     ),

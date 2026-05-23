@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:afalagi/core/theme/theme.dart';
 import 'package:afalagi/features/viewing/domain/entities/viewing_entity.dart';
 import 'package:afalagi/features/viewing/widgets/viewing_cards.dart';
 import 'package:flutter/cupertino.dart';
@@ -78,7 +79,7 @@ class _ViewingHistoryScreenState extends ConsumerState<ViewingHistoryScreen> {
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Delete', style: TextStyle(color: Colors.red)),
+            child: const Text('Delete', style: TextStyle(color: AppColors.danger)),
           ),
         ],
       ),
@@ -119,7 +120,7 @@ class _ViewingHistoryScreenState extends ConsumerState<ViewingHistoryScreen> {
                   fontSize: 32,
                   fontWeight: FontWeight.bold,
                   fontFamily: 'Figtree',
-                  color: Color(0xFF1B385E),
+                  color: AppColors.primary,
                 ),
               ),
               const SizedBox(height: 32),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:afalagi/core/theme/theme.dart';
 import 'package:afalagi/core/widgets/logout_dialog.dart';
 import 'package:afalagi/core/widgets/image.dart';
 import 'package:afalagi/features/auth/providers/auth_provider.dart';
@@ -33,7 +34,7 @@ class ProfileScreen extends ConsumerWidget {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: const Color(0xFFEDF2F7),
+                      color: AppColors.inputBackground,
                       width: 3,
                     ),
                   ),
@@ -51,11 +52,11 @@ class ProfileScreen extends ConsumerWidget {
               // Agent Name
               Text(
                 user.name,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
                   fontFamily: 'Figtree',
-                  color: Color(0xFF1B385E),
+                  color: AppColors.primary,
                 ),
               ),
               const SizedBox(height: 8),
@@ -64,18 +65,18 @@ class ProfileScreen extends ConsumerWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFE6FFFA),
+                    color: AppColors.success.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
-                    children: const [
-                      Icon(Icons.verified, color: Color(0xFF00A389), size: 14),
+                    children: [
+                      Icon(Icons.verified, color: AppColors.success, size: 14),
                       SizedBox(width: 4),
                       Text(
                         'VERIFIED AGENT',
                         style: TextStyle(
-                          color: Color(0xFF00A389),
+                          color: AppColors.success,
                           fontSize: 10,
                           fontWeight: FontWeight.bold,
                           letterSpacing: 0.5,
@@ -92,9 +93,9 @@ class ProfileScreen extends ConsumerWidget {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFF7FAFC),
+                      color: AppColors.inputBackground,
                       borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: const Color(0xFFEDF2F7)),
+                      border: Border.all(color: AppColors.inputBackground),
                     ),
                     child: Row(
                       children: [
@@ -104,10 +105,10 @@ class ProfileScreen extends ConsumerWidget {
                         ),
                         Text(
                           '${user.managedUnits} units',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFF1B385E),
+                            color: AppColors.primary,
                           ),
                         ),
                       ],
@@ -117,9 +118,9 @@ class ProfileScreen extends ConsumerWidget {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFF7FAFC),
+                      color: AppColors.inputBackground,
                       borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: const Color(0xFFEDF2F7)),
+                      border: Border.all(color: AppColors.inputBackground),
                     ),
                     child: Row(
                       children: [
@@ -129,10 +130,10 @@ class ProfileScreen extends ConsumerWidget {
                         ),
                         Text(
                           '${user.closingsCount} total',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFF1B385E),
+                            color: AppColors.primary,
                           ),
                         ),
                       ],
@@ -146,7 +147,7 @@ class ProfileScreen extends ConsumerWidget {
                 margin: const EdgeInsets.symmetric(horizontal: 4),
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF1B385E),
+                  color: AppColors.primary,
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Row(
@@ -176,9 +177,9 @@ class ProfileScreen extends ConsumerWidget {
                     Row(
                       children: List.generate(
                         5,
-                        (index) => const Icon(
+                        (index) => Icon(
                           Icons.star_rounded,
-                          color: Color(0xFFFFB000),
+                          color: AppColors.accent,
                           size: 20,
                         ),
                       ),
@@ -238,8 +239,8 @@ class ProfileScreen extends ConsumerWidget {
                     _buildListTile(
                       icon: Icons.delete_forever_outlined,
                       title: 'Delete Account',
-                      titleColor: const Color(0xFFC53030),
-                      iconColor: const Color(0xFFC53030),
+                      titleColor: AppColors.danger,
+                      iconColor: AppColors.danger,
                       onTap: () => context.push('/delete-account'),
                     ),
                   ],
@@ -259,18 +260,18 @@ class ProfileScreen extends ConsumerWidget {
                   margin: const EdgeInsets.symmetric(horizontal: 4),
                   padding: const EdgeInsets.symmetric(vertical: 20),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFFF5F5),
+                    color: AppColors.danger.withOpacity(0.05),
                     borderRadius: BorderRadius.circular(24),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Icon(Icons.logout_rounded, color: Color(0xFFC53030), size: 22),
+                    children: [
+                      Icon(Icons.logout_rounded, color: AppColors.danger, size: 22),
                       SizedBox(width: 12),
                       Text(
                         'Logout Account',
                         style: TextStyle(
-                          color: Color(0xFFC53030),
+                          color: AppColors.danger,
                           fontSize: 17,
                           fontWeight: FontWeight.bold,
                         ),
@@ -299,7 +300,7 @@ class ProfileScreen extends ConsumerWidget {
       leading: Container(
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: const Color(0xFFF7FAFC),
+          color: AppColors.inputBackground,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Icon(
@@ -326,11 +327,11 @@ class ProfileScreen extends ConsumerWidget {
   }
 
   Widget _buildDivider() {
-    return const Divider(
+    return Divider(
       height: 1,
       thickness: 1,
       indent: 80, // Align with title text
-      color: Color(0xFFEDF2F7),
+      color: AppColors.inputBackground,
     );
   }
 }

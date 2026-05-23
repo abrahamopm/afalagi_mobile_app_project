@@ -111,7 +111,7 @@ class PropertyCard extends StatelessWidget {
                             ),
                             child: const Icon(
                               Icons.delete_outline,
-                              color: Colors.red,
+                              color: AppColors.danger,
                               size: 20,
                             ),
                           ),
@@ -212,7 +212,7 @@ class PropertyCard extends StatelessWidget {
   Widget _buildFeatureIcon(IconData icon, String label) {
     return Column(
       children: [
-        Icon(icon, color: const Color(0xFF1b5e20), size: 24),
+        Icon(icon, color: AppColors.success, size: 24),
         const SizedBox(height: 8),
         Text(
           label,

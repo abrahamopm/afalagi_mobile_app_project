@@ -30,7 +30,7 @@ class AgencyDetailsScreen extends StatelessWidget {
                 fontSize: 28,
                 fontWeight: FontWeight.bold,
                 fontFamily: 'Figtree',
-                color: Color(0xFF1B385E),
+                color: AppColors.primary,
               ),
             ),
             const SizedBox(height: 4),
@@ -103,16 +103,16 @@ class AgencyDetailsScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            const Padding(
-              padding: EdgeInsets.only(left: 8),
+            Padding(
+              padding: const EdgeInsets.only(left: 8),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     "Bole, Addis Ababa",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Color(0xFF1B385E)),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.primary),
                   ),
-                  Text(
+                  const Text(
                     "Cape Verde St, Michael Bldg",
                     style: TextStyle(fontSize: 14, color: Colors.grey),
                   ),
@@ -125,7 +125,7 @@ class AgencyDetailsScreen extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(vertical: 16),
               decoration: BoxDecoration(
-                color: const Color(0xFF1B385E),
+                color: AppColors.primary,
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Row(
@@ -174,7 +174,7 @@ class AgencyDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildStatItem(String value, String label, {Color color = const Color(0xFF1B385E)}) {
+  Widget _buildStatItem(String value, String label, {Color color = AppColors.primary}) {
     return Expanded(
       child: Column(
         children: [
@@ -223,7 +223,7 @@ class AgencyDetailsScreen extends StatelessWidget {
             style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w500,
-              color: Color(0xFF1B385E),
+              color: AppColors.primary,
             ),
           ),
         )),

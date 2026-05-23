@@ -66,14 +66,14 @@ class SecondaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final effectiveColor = color ?? (isDestructive ? const Color(0xFFE53E3E) : const Color(0xFF1B385E));
+    final effectiveColor = color ?? (isDestructive ? AppColors.danger : AppColors.primary);
     
     return GestureDetector(
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
         decoration: BoxDecoration(
-          color: const Color(0xFFF1F4F9),
+          color: AppColors.inputBackground,
           borderRadius: BorderRadius.circular(8),
         ),
         child: Row(

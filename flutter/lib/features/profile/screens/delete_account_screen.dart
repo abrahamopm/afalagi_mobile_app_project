@@ -85,7 +85,7 @@ class _DeleteAccountScreenState extends ConsumerState<DeleteAccountScreen> {
               style: TextStyle(
                 fontSize: 28,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFFE53E3E),
+                color: AppColors.danger,
                 fontFamily: 'Figtree',
               ),
             ),
@@ -136,14 +136,14 @@ class _DeleteAccountScreenState extends ConsumerState<DeleteAccountScreen> {
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: Color(0xFFE53E3E), width: 2),
+                  borderSide: const BorderSide(color: AppColors.danger, width: 2),
                 ),
               ),
             ),
             const SizedBox(height: 32),
             CustomButton(
               text: _isDeleting ? 'Deleting...' : 'Delete My Account',
-              color: const Color(0xFFE53E3E),
+              color: AppColors.danger,
               onPressed: (_canDelete && !_isDeleting) ? _handleDelete : () {},
             ),
             const SizedBox(height: 16),
@@ -175,7 +175,7 @@ class _DeleteAccountScreenState extends ConsumerState<DeleteAccountScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFFED7D7)),
+        border: Border.all(color: AppColors.danger.withOpacity(0.15)),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -183,10 +183,10 @@ class _DeleteAccountScreenState extends ConsumerState<DeleteAccountScreen> {
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: const Color(0xFFFFF5F5),
+              color: AppColors.danger.withOpacity(0.05),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(icon, color: const Color(0xFFE53E3E), size: 24),
+            child: Icon(icon, color: AppColors.danger, size: 24),
           ),
           const SizedBox(width: 16),
           Expanded(

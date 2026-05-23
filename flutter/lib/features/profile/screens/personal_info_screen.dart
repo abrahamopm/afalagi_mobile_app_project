@@ -208,7 +208,7 @@ class _PersonalInfoScreenState extends ConsumerState<PersonalInfoScreen> {
                               child: Container(
                                 padding: const EdgeInsets.all(6),
                                 decoration: const BoxDecoration(
-                                  color: Color(0xFF1B385E),
+                                  color: AppColors.primary,
                                   shape: BoxShape.circle,
                                 ),
                                 child: const Icon(
@@ -232,7 +232,7 @@ class _PersonalInfoScreenState extends ConsumerState<PersonalInfoScreen> {
                                 fontSize: 26,
                                 fontWeight: FontWeight.bold,
                                 fontFamily: 'Figtree',
-                                color: Color(0xFF1B385E),
+                                color: AppColors.primary,
                                 height: 1.1,
                               ),
                             ),

@@ -1,3 +1,4 @@
+import 'package:afalagi/core/theme/theme.dart';
 import 'package:flutter/material.dart';
 
 class CustomTextField extends StatelessWidget {
@@ -58,13 +59,13 @@ class CustomTextField extends StatelessWidget {
           style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w500,
-            color: Color(0xFF1B385E),
+            color: AppColors.primary,
           ),
           decoration: InputDecoration(
             hintText: hintText,
             hintStyle: TextStyle(color: Colors.grey[400], fontSize: 14),
             filled: true,
-            fillColor: const Color(0xFFF1F4F9),
+            fillColor: AppColors.inputBackground,
             prefixIcon: prefixIcon,
             prefixText: prefixText,
             suffixIcon: onSuffixIconTap != null

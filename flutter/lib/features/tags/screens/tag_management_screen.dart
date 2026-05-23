@@ -19,11 +19,11 @@ class _TagManagementScreenState extends ConsumerState<TagManagementScreen> {
   final TextEditingController _filterController = TextEditingController();
   final TextEditingController _editTagController = TextEditingController();
 
-  Color _selectedColor = const Color(0xFF1B385E);
+  Color _selectedColor = AppColors.primary;
   String _filterQuery = '';
 
   final List<Color> _availableColors = [
-    const Color(0xFF1B385E),
+    AppColors.primary,
     const Color(0xFF2E6B4F),
     const Color(0xFF6B3E0C),
     const Color(0xFF006D8E),
@@ -47,7 +47,7 @@ class _TagManagementScreenState extends ConsumerState<TagManagementScreen> {
     if (hexCode.length == 6) {
       return Color(int.parse('FF$hexCode', radix: 16));
     }
-    return const Color(0xFF1B385E);
+    return AppColors.primary;
   }
 
   Future<void> _createTag() async {
@@ -248,7 +248,7 @@ class _TagManagementScreenState extends ConsumerState<TagManagementScreen> {
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
-                              color: Color(0xFF1B385E),
+                              color: AppColors.primary,
                             ),
                           ),
                           const SizedBox(height: 4),
@@ -318,7 +318,7 @@ class _TagManagementScreenState extends ConsumerState<TagManagementScreen> {
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: Color(0xFF1B385E),
+              color: AppColors.primary,
             ),
           ),
           const Text(
@@ -413,7 +413,7 @@ class _TagManagementScreenState extends ConsumerState<TagManagementScreen> {
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF1B385E),
+                    color: AppColors.primary,
                   ),
                 ),
                 Text(

@@ -112,7 +112,7 @@ class _ClientListScreenState extends ConsumerState<ClientListScreen> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF1F4F9),
+                    color: AppColors.inputBackground,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: DropdownButtonHideUnderline(
@@ -236,7 +236,7 @@ class _ClientListScreenState extends ConsumerState<ClientListScreen> {
     return InputDecoration(
       hintText: hint,
       filled: true,
-      fillColor: const Color(0xFFF1F4F9),
+      fillColor: AppColors.inputBackground,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
         borderSide: BorderSide.none,
@@ -270,7 +270,7 @@ class _ClientListScreenState extends ConsumerState<ClientListScreen> {
                 );
               }
             },
-            child: const Text('Delete', style: TextStyle(color: Colors.red)),
+            child: const Text('Delete', style: TextStyle(color: AppColors.danger)),
           ),
         ],
       ),
@@ -357,7 +357,7 @@ class _ClientListScreenState extends ConsumerState<ClientListScreen> {
   Widget _buildSearchBar() {
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFFEDF1F5),
+        color: AppColors.inputBackground,
         borderRadius: BorderRadius.circular(15),
       ),
       child: TextField(
@@ -401,7 +401,7 @@ class _ClientListScreenState extends ConsumerState<ClientListScreen> {
               right: -20,
               child: CircleAvatar(
                 radius: 60,
-                backgroundColor: const Color(0xFFF1F4F9),
+                backgroundColor: AppColors.inputBackground,
               ),
             ),
             Padding(
@@ -564,7 +564,7 @@ class _ClientListScreenState extends ConsumerState<ClientListScreen> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF8F9FA),
+                  color: AppColors.inputBackground,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Row(
@@ -636,13 +636,13 @@ class _ClientListScreenState extends ConsumerState<ClientListScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-        color: const Color(0xFFD1FAE5),
+        color: AppColors.success.withOpacity(0.1),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text(
         priority,
         style: const TextStyle(
-          color: Color(0xFF065F46),
+          color: AppColors.success,
           fontSize: 10,
           fontWeight: FontWeight.bold,
         ),
@@ -654,7 +654,7 @@ class _ClientListScreenState extends ConsumerState<ClientListScreen> {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: const Color(0xFFF1F4F9),
+        color: AppColors.inputBackground,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
@@ -715,9 +715,9 @@ class _ClientListScreenState extends ConsumerState<ClientListScreen> {
           value: 'delete',
           child: Row(
             children: [
-              Icon(Icons.delete, size: 18, color: Colors.red),
+              Icon(Icons.delete, size: 18, color: AppColors.danger),
               SizedBox(width: 8),
-              Text('Delete', style: TextStyle(color: Colors.red)),
+              Text('Delete', style: TextStyle(color: AppColors.danger)),
             ],
           ),
         ),

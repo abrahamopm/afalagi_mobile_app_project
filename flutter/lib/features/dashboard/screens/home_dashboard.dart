@@ -103,8 +103,8 @@ class DashboardScreen extends ConsumerWidget {
             title: 'Total Properties',
             value: stats.propertyCount.toString(),
             icon: Icons.business_center,
-            iconBgColor: const Color(0xFFE0F2F1),
-            iconColor: const Color(0xFF005A6E),
+            iconBgColor: AppColors.primary.withOpacity(0.1),
+            iconColor: AppColors.primary,
             badgeText: 'VIEW',
           ),
         ),
@@ -115,11 +115,11 @@ class DashboardScreen extends ConsumerWidget {
             title: 'Active Clients',
             value: stats.clientCount.toString(),
             icon: Icons.people_outline,
-            iconBgColor: const Color(0xFFF3F4F6),
-            iconColor: AppTheme.primaryColor,
+            iconBgColor: AppColors.success.withOpacity(0.1),
+            iconColor: AppColors.success,
             badgeText: 'ACTIVE',
-            badgeBgColor: const Color(0xFFE8F5E9),
-            badgeTextColor: Colors.green,
+            badgeBgColor: AppColors.success.withOpacity(0.1),
+            badgeTextColor: AppColors.success,
             showAvatars: true,
           ),
         ),
@@ -130,8 +130,8 @@ class DashboardScreen extends ConsumerWidget {
             title: "Today's Viewings",
             value: stats.todayViewingCount.toString(),
             icon: Icons.calendar_today_outlined,
-            iconBgColor: const Color(0xFFFFF9C4),
-            iconColor: const Color(0xFFB8860B),
+            iconBgColor: AppColors.accent.withOpacity(0.1),
+            iconColor: AppColors.accent,
           ),
         ),
       ],
@@ -214,13 +214,13 @@ class DashboardScreen extends ConsumerWidget {
         Color color;
         if (activity.type == 'property') {
           icon = Icons.apartment;
-          color = const Color(0xFF005A6E);
+          color = AppColors.primary;
         } else if (activity.type == 'client') {
           icon = Icons.person_outline;
-          color = AppTheme.primaryColor;
+          color = AppColors.success;
         } else {
           icon = Icons.calendar_month_outlined;
-          color = const Color(0xFFB8860B);
+          color = AppColors.accent;
         }
 
         return Padding(
