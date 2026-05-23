@@ -13,13 +13,15 @@ class DioClient {
       ..options.responseType = ResponseType.json;
 
     if (kDebugMode) {
-      dio.interceptors.add(LogInterceptor(
-        requestHeader: true,
-        requestBody: true,
-        responseHeader: false,
-        responseBody: true,
-        error: true,
-      ));
+      dio.interceptors.add(
+        LogInterceptor(
+          requestHeader: true,
+          requestBody: true,
+          responseHeader: false,
+          responseBody: true,
+          error: true,
+        ),
+      );
     }
   }
 }

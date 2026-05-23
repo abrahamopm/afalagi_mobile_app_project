@@ -18,12 +18,16 @@ class AdminStatsNotifier extends AsyncNotifier<AdminStats> {
 
   Future<void> refresh() async {
     state = const AsyncValue.loading();
-    state = await AsyncValue.guard(() => ref.read(adminRepositoryProvider).getStats());
+    state = await AsyncValue.guard(
+      () => ref.read(adminRepositoryProvider).getStats(),
+    );
   }
 }
 
 final adminStatsProvider =
-    AsyncNotifierProvider<AdminStatsNotifier, AdminStats>(AdminStatsNotifier.new);
+    AsyncNotifierProvider<AdminStatsNotifier, AdminStats>(
+      AdminStatsNotifier.new,
+    );
 
 class AdminUsersNotifier extends AsyncNotifier<List<AdminUserSummary>> {
   @override
@@ -33,18 +37,24 @@ class AdminUsersNotifier extends AsyncNotifier<List<AdminUserSummary>> {
 
   Future<void> refresh() async {
     state = const AsyncValue.loading();
-    state = await AsyncValue.guard(() => ref.read(adminRepositoryProvider).getUsers());
+    state = await AsyncValue.guard(
+      () => ref.read(adminRepositoryProvider).getUsers(),
+    );
   }
 
   Future<void> setUserActive(String id, bool isActive) async {
-    final updated = await ref.read(adminRepositoryProvider).updateUser(id, isActive: isActive);
+    final updated = await ref
+        .read(adminRepositoryProvider)
+        .updateUser(id, isActive: isActive);
     state = state.whenData(
       (users) => users.map((u) => u.id == id ? updated : u).toList(),
     );
   }
 
   Future<void> setUserVerified(String id, bool isVerified) async {
-    final updated = await ref.read(adminRepositoryProvider).updateUser(id, isVerified: isVerified);
+    final updated = await ref
+        .read(adminRepositoryProvider)
+        .updateUser(id, isVerified: isVerified);
     state = state.whenData(
       (users) => users.map((u) => u.id == id ? updated : u).toList(),
     );
@@ -52,7 +62,9 @@ class AdminUsersNotifier extends AsyncNotifier<List<AdminUserSummary>> {
 }
 
 final adminUsersProvider =
-    AsyncNotifierProvider<AdminUsersNotifier, List<AdminUserSummary>>(AdminUsersNotifier.new);
+    AsyncNotifierProvider<AdminUsersNotifier, List<AdminUserSummary>>(
+      AdminUsersNotifier.new,
+    );
 
 class AdminPropertiesNotifier extends AsyncNotifier<List<AdminPropertyItem>> {
   @override
@@ -62,12 +74,15 @@ class AdminPropertiesNotifier extends AsyncNotifier<List<AdminPropertyItem>> {
 
   Future<void> refresh() async {
     state = const AsyncValue.loading();
-    state = await AsyncValue.guard(() => ref.read(adminRepositoryProvider).getProperties());
+    state = await AsyncValue.guard(
+      () => ref.read(adminRepositoryProvider).getProperties(),
+    );
   }
 
   Future<void> setAvailability(String id, bool isAvailable) async {
-    final updated =
-        await ref.read(adminRepositoryProvider).updateProperty(id, isAvailable: isAvailable);
+    final updated = await ref
+        .read(adminRepositoryProvider)
+        .updateProperty(id, isAvailable: isAvailable);
     state = state.whenData(
       (items) => items.map((p) => p.id == id ? updated : p).toList(),
     );
@@ -79,5 +94,7 @@ class AdminPropertiesNotifier extends AsyncNotifier<List<AdminPropertyItem>> {
   }
 }
 
-final adminPropertiesProvider = AsyncNotifierProvider<AdminPropertiesNotifier,
-    List<AdminPropertyItem>>(AdminPropertiesNotifier.new);
+final adminPropertiesProvider =
+    AsyncNotifierProvider<AdminPropertiesNotifier, List<AdminPropertyItem>>(
+      AdminPropertiesNotifier.new,
+    );

@@ -28,7 +28,9 @@ abstract class CachedRepository<Entity, Model extends Entity> {
     }
     final cached = await local.getCached();
     if (cached.isNotEmpty) return cached;
-    throw const ServerException(message: 'No internet connection and no cached data.');
+    throw const ServerException(
+      message: 'No internet connection and no cached data.',
+    );
   }
 
   Future<Entity> getById(String id) async {
@@ -45,7 +47,9 @@ abstract class CachedRepository<Entity, Model extends Entity> {
     }
     final cached = await local.getCachedById(id);
     if (cached != null) return cached;
-    throw const ServerException(message: 'No internet connection and no cached data.');
+    throw const ServerException(
+      message: 'No internet connection and no cached data.',
+    );
   }
 
   Future<Entity> create(Map<String, dynamic> body) async {
