@@ -4,7 +4,8 @@ import 'package:flutter/foundation.dart';
 class AppConstants {
   // Use http://10.0.2.2:5000/api/v1 for Android emulator to reference localhost backend
   // Use http://localhost:5000/api/v1 for desktop/web
-  //relese mode only for debug because third party hosting is not allowed online  static String get baseUrl {
+  // relese mode only for debug because third party hosting is not allowed online
+  static String get baseUrl {
     if (kReleaseMode) {
       return 'https://afalagi-mobile-app-project.onrender.com/api/v1';
     }
