@@ -141,6 +141,27 @@ final routerProvider = Provider<GoRouter>((ref) {
           ),
         ],
       ),
+      ShellRoute(
+        builder: (context, state, child) => AdminShellScaffold(child: child),
+        routes: [
+          GoRoute(
+            path: '/admin/dashboard',
+            builder: (context, state) => const AdminDashboardScreen(),
+          ),
+          GoRoute(
+            path: '/admin/users',
+            builder: (context, state) => const AdminUsersScreen(),
+          ),
+          GoRoute(
+            path: '/admin/properties',
+            builder: (context, state) => const AdminPropertiesScreen(),
+          ),
+          GoRoute(
+            path: '/admin/profile',
+            builder: (context, state) => const ProfileScreen(),
+          ),
+        ],
+      ),
     ],
   );
 });
