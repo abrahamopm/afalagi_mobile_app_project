@@ -2,13 +2,13 @@ import 'package:afalagi/core/theme/theme.dart';
 import 'package:afalagi/core/widgets/button.dart';
 import 'package:afalagi/core/widgets/input.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:afalagi/features/property/models/property_model.dart';
+import 'package:afalagi/features/property/domain/entities/property_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../providers/property_provider.dart';
 
 class AddPropertyScreen extends ConsumerStatefulWidget {
-  final Property? property;
+  final PropertyEntity? property;
   const AddPropertyScreen({super.key, this.property});
 
   @override
@@ -87,7 +87,7 @@ class _AddPropertyScreenState extends ConsumerState<AddPropertyScreen> {
       _isLoading = true;
     });
 
-    final propertyData = Property(
+    final propertyData = PropertyEntity(
       id: widget.property?.id ?? '',
       title: _titleController.text.trim(),
       description: _descriptionController.text.trim(),

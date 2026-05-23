@@ -3,14 +3,15 @@ import 'package:afalagi/core/usecases/usecase.dart';
 import '../../../../core/providers/core_providers.dart';
 import '../data/datasources/property_local_ds.dart';
 import '../data/datasources/property_remote_ds.dart';
+import '../data/models/property_model.dart';
 import '../data/repositories/property_repository_impl.dart';
+import '../domain/entities/property_entity.dart';
 import '../domain/repositories/property_repository.dart';
 import '../domain/usecases/create_property.dart';
 import '../domain/usecases/delete_property.dart';
 import '../domain/usecases/get_properties.dart';
 import '../domain/usecases/get_property_by_id.dart';
 import '../domain/usecases/update_property.dart';
-import '../models/property_model.dart';
 
 final propertyLocalDSProvider = Provider<PropertyLocalDS>((ref) {
   final dbHelper = ref.watch(databaseProvider);
@@ -58,117 +59,49 @@ final deletePropertyUseCaseProvider = Provider<DeleteProperty>((ref) {
   return DeleteProperty(repository);
 });
 
-class PropertyNotifier extends AsyncNotifier<List<Property>> {
+class PropertyNotifier extends AsyncNotifier<List<PropertyEntity>> {
   @override
-  Future<List<Property>> build() async {
-    final getProperties = ref.watch(getPropertiesUseCaseProvider);
-    final entities = await getProperties(NoParams());
-    return entities.map((e) => Property(
-      id: e.id,
-      title: e.title,
-      description: e.description,
-      location: e.location,
-      imageUrl: e.imageUrl,
-      price: e.price,
-      beds: e.beds,
-      baths: e.baths,
-      sqft: e.sqft,
-      isAvailable: e.isAvailable,
-      tags: e.tags,
-    )).toList();
+  Future<List<PropertyEntity>> build() async {
+    return ref.watch(getPropertiesUseCaseProvider).call(const NoParams());
   }
 
-  Future<void> addProperty(Property property) async {
+  Future<void> addProperty(PropertyEntity property) async {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
-      final createProperty = ref.read(createPropertyUseCaseProvider);
-      await createProperty(property.toJson()..addAll({'id': property.id}));
-      final getProperties = ref.read(getPropertiesUseCaseProvider);
-      final entities = await getProperties(NoParams());
-      return entities.map((e) => Property(
-        id: e.id,
-        title: e.title,
-        description: e.description,
-        location: e.location,
-        imageUrl: e.imageUrl,
-        price: e.price,
-        beds: e.beds,
-        baths: e.baths,
-        sqft: e.sqft,
-        isAvailable: e.isAvailable,
-        tags: e.tags,
-      )).toList();
+      final body = PropertyModel.fromEntity(property).toJson();
+      await ref.read(createPropertyUseCaseProvider).call(body);
+      return ref.read(getPropertiesUseCaseProvider).call(const NoParams());
     });
   }
 
-  Future<void> updateProperty(String id, Property property) async {
+  Future<void> updateProperty(String id, PropertyEntity property) async {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
-      final updateProperty = ref.read(updatePropertyUseCaseProvider);
-      await updateProperty(UpdatePropertyParams(id: id, body: property.toJson()));
-      final getProperties = ref.read(getPropertiesUseCaseProvider);
-      final entities = await getProperties(NoParams());
-      return entities.map((e) => Property(
-        id: e.id,
-        title: e.title,
-        description: e.description,
-        location: e.location,
-        imageUrl: e.imageUrl,
-        price: e.price,
-        beds: e.beds,
-        baths: e.baths,
-        sqft: e.sqft,
-        isAvailable: e.isAvailable,
-        tags: e.tags,
-      )).toList();
+      final body = PropertyModel.fromEntity(property).toJson();
+      await ref.read(updatePropertyUseCaseProvider).call(
+        UpdatePropertyParams(id: id, body: body),
+      );
+      return ref.read(getPropertiesUseCaseProvider).call(const NoParams());
     });
   }
 
   Future<void> deleteProperty(String id) async {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
-      final deleteProperty = ref.read(deletePropertyUseCaseProvider);
-      await deleteProperty(id);
-      final getProperties = ref.read(getPropertiesUseCaseProvider);
-      final entities = await getProperties(NoParams());
-      return entities.map((e) => Property(
-        id: e.id,
-        title: e.title,
-        description: e.description,
-        location: e.location,
-        imageUrl: e.imageUrl,
-        price: e.price,
-        beds: e.beds,
-        baths: e.baths,
-        sqft: e.sqft,
-        isAvailable: e.isAvailable,
-        tags: e.tags,
-      )).toList();
+      await ref.read(deletePropertyUseCaseProvider).call(id);
+      return ref.read(getPropertiesUseCaseProvider).call(const NoParams());
     });
   }
 
   Future<void> refresh() async {
     state = const AsyncValue.loading();
-    state = await AsyncValue.guard(() async {
-      final getProperties = ref.read(getPropertiesUseCaseProvider);
-      final entities = await getProperties(NoParams());
-      return entities.map((e) => Property(
-        id: e.id,
-        title: e.title,
-        description: e.description,
-        location: e.location,
-        imageUrl: e.imageUrl,
-        price: e.price,
-        beds: e.beds,
-        baths: e.baths,
-        sqft: e.sqft,
-        isAvailable: e.isAvailable,
-        tags: e.tags,
-      )).toList();
-    });
+    state = await AsyncValue.guard(
+      () => ref.read(getPropertiesUseCaseProvider).call(const NoParams()),
+    );
   }
 }
 
-final propertyListProvider = AsyncNotifierProvider<PropertyNotifier, List<Property>>(() {
-  return PropertyNotifier();
-});
+final propertyListProvider =
+    AsyncNotifierProvider<PropertyNotifier, List<PropertyEntity>>(
+  PropertyNotifier.new,
+);

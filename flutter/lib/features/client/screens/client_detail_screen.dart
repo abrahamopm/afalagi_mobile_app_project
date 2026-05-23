@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../models/client_model.dart';
+import '../domain/entities/client_entity.dart';
 
 class ClientDetailScreen extends StatelessWidget {
-  final Client client;
+  final ClientEntity client;
 
   const ClientDetailScreen({super.key, required this.client});
 

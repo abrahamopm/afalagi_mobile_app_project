@@ -1,10 +1,10 @@
 import 'package:afalagi/core/widgets/image.dart';
-import 'package:afalagi/features/property/models/property_model.dart';
+import 'package:afalagi/features/property/domain/entities/property_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:afalagi/core/theme/theme.dart';
 
 class PropertyCard extends StatelessWidget {
-  final Property property;
+  final PropertyEntity property;
   final VoidCallback? onDelete;
   final VoidCallback? onEdit;
   final VoidCallback? onTap;

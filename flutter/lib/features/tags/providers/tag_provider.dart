@@ -3,13 +3,14 @@ import 'package:afalagi/core/usecases/usecase.dart';
 import '../../../../core/providers/core_providers.dart';
 import '../data/datasources/tag_local_ds.dart';
 import '../data/datasources/tag_remote_ds.dart';
+import '../data/models/tag_model.dart';
 import '../data/repositories/tag_repository_impl.dart';
+import '../domain/entities/tag_entity.dart';
 import '../domain/repositories/tag_repository.dart';
 import '../domain/usecases/create_tag.dart';
 import '../domain/usecases/delete_tag.dart';
 import '../domain/usecases/get_tags.dart';
 import '../domain/usecases/update_tag.dart';
-import '../models/tag_model.dart';
 
 final tagLocalDSProvider = Provider<TagLocalDS>((ref) {
   final dbHelper = ref.watch(databaseProvider);
@@ -52,82 +53,49 @@ final deleteTagUseCaseProvider = Provider<DeleteTag>((ref) {
   return DeleteTag(repository);
 });
 
-class TagNotifier extends AsyncNotifier<List<TagModel>> {
+class TagNotifier extends AsyncNotifier<List<TagEntity>> {
   @override
-  Future<List<TagModel>> build() async {
-    final getTags = ref.watch(getTagsUseCaseProvider);
-    final entities = await getTags(NoParams());
-    return entities.map((e) => TagModel(
-      id: e.id,
-      name: e.name,
-      color: e.color,
-      propertyCount: e.propertyCount,
-    )).toList();
+  Future<List<TagEntity>> build() async {
+    return ref.watch(getTagsUseCaseProvider).call(const NoParams());
   }
 
-  Future<void> addTag(TagModel tag) async {
+  Future<void> addTag(TagEntity tag) async {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
-      final createTag = ref.read(createTagUseCaseProvider);
-      await createTag(tag.toJson()..addAll({'id': tag.id}));
-      final getTags = ref.read(getTagsUseCaseProvider);
-      final entities = await getTags(NoParams());
-      return entities.map((e) => TagModel(
-        id: e.id,
-        name: e.name,
-        color: e.color,
-        propertyCount: e.propertyCount,
-      )).toList();
+      final body = TagModel.fromEntity(tag).toJson();
+      await ref.read(createTagUseCaseProvider).call(body);
+      return ref.read(getTagsUseCaseProvider).call(const NoParams());
     });
   }
 
-  Future<void> updateTag(String id, TagModel tag) async {
+  Future<void> updateTag(String id, TagEntity tag) async {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
-      final updateTag = ref.read(updateTagUseCaseProvider);
-      await updateTag(UpdateTagParams(id: id, body: tag.toJson()));
-      final getTags = ref.read(getTagsUseCaseProvider);
-      final entities = await getTags(NoParams());
-      return entities.map((e) => TagModel(
-        id: e.id,
-        name: e.name,
-        color: e.color,
-        propertyCount: e.propertyCount,
-      )).toList();
+      final body = TagModel.fromEntity(tag).toJson();
+      await ref.read(updateTagUseCaseProvider).call(
+        UpdateTagParams(id: id, body: body),
+      );
+      return ref.read(getTagsUseCaseProvider).call(const NoParams());
     });
   }
 
   Future<void> deleteTag(String id) async {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
-      final deleteTag = ref.read(deleteTagUseCaseProvider);
-      await deleteTag(id);
-      final getTags = ref.read(getTagsUseCaseProvider);
-      final entities = await getTags(NoParams());
-      return entities.map((e) => TagModel(
-        id: e.id,
-        name: e.name,
-        color: e.color,
-        propertyCount: e.propertyCount,
-      )).toList();
+      await ref.read(deleteTagUseCaseProvider).call(id);
+      return ref.read(getTagsUseCaseProvider).call(const NoParams());
     });
   }
 
   Future<void> refresh() async {
     state = const AsyncValue.loading();
-    state = await AsyncValue.guard(() async {
-      final getTags = ref.read(getTagsUseCaseProvider);
-      final entities = await getTags(NoParams());
-      return entities.map((e) => TagModel(
-        id: e.id,
-        name: e.name,
-        color: e.color,
-        propertyCount: e.propertyCount,
-      )).toList();
-    });
+    state = await AsyncValue.guard(
+      () => ref.read(getTagsUseCaseProvider).call(const NoParams()),
+    );
   }
 }
 
-final tagListProvider = AsyncNotifierProvider<TagNotifier, List<TagModel>>(() {
-  return TagNotifier();
-});
+final tagListProvider =
+    AsyncNotifierProvider<TagNotifier, List<TagEntity>>(
+  TagNotifier.new,
+);

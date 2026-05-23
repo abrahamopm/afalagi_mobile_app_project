@@ -2,10 +2,10 @@ import 'package:afalagi/core/theme/theme.dart';
 import 'package:afalagi/core/widgets/button.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../models/property_model.dart';
+import '../domain/entities/property_entity.dart';
 
 class PropertyDetailScreen extends StatelessWidget {
-  final Property property;
+  final PropertyEntity property;
 
   const PropertyDetailScreen({super.key, required this.property});
 

@@ -3,13 +3,14 @@ import 'package:afalagi/core/usecases/usecase.dart';
 import '../../../../core/providers/core_providers.dart';
 import '../data/datasources/client_local_ds.dart';
 import '../data/datasources/client_remote_ds.dart';
+import '../data/models/client_model.dart';
 import '../data/repositories/client_repository_impl.dart';
+import '../domain/entities/client_entity.dart';
 import '../domain/repositories/client_repository.dart';
 import '../domain/usecases/create_client.dart';
 import '../domain/usecases/delete_client.dart';
 import '../domain/usecases/get_clients.dart';
 import '../domain/usecases/update_client.dart';
-import '../models/client_model.dart';
 
 final clientLocalDSProvider = Provider<ClientLocalDS>((ref) {
   final dbHelper = ref.watch(databaseProvider);
@@ -52,107 +53,49 @@ final deleteClientUseCaseProvider = Provider<DeleteClient>((ref) {
   return DeleteClient(repository);
 });
 
-class ClientNotifier extends AsyncNotifier<List<Client>> {
+class ClientNotifier extends AsyncNotifier<List<ClientEntity>> {
   @override
-  Future<List<Client>> build() async {
-    final getClients = ref.watch(getClientsUseCaseProvider);
-    final entities = await getClients(NoParams());
-    return entities.map((e) => Client(
-      id: e.id,
-      name: e.name,
-      phone: e.phone,
-      priority: e.priority,
-      interest: e.interest,
-      area: e.area,
-      budget: e.budget,
-      image: e.image,
-      tags: e.tags,
-    )).toList();
+  Future<List<ClientEntity>> build() async {
+    return ref.watch(getClientsUseCaseProvider).call(const NoParams());
   }
 
-  Future<void> addClient(Client client) async {
+  Future<void> addClient(ClientEntity client) async {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
-      final createClient = ref.read(createClientUseCaseProvider);
-      await createClient(client.toJson()..addAll({'id': client.id}));
-      final getClients = ref.read(getClientsUseCaseProvider);
-      final entities = await getClients(NoParams());
-      return entities.map((e) => Client(
-        id: e.id,
-        name: e.name,
-        phone: e.phone,
-        priority: e.priority,
-        interest: e.interest,
-        area: e.area,
-        budget: e.budget,
-        image: e.image,
-        tags: e.tags,
-      )).toList();
+      final body = ClientModel.fromEntity(client).toJson();
+      await ref.read(createClientUseCaseProvider).call(body);
+      return ref.read(getClientsUseCaseProvider).call(const NoParams());
     });
   }
 
-  Future<void> updateClient(String id, Client client) async {
+  Future<void> updateClient(String id, ClientEntity client) async {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
-      final updateClient = ref.read(updateClientUseCaseProvider);
-      await updateClient(UpdateClientParams(id: id, body: client.toJson()));
-      final getClients = ref.read(getClientsUseCaseProvider);
-      final entities = await getClients(NoParams());
-      return entities.map((e) => Client(
-        id: e.id,
-        name: e.name,
-        phone: e.phone,
-        priority: e.priority,
-        interest: e.interest,
-        area: e.area,
-        budget: e.budget,
-        image: e.image,
-        tags: e.tags,
-      )).toList();
+      final body = ClientModel.fromEntity(client).toJson();
+      await ref.read(updateClientUseCaseProvider).call(
+        UpdateClientParams(id: id, body: body),
+      );
+      return ref.read(getClientsUseCaseProvider).call(const NoParams());
     });
   }
 
   Future<void> deleteClient(String id) async {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
-      final deleteClient = ref.read(deleteClientUseCaseProvider);
-      await deleteClient(id);
-      final getClients = ref.read(getClientsUseCaseProvider);
-      final entities = await getClients(NoParams());
-      return entities.map((e) => Client(
-        id: e.id,
-        name: e.name,
-        phone: e.phone,
-        priority: e.priority,
-        interest: e.interest,
-        area: e.area,
-        budget: e.budget,
-        image: e.image,
-        tags: e.tags,
-      )).toList();
+      await ref.read(deleteClientUseCaseProvider).call(id);
+      return ref.read(getClientsUseCaseProvider).call(const NoParams());
     });
   }
 
   Future<void> refresh() async {
     state = const AsyncValue.loading();
-    state = await AsyncValue.guard(() async {
-      final getClients = ref.read(getClientsUseCaseProvider);
-      final entities = await getClients(NoParams());
-      return entities.map((e) => Client(
-        id: e.id,
-        name: e.name,
-        phone: e.phone,
-        priority: e.priority,
-        interest: e.interest,
-        area: e.area,
-        budget: e.budget,
-        image: e.image,
-        tags: e.tags,
-      )).toList();
-    });
+    state = await AsyncValue.guard(
+      () => ref.read(getClientsUseCaseProvider).call(const NoParams()),
+    );
   }
 }
 
-final clientListProvider = AsyncNotifierProvider<ClientNotifier, List<Client>>(() {
-  return ClientNotifier();
-});
+final clientListProvider =
+    AsyncNotifierProvider<ClientNotifier, List<ClientEntity>>(
+  ClientNotifier.new,
+);

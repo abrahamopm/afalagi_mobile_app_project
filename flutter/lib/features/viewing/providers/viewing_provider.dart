@@ -3,13 +3,14 @@ import 'package:afalagi/core/usecases/usecase.dart';
 import '../../../../core/providers/core_providers.dart';
 import '../data/datasources/viewing_local_ds.dart';
 import '../data/datasources/viewing_remote_ds.dart';
+import '../data/models/viewing_model.dart';
 import '../data/repositories/viewing_repository_impl.dart';
+import '../domain/entities/viewing_entity.dart';
 import '../domain/repositories/viewing_repository.dart';
 import '../domain/usecases/create_viewing.dart';
 import '../domain/usecases/delete_viewing.dart';
 import '../domain/usecases/get_viewings.dart';
 import '../domain/usecases/update_viewing.dart';
-import '../models/viewing_model.dart';
 
 final viewingLocalDSProvider = Provider<ViewingLocalDS>((ref) {
   final dbHelper = ref.watch(databaseProvider);
@@ -52,112 +53,49 @@ final deleteViewingUseCaseProvider = Provider<DeleteViewing>((ref) {
   return DeleteViewing(repository);
 });
 
-class ViewingNotifier extends AsyncNotifier<List<Viewing>> {
+class ViewingNotifier extends AsyncNotifier<List<ViewingEntity>> {
   @override
-  Future<List<Viewing>> build() async {
-    final getViewings = ref.watch(getViewingsUseCaseProvider);
-    final entities = await getViewings(NoParams());
-    return entities.map((e) => Viewing(
-      id: e.id,
-      propertyId: e.propertyId,
-      clientId: e.clientId,
-      propertyTitle: e.propertyTitle,
-      clientName: e.clientName,
-      imageUrl: e.imageUrl,
-      date: e.date,
-      status: e.status,
-      price: e.price,
-      notes: e.notes,
-    )).toList();
+  Future<List<ViewingEntity>> build() async {
+    return ref.watch(getViewingsUseCaseProvider).call(const NoParams());
   }
 
-  Future<void> addViewing(Viewing viewing) async {
+  Future<void> addViewing(ViewingEntity viewing) async {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
-      final createViewing = ref.read(createViewingUseCaseProvider);
-      await createViewing(viewing.toJson()..addAll({'id': viewing.id}));
-      final getViewings = ref.read(getViewingsUseCaseProvider);
-      final entities = await getViewings(NoParams());
-      return entities.map((e) => Viewing(
-        id: e.id,
-        propertyId: e.propertyId,
-        clientId: e.clientId,
-        propertyTitle: e.propertyTitle,
-        clientName: e.clientName,
-        imageUrl: e.imageUrl,
-        date: e.date,
-        status: e.status,
-        price: e.price,
-        notes: e.notes,
-      )).toList();
+      final body = ViewingModel.fromEntity(viewing).toJson();
+      await ref.read(createViewingUseCaseProvider).call(body);
+      return ref.read(getViewingsUseCaseProvider).call(const NoParams());
     });
   }
 
-  Future<void> updateViewing(String id, Viewing viewing) async {
+  Future<void> updateViewing(String id, ViewingEntity viewing) async {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
-      final updateViewing = ref.read(updateViewingUseCaseProvider);
-      await updateViewing(UpdateViewingParams(id: id, body: viewing.toJson()));
-      final getViewings = ref.read(getViewingsUseCaseProvider);
-      final entities = await getViewings(NoParams());
-      return entities.map((e) => Viewing(
-        id: e.id,
-        propertyId: e.propertyId,
-        clientId: e.clientId,
-        propertyTitle: e.propertyTitle,
-        clientName: e.clientName,
-        imageUrl: e.imageUrl,
-        date: e.date,
-        status: e.status,
-        price: e.price,
-        notes: e.notes,
-      )).toList();
+      final body = ViewingModel.fromEntity(viewing).toJson();
+      await ref.read(updateViewingUseCaseProvider).call(
+        UpdateViewingParams(id: id, body: body),
+      );
+      return ref.read(getViewingsUseCaseProvider).call(const NoParams());
     });
   }
 
   Future<void> deleteViewing(String id) async {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
-      final deleteViewing = ref.read(deleteViewingUseCaseProvider);
-      await deleteViewing(id);
-      final getViewings = ref.read(getViewingsUseCaseProvider);
-      final entities = await getViewings(NoParams());
-      return entities.map((e) => Viewing(
-        id: e.id,
-        propertyId: e.propertyId,
-        clientId: e.clientId,
-        propertyTitle: e.propertyTitle,
-        clientName: e.clientName,
-        imageUrl: e.imageUrl,
-        date: e.date,
-        status: e.status,
-        price: e.price,
-        notes: e.notes,
-      )).toList();
+      await ref.read(deleteViewingUseCaseProvider).call(id);
+      return ref.read(getViewingsUseCaseProvider).call(const NoParams());
     });
   }
 
   Future<void> refresh() async {
     state = const AsyncValue.loading();
-    state = await AsyncValue.guard(() async {
-      final getViewings = ref.read(getViewingsUseCaseProvider);
-      final entities = await getViewings(NoParams());
-      return entities.map((e) => Viewing(
-        id: e.id,
-        propertyId: e.propertyId,
-        clientId: e.clientId,
-        propertyTitle: e.propertyTitle,
-        clientName: e.clientName,
-        imageUrl: e.imageUrl,
-        date: e.date,
-        status: e.status,
-        price: e.price,
-        notes: e.notes,
-      )).toList();
-    });
+    state = await AsyncValue.guard(
+      () => ref.read(getViewingsUseCaseProvider).call(const NoParams()),
+    );
   }
 }
 
-final viewingListProvider = AsyncNotifierProvider<ViewingNotifier, List<Viewing>>(() {
-  return ViewingNotifier();
-});
+final viewingListProvider =
+    AsyncNotifierProvider<ViewingNotifier, List<ViewingEntity>>(
+  ViewingNotifier.new,
+);

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:afalagi/features/viewing/models/viewing_model.dart';
+import 'package:afalagi/features/viewing/domain/entities/viewing_entity.dart';
 import 'package:afalagi/features/viewing/widgets/viewing_cards.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
@@ -85,7 +85,7 @@ class _ViewingHistoryScreenState extends ConsumerState<ViewingHistoryScreen> {
     );
   }
 
-  void _editViewing(Viewing viewing) {
+  void _editViewing(ViewingEntity viewing) {
     context.push('/log-viewing', extra: viewing);
   }
 
@@ -173,7 +173,7 @@ class _ViewingHistoryScreenState extends ConsumerState<ViewingHistoryScreen> {
     );
   }
 
-  Widget _buildBentoGrid(List<Viewing> viewings) {
+  Widget _buildBentoGrid(List<ViewingEntity> viewings) {
     // Featured Item (Recent)
     final featured = viewings.first;
     final others = viewings.skip(1).toList();

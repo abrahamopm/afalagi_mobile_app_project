@@ -6,10 +6,10 @@ import 'features/auth/screens/signup_screen.dart';
 import 'features/property/screens/property_list_screen.dart';
 import 'features/property/screens/add_property_screen.dart';
 import 'features/property/screens/property_detail_screen.dart';
-import 'features/property/models/property_model.dart';
+import 'features/property/domain/entities/property_entity.dart';
 import 'features/client/screens/client_list_screen.dart';
 import 'features/client/screens/client_detail_screen.dart';
-import 'features/client/models/client_model.dart';
+import 'features/client/domain/entities/client_entity.dart';
 import 'features/viewing/routes/viewing_routes.dart';
 import 'features/dashboard/screens/home_dashboard.dart';
 import 'features/profile/screens/profile_screen.dart';
@@ -52,7 +52,7 @@ class AppRoutes {
           GoRoute(
             path: '/property-detail',
             builder: (context, state) =>
-                PropertyDetailScreen(property: state.extra as Property),
+                PropertyDetailScreen(property: state.extra as PropertyEntity),
           ),
           GoRoute(
             path: '/add-property',
@@ -61,7 +61,7 @@ class AppRoutes {
           GoRoute(
             path: '/edit-property',
             builder: (context, state) =>
-                AddPropertyScreen(property: state.extra as Property),
+                AddPropertyScreen(property: state.extra as PropertyEntity),
           ),
           GoRoute(
             path: '/clients',
@@ -70,7 +70,7 @@ class AppRoutes {
           GoRoute(
             path: '/client-detail',
             builder: (context, state) =>
-                ClientDetailScreen(client: state.extra as Client),
+                ClientDetailScreen(client: state.extra as ClientEntity),
           ),
           ...ViewingRoutes.routes,
           GoRoute(

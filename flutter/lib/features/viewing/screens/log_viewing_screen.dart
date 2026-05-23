@@ -1,6 +1,6 @@
 import 'package:afalagi/core/theme/theme.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:afalagi/features/viewing/models/viewing_model.dart';
+import 'package:afalagi/features/viewing/domain/entities/viewing_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../providers/viewing_provider.dart';
@@ -8,7 +8,7 @@ import '../providers/viewing_provider.dart';
 class LogViewingScreen extends ConsumerStatefulWidget {
   final String? propertyId;
   final String? clientId;
-  final Viewing? viewing;
+  final ViewingEntity? viewing;
 
   const LogViewingScreen({
     super.key,
@@ -83,7 +83,7 @@ class _LogViewingScreenState extends ConsumerState<LogViewingScreen> {
         }
       } else {
         // Add new
-        final newViewing = Viewing(
+        final newViewing = ViewingEntity(
           id: '',
           propertyId: _propertyId,
           clientId: _clientId,
