@@ -13,6 +13,7 @@ class ViewingModel extends ViewingEntity {
     required super.status,
     required super.price,
     super.notes,
+    super.interestScore,
   });
 
   factory ViewingModel.fromJson(Map<String, dynamic> json) {
@@ -56,6 +57,7 @@ class ViewingModel extends ViewingEntity {
       status: json['status'] ?? 'Recent',
       price: propPrice,
       notes: json['notes'] ?? '',
+      interestScore: json['interestScore'] ?? 0,
     );
   }
 
@@ -66,6 +68,7 @@ class ViewingModel extends ViewingEntity {
       'date': date,
       'status': status,
       'notes': notes,
+      'interestScore': interestScore,
     };
   }
 
@@ -81,6 +84,7 @@ class ViewingModel extends ViewingEntity {
       status: map[DatabaseTables.colViewingStatus] ?? '',
       price: map[DatabaseTables.colViewingPrice] ?? '',
       notes: map[DatabaseTables.colViewingNotes] ?? '',
+      interestScore: map[DatabaseTables.colViewingInterestScore] ?? 0,
     );
   }
 
@@ -96,6 +100,7 @@ class ViewingModel extends ViewingEntity {
       DatabaseTables.colViewingStatus: status,
       DatabaseTables.colViewingPrice: price,
       DatabaseTables.colViewingNotes: notes,
+      DatabaseTables.colViewingInterestScore: interestScore,
     };
   }
 
@@ -111,6 +116,7 @@ class ViewingModel extends ViewingEntity {
       status: entity.status,
       price: entity.price,
       notes: entity.notes,
+      interestScore: entity.interestScore,
     );
   }
 }

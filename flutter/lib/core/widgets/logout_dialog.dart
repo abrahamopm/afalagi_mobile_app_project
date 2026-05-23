@@ -1,11 +1,17 @@
+import 'package:afalagi/features/auth/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:afalagi/core/widgets/button.dart';
 
-class LogoutDialog extends StatelessWidget {
+class LogoutDialog extends ConsumerWidget {
   const LogoutDialog({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final authState = ref.watch(authStateProvider);
+    final isLoading = authState.isLoading;
+
     return Dialog(
       backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
@@ -28,8 +34,6 @@ class LogoutDialog extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 24),
-            
-            // Title
             const Text(
               'Logout',
               style: TextStyle(
@@ -39,7 +43,6 @@ class LogoutDialog extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 12),
-            
             const Text(
               'Are you sure you want to log out of your Afalagi agent account?',
               textAlign: TextAlign.center,
@@ -50,21 +53,30 @@ class LogoutDialog extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 32),
-            
-            // Log out Button using CustomButton
             CustomButton(
-              text: 'Log out',
-              onPressed: () {
-                // Handle logout logic
-                Navigator.pop(context);
-              },
+              text: isLoading ? 'Logging out...' : 'Log out',
+              onPressed: isLoading
+                  ? () {}
+                  : () async {
+                      try {
+                        await ref.read(authStateProvider.notifier).logout();
+                        if (context.mounted) {
+                          Navigator.pop(context);
+                          context.go('/login');
+                        }
+                      } catch (e) {
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Logout failed: $e')),
+                          );
+                        }
+                      }
+                    },
             ),
             const SizedBox(height: 16),
-            
-            // Cancel Button using CustomButton
             CustomButton(
               text: 'Cancel',
-              onPressed: () => Navigator.pop(context),
+              onPressed: isLoading ? () {} : () => Navigator.pop(context),
               color: const Color(0xFFE9ECEF),
               textColor: const Color(0xFF495057),
             ),
@@ -74,4 +86,3 @@ class LogoutDialog extends StatelessWidget {
     );
   }
 }
-

@@ -23,13 +23,10 @@ class ClientDetailScreen extends StatelessWidget {
               onPressed: () {
                 context.push(
                   '/log-viewing',
-                  extra: {
-                    'propertyId': 'dummy_property_id',
-                    'clientId': client.id,
-                  },
+                  extra: {'clientId': client.id},
                 );
               },
-              child: const Text('Schedule Viewing'),
+              child: const Text('Log Viewing'),
             ),
           ],
         ),

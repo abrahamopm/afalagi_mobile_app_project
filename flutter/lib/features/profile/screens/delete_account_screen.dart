@@ -1,25 +1,29 @@
 import 'package:afalagi/core/theme/theme.dart';
 import 'package:afalagi/core/widgets/button.dart';
+import 'package:afalagi/features/auth/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-class DeleteAccountScreen extends StatefulWidget {
+class DeleteAccountScreen extends ConsumerStatefulWidget {
   const DeleteAccountScreen({super.key});
 
   @override
-  State<DeleteAccountScreen> createState() => _DeleteAccountScreenState();
+  ConsumerState<DeleteAccountScreen> createState() =>
+      _DeleteAccountScreenState();
 }
 
-class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
+class _DeleteAccountScreenState extends ConsumerState<DeleteAccountScreen> {
   final TextEditingController _confirmController = TextEditingController();
   bool _canDelete = false;
+  bool _isDeleting = false;
 
   @override
   void initState() {
     super.initState();
     _confirmController.addListener(() {
       setState(() {
-        _canDelete = _confirmController.text.trim().toUpperCase() == "DELETE";
+        _canDelete = _confirmController.text.trim().toUpperCase() == 'DELETE';
       });
     });
   }
@@ -28,6 +32,26 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
   void dispose() {
     _confirmController.dispose();
     super.dispose();
+  }
+
+  Future<void> _handleDelete() async {
+    setState(() => _isDeleting = true);
+    try {
+      await ref.read(authStateProvider.notifier).deleteAccount();
+      if (mounted) {
+        context.go('/login');
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to delete account: $e')),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isDeleting = false);
+      }
+    }
   }
 
   @override
@@ -75,48 +99,40 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
               ),
             ),
             const SizedBox(height: 32),
-
-            // Bento Style Warning Section
             _buildWarningCard(
-              Icons.home_work_outlined,
-              "Properties",
-              "All your active listings will be removed.",
+              icon: Icons.home_work_outlined,
+              title: 'Property Portfolio',
+              description:
+                  'All your property listings will be permanently removed from the Afalagi ecosystem.',
             ),
+            const SizedBox(height: 16),
             _buildWarningCard(
-              Icons.people_outline,
-              "Leads",
-              "Your entire database of potential buyers will be deleted.",
+              icon: Icons.people_outline,
+              title: 'Leads & Buyers',
+              description:
+                  'Your entire client database and lead history will be scrubbed from our servers.',
             ),
+            const SizedBox(height: 16),
             _buildWarningCard(
-              Icons.analytics_outlined,
-              "Analytics & Viewings",
-              "Historical performance data and scheduled viewings will be wiped from the Afalagi ecosystem.",
+              icon: Icons.analytics_outlined,
+              title: 'Analytics & Viewings',
+              description:
+                  'All viewing logs, interest scores, and performance metrics will be lost.',
             ),
-
-            const SizedBox(height: 40),
-
+            const SizedBox(height: 32),
             const Text(
-              "Type 'DELETE' to confirm",
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-                color: Colors.black54,
-              ),
+              'Type DELETE to confirm',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
             ),
             const SizedBox(height: 12),
             TextField(
               controller: _confirmController,
               decoration: InputDecoration(
-                hintText: "DELETE",
+                hintText: 'DELETE',
                 filled: true,
                 fillColor: Colors.white,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: Colors.grey[300]!),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: Colors.grey[300]!),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -124,26 +140,18 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
                 ),
               ),
             ),
-
             const SizedBox(height: 32),
             CustomButton(
-              text: "Delete My Account",
+              text: _isDeleting ? 'Deleting...' : 'Delete My Account',
               color: const Color(0xFFE53E3E),
-              onPressed: _canDelete
-                  ? () {
-                      // Perform deletion logic
-                      context.go('/login');
-                    }
-                  : () {}, // Handled by enabled/disabled style in a real app, 
-                           // but here we follow the logic of being clickable only when DELETE is typed.
-                           // Actually let's make it visually disabled if not canDelete.
+              onPressed: (_canDelete && !_isDeleting) ? _handleDelete : () {},
             ),
             const SizedBox(height: 16),
             Center(
               child: TextButton(
                 onPressed: () => context.pop(),
                 child: const Text(
-                  "Go back",
+                  'Go back',
                   style: TextStyle(
                     color: Colors.black54,
                     fontWeight: FontWeight.bold,
@@ -157,21 +165,17 @@ class _DeleteAccountScreenState extends State<DeleteAccountScreen> {
     );
   }
 
-  Widget _buildWarningCard(IconData icon, String title, String description) {
+  Widget _buildWarningCard({
+    required IconData icon,
+    required String title,
+    required String description,
+  }) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: const Color(0xFFFFF5F5)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFFFED7D7)),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,

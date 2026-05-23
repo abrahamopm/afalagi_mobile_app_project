@@ -120,10 +120,7 @@ class PropertyDetailScreen extends StatelessWidget {
                     onPressed: () {
                       context.push(
                         '/log-viewing',
-                        extra: {
-                          'propertyId': property.id,
-                          'clientId': 'dummy_client_id',
-                        },
+                        extra: {'propertyId': property.id},
                       );
                     },
                   ),

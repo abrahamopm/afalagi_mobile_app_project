@@ -20,8 +20,9 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 1,
+      version: 2,
       onCreate: _createDB,
+      onUpgrade: _upgradeDB,
     );
   }
 
@@ -78,7 +79,8 @@ class DatabaseHelper {
         ${DatabaseTables.colViewingDate} TEXT NOT NULL,
         ${DatabaseTables.colViewingStatus} TEXT NOT NULL,
         ${DatabaseTables.colViewingPrice} TEXT NOT NULL,
-        ${DatabaseTables.colViewingNotes} TEXT NOT NULL
+        ${DatabaseTables.colViewingNotes} TEXT NOT NULL,
+        ${DatabaseTables.colViewingInterestScore} INTEGER NOT NULL DEFAULT 0
       )
     ''');
 
@@ -91,6 +93,14 @@ class DatabaseHelper {
         ${DatabaseTables.colTagPropertyCount} INTEGER NOT NULL
       )
     ''');
+  }
+
+  Future<void> _upgradeDB(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < 2) {
+      await db.execute(
+        'ALTER TABLE ${DatabaseTables.viewings} ADD COLUMN ${DatabaseTables.colViewingInterestScore} INTEGER NOT NULL DEFAULT 0',
+      );
+    }
   }
 
   Future<void> clearAllTables() async {

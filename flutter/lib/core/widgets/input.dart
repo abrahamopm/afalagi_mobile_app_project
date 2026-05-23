@@ -13,6 +13,7 @@ class CustomTextField extends StatelessWidget {
   final Widget? suffixIcon;
   final VoidCallback? onSuffixIconTap;
   final String? prefixText;
+  final bool readOnly;
 
   const CustomTextField({
     super.key,
@@ -28,6 +29,7 @@ class CustomTextField extends StatelessWidget {
     this.suffixIcon,
     this.onSuffixIconTap,
     this.prefixText,
+    this.readOnly = false,
   });
 
   @override
@@ -47,6 +49,7 @@ class CustomTextField extends StatelessWidget {
         const SizedBox(height: 8),
         TextFormField(
           controller: controller,
+          readOnly: readOnly,
           obscureText: obscureText,
           maxLines: maxLines,
           keyboardType: keyboardType,

@@ -9,6 +9,7 @@ class ViewingEntity {
   final String status;
   final String price;
   final String notes;
+  final int interestScore;
 
   const ViewingEntity({
     required this.id,
@@ -21,6 +22,7 @@ class ViewingEntity {
     required this.status,
     required this.price,
     this.notes = '',
+    this.interestScore = 0,
   });
 
   ViewingEntity copyWith({
@@ -34,6 +36,7 @@ class ViewingEntity {
     String? status,
     String? price,
     String? notes,
+    int? interestScore,
   }) {
     return ViewingEntity(
       id: id ?? this.id,
@@ -46,6 +49,7 @@ class ViewingEntity {
       status: status ?? this.status,
       price: price ?? this.price,
       notes: notes ?? this.notes,
+      interestScore: interestScore ?? this.interestScore,
     );
   }
 
@@ -63,7 +67,8 @@ class ViewingEntity {
           date == other.date &&
           status == other.status &&
           price == other.price &&
-          notes == other.notes;
+          notes == other.notes &&
+          interestScore == other.interestScore;
 
   @override
   int get hashCode =>
@@ -76,5 +81,6 @@ class ViewingEntity {
       date.hashCode ^
       status.hashCode ^
       price.hashCode ^
-      notes.hashCode;
+      notes.hashCode ^
+      interestScore.hashCode;
 }

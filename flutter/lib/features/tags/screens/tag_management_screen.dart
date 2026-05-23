@@ -1,16 +1,20 @@
 import 'package:afalagi/core/theme/theme.dart';
 import 'package:afalagi/core/widgets/button.dart';
 import 'package:afalagi/core/widgets/input.dart';
+import 'package:afalagi/features/tags/domain/entities/tag_entity.dart';
+import 'package:afalagi/features/tags/providers/tag_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class TagManagementScreen extends StatefulWidget {
+class TagManagementScreen extends ConsumerStatefulWidget {
   const TagManagementScreen({super.key});
 
   @override
-  State<TagManagementScreen> createState() => _TagManagementScreenState();
+  ConsumerState<TagManagementScreen> createState() =>
+      _TagManagementScreenState();
 }
 
-class _TagManagementScreenState extends State<TagManagementScreen> {
+class _TagManagementScreenState extends ConsumerState<TagManagementScreen> {
   final TextEditingController _tagController = TextEditingController();
   final TextEditingController _filterController = TextEditingController();
   final TextEditingController _editTagController = TextEditingController();
@@ -19,18 +23,11 @@ class _TagManagementScreenState extends State<TagManagementScreen> {
   String _filterQuery = '';
 
   final List<Color> _availableColors = [
-    const Color(0xFF1B385E), // Dark Blue
-    const Color(0xFF2E6B4F), // Forest Green
-    const Color(0xFF6B3E0C), // Deep Ochre
-    const Color(0xFF006D8E), // Teal
-    const Color(0xFFA6EBC9), // Mint (Accent)
-  ];
-
-  final List<Map<String, dynamic>> _tags = [
-    {'name': 'Luxury', 'properties': 124, 'color': const Color(0xFF1B385E)},
-    {'name': 'Villa', 'properties': 86, 'color': const Color(0xFF2E6B4F)},
-    {'name': 'Bole', 'properties': 312, 'color': const Color(0xFF6B3E0C)},
-    {'name': 'Under Construction', 'properties': 42, 'color': const Color(0xFF006D8E)},
+    const Color(0xFF1B385E),
+    const Color(0xFF2E6B4F),
+    const Color(0xFF6B3E0C),
+    const Color(0xFF006D8E),
+    const Color(0xFFA6EBC9),
   ];
 
   @override
@@ -41,38 +38,90 @@ class _TagManagementScreenState extends State<TagManagementScreen> {
     super.dispose();
   }
 
-  void _createTag() {
+  String _colorToHex(Color color) {
+    return '#${color.toARGB32().toRadixString(16).substring(2).toUpperCase()}';
+  }
+
+  Color _colorFromHex(String hex) {
+    final hexCode = hex.replaceAll('#', '');
+    if (hexCode.length == 6) {
+      return Color(int.parse('FF$hexCode', radix: 16));
+    }
+    return const Color(0xFF1B385E);
+  }
+
+  Future<void> _createTag() async {
     if (_tagController.text.trim().isEmpty) return;
-    setState(() {
-      _tags.insert(0, {
-        'name': _tagController.text.trim(),
-        'properties': 0,
-        'color': _selectedColor,
-      });
-      _tagController.clear();
-    });
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Tag created successfully')),
+
+    final tag = TagEntity(
+      id: '',
+      name: _tagController.text.trim(),
+      color: _colorToHex(_selectedColor),
     );
+
+    try {
+      await ref.read(tagListProvider.notifier).addTag(tag);
+      _tagController.clear();
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Tag created successfully')),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e')),
+        );
+      }
+    }
   }
 
-  void _deleteTag(int index) {
-    setState(() {
-      _tags.removeAt(index);
-    });
+  Future<void> _deleteTag(TagEntity tag) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Tag'),
+        content: Text('Delete "${tag.name}"? It will be removed from properties.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Delete', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true) return;
+
+    try {
+      await ref.read(tagListProvider.notifier).deleteTag(tag.id);
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e')),
+        );
+      }
+    }
   }
 
-  void _editTag(int index) {
-    final tag = _tags[index];
-    _editTagController.text = tag['name'];
-    Color tempColor = tag['color'];
+  void _editTag(TagEntity tag) {
+    _editTagController.text = tag.name;
+    Color tempColor = _colorFromHex(tag.color);
 
     showDialog(
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setDialogState) => AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          title: const Text('Edit Tag', style: TextStyle(fontWeight: FontWeight.bold)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          title: const Text(
+            'Edit Tag',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -82,7 +131,10 @@ class _TagManagementScreenState extends State<TagManagementScreen> {
                   labelText: 'Tag Name',
                   filled: true,
                   fillColor: const Color(0xFFF1F4F9),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
                 ),
               ),
               const SizedBox(height: 20),
@@ -94,7 +146,9 @@ class _TagManagementScreenState extends State<TagManagementScreen> {
                     child: CircleAvatar(
                       radius: 15,
                       backgroundColor: color,
-                      child: tempColor == color ? const Icon(Icons.check, color: Colors.white, size: 16) : null,
+                      child: tempColor == color
+                          ? const Icon(Icons.check, color: Colors.white, size: 16)
+                          : null,
                     ),
                   );
                 }).toList(),
@@ -102,17 +156,29 @@ class _TagManagementScreenState extends State<TagManagementScreen> {
             ],
           ),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
             TextButton(
-              onPressed: () {
-                setState(() {
-                  _tags[index] = {
-                    ...tag,
-                    'name': _editTagController.text.trim(),
-                    'color': tempColor,
-                  };
-                });
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () async {
+                final messenger = ScaffoldMessenger.of(context);
                 Navigator.pop(context);
+
+                final updated = tag.copyWith(
+                  name: _editTagController.text.trim(),
+                  color: _colorToHex(tempColor),
+                );
+
+                try {
+                  await ref
+                      .read(tagListProvider.notifier)
+                      .updateTag(tag.id, updated);
+                } catch (e) {
+                  messenger.showSnackBar(
+                    SnackBar(content: Text('Error: $e')),
+                  );
+                }
               },
               child: const Text('Save'),
             ),
@@ -122,70 +188,110 @@ class _TagManagementScreenState extends State<TagManagementScreen> {
     );
   }
 
-  List<Map<String, dynamic>> get _filteredTags {
-    if (_filterQuery.isEmpty) return _tags;
-    return _tags.where((tag) => tag['name'].toLowerCase().contains(_filterQuery.toLowerCase())).toList();
+  List<TagEntity> _filterTags(List<TagEntity> tags) {
+    if (_filterQuery.isEmpty) return tags;
+    return tags
+        .where(
+          (tag) =>
+              tag.name.toLowerCase().contains(_filterQuery.toLowerCase()),
+        )
+        .toList();
   }
 
   @override
   Widget build(BuildContext context) {
+    final tagsAsync = ref.watch(tagListProvider);
+
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Organize and curate your property portfolio labels for Ethiopia\'s elite market.',
-              style: TextStyle(fontSize: 15, color: Colors.grey, height: 1.5),
-            ),
-            const SizedBox(height: 32),
-
-            // Create Tag Card
-            _buildCreateSection(),
-            const SizedBox(height: 40),
-
-            // Active Tags Section
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Active Tags',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1B385E)),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      'TOTAL ${_tags.length} MANAGED LABELS',
-                      style: const TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold, letterSpacing: 0.5),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            
-            // Filter
-            CustomTextField(
-              label: "",
-              hintText: 'Filter tags...',
-              controller: _filterController,
-              onChanged: (value) => setState(() => _filterQuery = value),
-              prefixIcon: const Icon(Icons.search, size: 20),
-            ),
-            const SizedBox(height: 24),
-
-            // Tag List
-            ..._filteredTags.asMap().entries.map((entry) {
-              return _buildTagCard(entry.value, entry.key);
-            }),
-            
-            const SizedBox(height: 24),
-          ],
+      body: tagsAsync.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (error, _) => Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Error: $error'),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () => ref.read(tagListProvider.notifier).refresh(),
+                child: const Text('Retry'),
+              ),
+            ],
+          ),
         ),
+        data: (tags) {
+          final filtered = _filterTags(tags);
+
+          return RefreshIndicator(
+            onRefresh: () => ref.read(tagListProvider.notifier).refresh(),
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Organize and curate your property portfolio labels for Ethiopia\'s elite market.',
+                    style: TextStyle(fontSize: 15, color: Colors.grey, height: 1.5),
+                  ),
+                  const SizedBox(height: 32),
+                  _buildCreateSection(),
+                  const SizedBox(height: 40),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Active Tags',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF1B385E),
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            'TOTAL ${tags.length} MANAGED LABELS',
+                            style: const TextStyle(
+                              fontSize: 10,
+                              color: Colors.grey,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 0.5,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  CustomTextField(
+                    label: '',
+                    hintText: 'Filter tags...',
+                    controller: _filterController,
+                    onChanged: (value) => setState(() => _filterQuery = value),
+                    prefixIcon: const Icon(Icons.search, size: 20),
+                  ),
+                  const SizedBox(height: 24),
+                  if (filtered.isEmpty)
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 24),
+                      child: Center(
+                        child: Text(
+                          'No tags yet. Create one above.',
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                      ),
+                    )
+                  else
+                    ...filtered.map((tag) => _buildTagCard(tag)),
+                  const SizedBox(height: 24),
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }
@@ -197,7 +303,11 @@ class _TagManagementScreenState extends State<TagManagementScreen> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 20, offset: const Offset(0, 8)),
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+          ),
         ],
       ),
       child: Column(
@@ -205,22 +315,36 @@ class _TagManagementScreenState extends State<TagManagementScreen> {
         children: [
           const Text(
             'Create New Tag',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1B385E)),
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF1B385E),
+            ),
           ),
           const Text(
             'DEFINE A BRAND CATEGORY',
-            style: TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold, letterSpacing: 0.5),
+            style: TextStyle(
+              fontSize: 10,
+              color: Colors.grey,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 0.5,
+            ),
           ),
           const SizedBox(height: 24),
-          
           CustomTextField(
-            label: "Tag Name",
+            label: 'Tag Name',
             hintText: 'e.g. Waterfront',
             controller: _tagController,
           ),
           const SizedBox(height: 20),
-          
-          const Text('Category Color', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey)),
+          const Text(
+            'Category Color',
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+              color: Colors.grey,
+            ),
+          ),
           const SizedBox(height: 12),
           Row(
             children: _availableColors.map((color) {
@@ -232,7 +356,9 @@ class _TagManagementScreenState extends State<TagManagementScreen> {
                   padding: const EdgeInsets.all(2),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    border: isSelected ? Border.all(color: AppTheme.primaryColor, width: 1.5) : null,
+                    border: isSelected
+                        ? Border.all(color: AppTheme.primaryColor, width: 1.5)
+                        : null,
                   ),
                   child: CircleAvatar(radius: 14, backgroundColor: color),
                 ),
@@ -241,7 +367,7 @@ class _TagManagementScreenState extends State<TagManagementScreen> {
           ),
           const SizedBox(height: 32),
           CustomButton(
-            text: "Create Tag",
+            text: 'Create Tag',
             onPressed: _createTag,
             icon: Icons.add,
           ),
@@ -250,7 +376,9 @@ class _TagManagementScreenState extends State<TagManagementScreen> {
     );
   }
 
-  Widget _buildTagCard(Map<String, dynamic> tag, int index) {
+  Widget _buildTagCard(TagEntity tag) {
+    final color = _colorFromHex(tag.color);
+
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
@@ -258,7 +386,11 @@ class _TagManagementScreenState extends State<TagManagementScreen> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 10, offset: const Offset(0, 4)),
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.02),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
         ],
       ),
       child: Row(
@@ -267,7 +399,7 @@ class _TagManagementScreenState extends State<TagManagementScreen> {
             width: 4,
             height: 40,
             decoration: BoxDecoration(
-              color: tag['color'],
+              color: color,
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -277,19 +409,37 @@ class _TagManagementScreenState extends State<TagManagementScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  tag['name'],
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF1B385E)),
+                  tag.name,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF1B385E),
+                  ),
                 ),
                 Text(
-                  '${tag['properties']} PROPERTIES',
-                  style: const TextStyle(fontSize: 9, color: Colors.grey, fontWeight: FontWeight.bold, letterSpacing: 0.5),
+                  '${tag.propertyCount} PROPERTIES',
+                  style: const TextStyle(
+                    fontSize: 9,
+                    color: Colors.grey,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 0.5,
+                  ),
                 ),
               ],
             ),
           ),
-          SecondaryButton(icon: Icons.edit_outlined, label: "Edit", onTap: () => _editTag(index)),
+          SecondaryButton(
+            icon: Icons.edit_outlined,
+            label: 'Edit',
+            onTap: () => _editTag(tag),
+          ),
           const SizedBox(width: 8),
-          SecondaryButton(icon: Icons.delete_outline, label: "Delete", onTap: () => _deleteTag(index), isDestructive: true),
+          SecondaryButton(
+            icon: Icons.delete_outline,
+            label: 'Delete',
+            onTap: () => _deleteTag(tag),
+            isDestructive: true,
+          ),
         ],
       ),
     );

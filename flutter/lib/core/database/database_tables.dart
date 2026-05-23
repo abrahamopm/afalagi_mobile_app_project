@@ -48,6 +48,7 @@ class DatabaseTables {
   static const String colViewingStatus = 'status';
   static const String colViewingPrice = 'price';
   static const String colViewingNotes = 'notes';
+  static const String colViewingInterestScore = 'interestScore';
 
   // Tag Columns
   static const String colTagId = 'id';
