@@ -27,7 +27,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:afalagi/features/auth/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 
-import 'core/widgets/shell_scaffold.dart';
+import 'Core/widgets/shell_scaffold.dart';
 
 class RouterNotifier extends ChangeNotifier {
   final Ref _ref;

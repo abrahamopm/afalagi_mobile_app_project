@@ -1,4 +1,4 @@
-import '../../../../core/repositories/cached_repository.dart';
+import '../../../../Core/repositories/cached_repository.dart';
 import '../../domain/entities/property_entity.dart';
 import '../../domain/repositories/property_repository.dart';
 import '../datasources/property_local_ds.dart';

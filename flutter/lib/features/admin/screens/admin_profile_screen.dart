@@ -1,6 +1,6 @@
-import 'package:afalagi/core/theme/theme.dart';
-import 'package:afalagi/core/widgets/image.dart';
-import 'package:afalagi/core/widgets/logout_dialog.dart';
+import 'package:afalagi/Core/theme/theme.dart';
+import 'package:afalagi/Core/widgets/image.dart';
+import 'package:afalagi/Core/widgets/logout_dialog.dart';
 import 'package:afalagi/features/admin/widgets/admin_section_header.dart';
 import 'package:afalagi/features/auth/providers/auth_provider.dart';
 import 'package:flutter/material.dart';

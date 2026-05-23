@@ -1,5 +1,5 @@
 import '../../domain/entities/tag_entity.dart';
-import '../../../../core/database/database_tables.dart';
+import '../../../../Core/database/database_tables.dart';
 
 class TagModel extends TagEntity {
   const TagModel({

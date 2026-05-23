@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:afalagi/core/errors/exceptions.dart';
-import 'package:afalagi/core/network/network_info.dart';
+import 'package:afalagi/Core/errors/exceptions.dart';
+import 'package:afalagi/Core/network/network_info.dart';
 import 'package:afalagi/features/property/data/datasources/property_local_ds.dart';
 import 'package:afalagi/features/property/data/datasources/property_remote_ds.dart';
 import 'package:afalagi/features/property/data/models/property_model.dart';

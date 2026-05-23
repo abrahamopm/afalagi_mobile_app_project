@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:afalagi/core/usecases/usecase.dart';
-import '../../../../core/providers/core_providers.dart';
+import 'package:afalagi/Core/usecases/usecase.dart';
+import '../../../Core/providers/core_providers.dart';
 import '../data/models/user_model.dart';
 import '../data/repositories/auth_repository_impl.dart';
 import '../domain/repositories/auth_repository.dart';
@@ -11,7 +11,7 @@ import '../domain/usecases/logout_usecase.dart';
 import '../domain/usecases/signup_usecase.dart';
 import '../domain/usecases/update_profile.dart';
 
-import '../../../../core/database/database_helper.dart';
+import '../../../Core/database/database_helper.dart';
 
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
   final dio = ref.watch(dioProvider);

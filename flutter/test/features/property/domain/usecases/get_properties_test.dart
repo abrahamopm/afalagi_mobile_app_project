@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:afalagi/core/usecases/usecase.dart';
+import 'package:afalagi/Core/usecases/usecase.dart';
 import 'package:afalagi/features/property/domain/entities/property_entity.dart';
 import 'package:afalagi/features/property/domain/repositories/property_repository.dart';
 import 'package:afalagi/features/property/domain/usecases/get_properties.dart';

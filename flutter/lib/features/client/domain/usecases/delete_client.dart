@@ -1,4 +1,4 @@
-import 'package:afalagi/core/usecases/usecase.dart';
+import 'package:afalagi/Core/usecases/usecase.dart';
 import '../repositories/client_repository.dart';
 
 class DeleteClient extends UseCase<void, String> {

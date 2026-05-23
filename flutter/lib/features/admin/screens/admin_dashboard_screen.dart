@@ -1,6 +1,6 @@
-import 'package:afalagi/core/theme/theme.dart';
-import 'package:afalagi/core/widgets/button.dart';
-import 'package:afalagi/core/widgets/stat_card.dart';
+import 'package:afalagi/Core/theme/theme.dart';
+import 'package:afalagi/Core/widgets/button.dart';
+import 'package:afalagi/Core/widgets/stat_card.dart';
 import 'package:afalagi/features/admin/domain/entities/admin_stats.dart';
 import 'package:afalagi/features/admin/providers/admin_provider.dart';
 import 'package:afalagi/features/admin/widgets/admin_activity_tile.dart';

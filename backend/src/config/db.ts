@@ -17,7 +17,7 @@ const seedAdmin = async () => {
         isVerified: true,
         isActive: true,
       });
-      console.log(`✅ Default admin created: ${email}`);
+      console.log(`Default admin created: ${email}`);
     }
   } catch (error) {
     console.error('Error seeding admin:', error);

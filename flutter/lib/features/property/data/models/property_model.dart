@@ -1,6 +1,6 @@
 import 'dart:convert';
 import '../../domain/entities/property_entity.dart';
-import '../../../../core/database/database_tables.dart';
+import '../../../../Core/database/database_tables.dart';
 
 class PropertyModel extends PropertyEntity {
   const PropertyModel({

@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/providers/core_providers.dart';
+import '../../../Core/providers/core_providers.dart';
 import '../data/repositories/admin_repository_impl.dart';
 import '../domain/entities/admin_property_item.dart';
 import '../domain/entities/admin_stats.dart';

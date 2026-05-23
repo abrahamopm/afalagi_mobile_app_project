@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:afalagi/features/property/data/models/property_model.dart';
 import 'package:afalagi/features/property/domain/entities/property_entity.dart';
-import 'package:afalagi/core/database/database_tables.dart';
+import 'package:afalagi/Core/database/database_tables.dart';
 
 void main() {
   const propertyModel = PropertyModel(

@@ -1,5 +1,5 @@
-import 'package:afalagi/core/theme/theme.dart';
-import 'package:afalagi/core/widgets/button.dart';
+import 'package:afalagi/Core/theme/theme.dart';
+import 'package:afalagi/Core/widgets/button.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../domain/entities/property_entity.dart';

@@ -1,4 +1,4 @@
-import 'package:afalagi/core/theme/theme.dart';
+import 'package:afalagi/Core/theme/theme.dart';
 import 'package:flutter/material.dart';
 
 class CustomButton extends StatelessWidget {

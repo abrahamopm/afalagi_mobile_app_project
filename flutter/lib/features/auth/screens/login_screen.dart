@@ -1,8 +1,8 @@
-import 'package:afalagi/core/widgets/button.dart';
-import 'package:afalagi/core/widgets/image.dart';
+import 'package:afalagi/Core/widgets/button.dart';
+import 'package:afalagi/Core/widgets/image.dart';
 
-import 'package:afalagi/core/widgets/input.dart';
-import 'package:afalagi/core/util/validators.dart';
+import 'package:afalagi/Core/widgets/input.dart';
+import 'package:afalagi/Core/util/validators.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';

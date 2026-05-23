@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:afalagi/core/theme/theme.dart';
-import 'package:afalagi/core/widgets/stat_card.dart';
-import 'package:afalagi/core/widgets/button.dart';
+import 'package:afalagi/Core/theme/theme.dart';
+import 'package:afalagi/Core/widgets/stat_card.dart';
+import 'package:afalagi/Core/widgets/button.dart';
 import 'package:go_router/go_router.dart';
 import '../../auth/providers/auth_provider.dart';
 import '../providers/dashboard_provider.dart';

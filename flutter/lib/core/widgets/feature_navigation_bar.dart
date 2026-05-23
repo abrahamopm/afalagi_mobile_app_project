@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:afalagi/core/theme/theme.dart';
+import 'package:afalagi/Core/theme/theme.dart';
 
 class FeatureNavigationBar extends StatelessWidget {
   final String currentLocation;

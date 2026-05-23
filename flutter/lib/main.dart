@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'routes.dart';
-import 'core/theme/theme.dart';
+import 'Core/theme/theme.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();

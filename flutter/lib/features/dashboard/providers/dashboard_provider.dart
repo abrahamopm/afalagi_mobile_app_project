@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:afalagi/core/usecases/usecase.dart';
-import '../../../../core/providers/core_providers.dart';
+import 'package:afalagi/Core/usecases/usecase.dart';
+import '../../../Core/providers/core_providers.dart';
 import '../data/repositories/dashboard_repository_impl.dart';
 import '../domain/entities/dashboard_stats.dart';
 import '../domain/repositories/dashboard_repository.dart';

@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import '../constants/Constants.dart';
+import '../constants/constants.dart';
 
 class DioClient {
   final Dio dio;

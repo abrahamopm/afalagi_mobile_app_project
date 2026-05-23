@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:afalagi/core/usecases/usecase.dart';
-import '../../../../core/providers/core_providers.dart';
+import 'package:afalagi/Core/usecases/usecase.dart';
+import '../../../Core/providers/core_providers.dart';
 import '../data/datasources/client_local_ds.dart';
 import '../data/datasources/client_remote_ds.dart';
 import '../data/models/client_model.dart';
