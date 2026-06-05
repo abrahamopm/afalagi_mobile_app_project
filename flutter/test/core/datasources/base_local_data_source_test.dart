@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:afalagi/Core/database/database_helper.dart';
-import 'package:afalagi/Core/database/database_tables.dart';
-import 'package:afalagi/Core/datasources/base_local_data_source.dart';
+import 'package:afalagi/core/database/database_helper.dart';
+import 'package:afalagi/core/database/database_tables.dart';
+import 'package:afalagi/core/datasources/base_local_data_source.dart';
 import 'package:afalagi/features/property/data/models/property_model.dart';
 
 class MockDatabaseHelper extends Mock implements DatabaseHelper {}

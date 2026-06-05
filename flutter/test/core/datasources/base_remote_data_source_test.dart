@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:afalagi/Core/datasources/base_remote_data_source.dart';
-import 'package:afalagi/Core/errors/exceptions.dart';
+import 'package:afalagi/core/datasources/base_remote_data_source.dart';
+import 'package:afalagi/core/errors/exceptions.dart';
 import 'package:afalagi/features/property/data/models/property_model.dart';
 
 class MockDio extends Mock implements Dio {}
