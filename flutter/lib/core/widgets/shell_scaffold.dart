@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:afalagi/Core/widgets/scaffold.dart';
-import 'package:afalagi/Core/widgets/feature_navigation_bar.dart';
-import 'package:afalagi/Core/widgets/offline_banner.dart';
+import 'package:afalagi/core/widgets/scaffold.dart';
+import 'package:afalagi/core/widgets/feature_navigation_bar.dart';
+import 'package:afalagi/core/widgets/offline_banner.dart';
 
 class ShellScaffold extends StatelessWidget {
   final Widget child;

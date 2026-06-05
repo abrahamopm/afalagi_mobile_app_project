@@ -1,7 +1,7 @@
-import 'package:afalagi/Core/widgets/image.dart';
+import 'package:afalagi/core/widgets/image.dart';
 import 'package:afalagi/features/property/domain/entities/property_entity.dart';
 import 'package:flutter/material.dart';
-import 'package:afalagi/Core/theme/theme.dart';
+import 'package:afalagi/core/theme/theme.dart';
 
 class PropertyCard extends StatelessWidget {
   final PropertyEntity property;

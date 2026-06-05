@@ -1,8 +1,8 @@
-import 'package:afalagi/Core/widgets/button.dart';
-import 'package:afalagi/Core/widgets/image.dart';
+import 'package:afalagi/core/widgets/button.dart';
+import 'package:afalagi/core/widgets/image.dart';
 
-import 'package:afalagi/Core/widgets/input.dart';
-import 'package:afalagi/Core/util/validators.dart';
+import 'package:afalagi/core/widgets/input.dart';
+import 'package:afalagi/core/util/validators.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -24,6 +24,22 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   bool _rememberMe = false;
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _loadRememberedEmail());
+  }
+
+  Future<void> _loadRememberedEmail() async {
+    final email = await ref.read(authRepositoryProvider).getRememberedEmail();
+    if (email != null && mounted) {
+      setState(() {
+        _emailController.text = email;
+        _rememberMe = true;
+      });
+    }
+  }
+
+  @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
@@ -41,6 +57,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       await ref.read(authStateProvider.notifier).login(
             _emailController.text.trim(),
             _passwordController.text,
+            rememberMe: _rememberMe,
           );
       if (mounted) {
         final authState = ref.read(authStateProvider);

@@ -1,6 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:afalagi/Core/usecases/usecase.dart';
-import '../../../Core/providers/core_providers.dart';
+import 'package:afalagi/core/usecases/usecase.dart';
+import '../../../core/providers/core_providers.dart';
+import '../data/datasources/auth_local_ds.dart';
+import '../data/datasources/auth_remote_ds.dart';
 import '../data/models/user_model.dart';
 import '../data/repositories/auth_repository_impl.dart';
 import '../domain/repositories/auth_repository.dart';
@@ -11,42 +13,48 @@ import '../domain/usecases/logout_usecase.dart';
 import '../domain/usecases/signup_usecase.dart';
 import '../domain/usecases/update_profile.dart';
 
-import '../../../Core/database/database_helper.dart';
+final authRemoteDSProvider = Provider<AuthRemoteDS>((ref) {
+  return AuthRemoteDS(ref.watch(dioProvider));
+});
+
+final authLocalDSProvider = Provider<AuthLocalDS>((ref) {
+  return AuthLocalDS(ref.watch(secureStorageProvider));
+});
 
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
-  final dio = ref.watch(dioProvider);
-  final secureStorage = ref.watch(secureStorageProvider);
-  return AuthRepositoryImpl(dio, secureStorage, DatabaseHelper.instance);
+  return AuthRepositoryImpl(
+    ref.watch(authRemoteDSProvider),
+    ref.watch(authLocalDSProvider),
+    ref.watch(databaseProvider),
+  );
 });
 
 final getMeUseCaseProvider = Provider<GetCurrentUser>((ref) {
-  final repository = ref.watch(authRepositoryProvider);
-  return GetCurrentUser(repository);
+  return GetCurrentUser(ref.watch(authRepositoryProvider));
 });
 
 final loginUseCaseProvider = Provider<LoginUseCase>((ref) {
-  final repository = ref.watch(authRepositoryProvider);
-  return LoginUseCase(repository);
+  return LoginUseCase(ref.watch(authRepositoryProvider));
 });
 
 final signupUseCaseProvider = Provider<SignupUseCase>((ref) {
-  final repository = ref.watch(authRepositoryProvider);
-  return SignupUseCase(repository);
+  return SignupUseCase(ref.watch(authRepositoryProvider));
 });
 
 final updateProfileUseCaseProvider = Provider<UpdateProfile>((ref) {
-  final repository = ref.watch(authRepositoryProvider);
-  return UpdateProfile(repository);
+  return UpdateProfile(ref.watch(authRepositoryProvider));
 });
 
 final deleteAccountUseCaseProvider = Provider<DeleteAccount>((ref) {
-  final repository = ref.watch(authRepositoryProvider);
-  return DeleteAccount(repository);
+  return DeleteAccount(ref.watch(authRepositoryProvider));
 });
 
 final logoutUseCaseProvider = Provider<LogoutUseCase>((ref) {
-  final repository = ref.watch(authRepositoryProvider);
-  return LogoutUseCase(repository);
+  return LogoutUseCase(ref.watch(authRepositoryProvider));
+});
+
+final rememberedEmailProvider = FutureProvider<String?>((ref) async {
+  return ref.watch(authRepositoryProvider).getRememberedEmail();
 });
 
 class AuthNotifier extends AsyncNotifier<UserModel?> {
@@ -57,11 +65,14 @@ class AuthNotifier extends AsyncNotifier<UserModel?> {
     return user != null ? UserModel.fromEntity(user) : null;
   }
 
-  Future<void> login(String email, String password) async {
+  Future<void> login(String email, String password, {bool rememberMe = false}) async {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
       final login = ref.read(loginUseCaseProvider);
       final user = await login(LoginParams(email: email, password: password));
+      await ref.read(authRepositoryProvider).saveRememberedEmail(
+        rememberMe ? email : null,
+      );
       return UserModel.fromEntity(user);
     });
   }
