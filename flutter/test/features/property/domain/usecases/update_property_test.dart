@@ -1,19 +1,22 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:afalagi/core/usecases/usecase.dart';
 import 'package:afalagi/features/property/domain/entities/property_entity.dart';
 import 'package:afalagi/features/property/domain/repositories/property_repository.dart';
-import 'package:afalagi/features/property/domain/usecases/get_properties.dart';
+import 'package:afalagi/features/property/domain/usecases/update_property.dart';
 
 class MockPropertyRepository extends Mock implements PropertyRepository {}
 
 void main() {
+  setUpAll(() {
+    registerFallbackValue(const UpdatePropertyParams(id: '', body: {}));
+  });
+
   late MockPropertyRepository mockRepository;
-  late GetProperties usecase;
+  late UpdateProperty usecase;
 
   const tProperty = PropertyEntity(
     id: '1',
-    title: 'Test Property',
+    title: 'Updated Property',
     description: 'Test Description',
     location: 'Test Location',
     imageUrl: 'test.png',
@@ -25,24 +28,23 @@ void main() {
     tags: [],
   );
 
-  final tPropertyList = [tProperty];
-
   setUp(() {
     mockRepository = MockPropertyRepository();
-    usecase = GetProperties(mockRepository);
+    usecase = UpdateProperty(mockRepository);
   });
 
-  group('GetProperties UseCase Tests', () {
-    test('should get properties from repository', () async {
-      // arrange
-      when(() => mockRepository.getAll()).thenAnswer((_) async => tPropertyList);
+  group('UpdateProperty UseCase Tests', () {
+    test('should update property via repository', () async {
+      const params = UpdatePropertyParams(
+        id: '1',
+        body: {'title': 'Updated Property'},
+      );
+      when(() => mockRepository.update(any(), any())).thenAnswer((_) async => tProperty);
 
-      // act
-      final result = await usecase(NoParams());
+      final result = await usecase(params);
 
-      // assert
-      expect(result, equals(tPropertyList));
-      verify(() => mockRepository.getAll()).called(1);
+      expect(result, equals(tProperty));
+      verify(() => mockRepository.update('1', params.body)).called(1);
       verifyNoMoreInteractions(mockRepository);
     });
   });

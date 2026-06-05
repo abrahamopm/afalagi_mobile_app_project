@@ -1,15 +1,14 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:afalagi/core/usecases/usecase.dart';
 import 'package:afalagi/features/property/domain/entities/property_entity.dart';
 import 'package:afalagi/features/property/domain/repositories/property_repository.dart';
-import 'package:afalagi/features/property/domain/usecases/get_properties.dart';
+import 'package:afalagi/features/property/domain/usecases/get_property_by_id.dart';
 
 class MockPropertyRepository extends Mock implements PropertyRepository {}
 
 void main() {
   late MockPropertyRepository mockRepository;
-  late GetProperties usecase;
+  late GetPropertyById usecase;
 
   const tProperty = PropertyEntity(
     id: '1',
@@ -25,24 +24,19 @@ void main() {
     tags: [],
   );
 
-  final tPropertyList = [tProperty];
-
   setUp(() {
     mockRepository = MockPropertyRepository();
-    usecase = GetProperties(mockRepository);
+    usecase = GetPropertyById(mockRepository);
   });
 
-  group('GetProperties UseCase Tests', () {
-    test('should get properties from repository', () async {
-      // arrange
-      when(() => mockRepository.getAll()).thenAnswer((_) async => tPropertyList);
+  group('GetPropertyById UseCase Tests', () {
+    test('should get property by id from repository', () async {
+      when(() => mockRepository.getById(any())).thenAnswer((_) async => tProperty);
 
-      // act
-      final result = await usecase(NoParams());
+      final result = await usecase('1');
 
-      // assert
-      expect(result, equals(tPropertyList));
-      verify(() => mockRepository.getAll()).called(1);
+      expect(result, equals(tProperty));
+      verify(() => mockRepository.getById('1')).called(1);
       verifyNoMoreInteractions(mockRepository);
     });
   });
