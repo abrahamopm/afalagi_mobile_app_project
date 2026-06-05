@@ -1,7 +1,7 @@
-import 'package:afalagi/Core/theme/theme.dart';
-import 'package:afalagi/Core/widgets/image.dart';
-import 'package:afalagi/Core/widgets/offline_banner.dart';
-import 'package:afalagi/Core/widgets/scaffold.dart';
+import 'package:afalagi/core/theme/theme.dart';
+import 'package:afalagi/core/widgets/image.dart';
+import 'package:afalagi/core/widgets/offline_banner.dart';
+import 'package:afalagi/core/widgets/scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 

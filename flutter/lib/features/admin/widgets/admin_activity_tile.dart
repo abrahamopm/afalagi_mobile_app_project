@@ -1,4 +1,4 @@
-import 'package:afalagi/Core/theme/theme.dart';
+import 'package:afalagi/core/theme/theme.dart';
 import 'package:afalagi/features/admin/domain/entities/admin_stats.dart';
 import 'package:flutter/material.dart';
 

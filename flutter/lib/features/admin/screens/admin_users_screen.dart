@@ -1,5 +1,5 @@
-import 'package:afalagi/Core/theme/theme.dart';
-import 'package:afalagi/Core/widgets/afalagi_dialog.dart';
+import 'package:afalagi/core/theme/theme.dart';
+import 'package:afalagi/core/widgets/afalagi_dialog.dart';
 import 'package:afalagi/features/admin/domain/entities/admin_user_summary.dart';
 import 'package:afalagi/features/admin/providers/admin_provider.dart';
 import 'package:afalagi/features/admin/widgets/admin_section_header.dart';
