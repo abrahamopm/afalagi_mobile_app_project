@@ -1,7 +1,7 @@
-import 'package:afalagi/Core/theme/theme.dart';
-import 'package:afalagi/Core/widgets/afalagi_dialog.dart';
-import 'package:afalagi/Core/widgets/button.dart';
-import 'package:afalagi/Core/widgets/image.dart';
+import 'package:afalagi/core/theme/theme.dart';
+import 'package:afalagi/core/widgets/afalagi_dialog.dart';
+import 'package:afalagi/core/widgets/button.dart';
+import 'package:afalagi/core/widgets/image.dart';
 import 'package:afalagi/features/client/domain/entities/client_entity.dart';
 import 'package:afalagi/features/client/providers/client_provider.dart';
 import 'package:flutter/material.dart';

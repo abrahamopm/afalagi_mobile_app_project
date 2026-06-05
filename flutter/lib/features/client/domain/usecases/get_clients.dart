@@ -1,4 +1,4 @@
-import 'package:afalagi/Core/usecases/usecase.dart';
+import 'package:afalagi/core/usecases/usecase.dart';
 import '../entities/client_entity.dart';
 import '../repositories/client_repository.dart';
 

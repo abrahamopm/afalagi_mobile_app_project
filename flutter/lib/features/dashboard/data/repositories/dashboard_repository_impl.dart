@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
-import '../../../../Core/constants/constants.dart';
-import '../../../../Core/errors/exceptions.dart';
+import '../../../../core/constants/constants.dart';
+import '../../../../core/errors/exceptions.dart';
 import '../../domain/repositories/dashboard_repository.dart';
 import '../models/dashboard_stats_model.dart';
 

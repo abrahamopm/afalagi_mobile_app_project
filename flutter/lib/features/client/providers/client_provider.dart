@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:afalagi/Core/usecases/usecase.dart';
-import '../../../Core/providers/core_providers.dart';
+import 'package:afalagi/core/usecases/usecase.dart';
+import '../../../core/providers/core_providers.dart';
 import '../data/datasources/client_local_ds.dart';
 import '../data/datasources/client_remote_ds.dart';
 import '../data/models/client_model.dart';
@@ -10,6 +10,7 @@ import '../domain/repositories/client_repository.dart';
 import '../domain/usecases/create_client.dart';
 import '../domain/usecases/delete_client.dart';
 import '../domain/usecases/get_clients.dart';
+import '../domain/usecases/get_client_by_id.dart';
 import '../domain/usecases/update_client.dart';
 
 final clientLocalDSProvider = Provider<ClientLocalDS>((ref) {
@@ -51,6 +52,11 @@ final updateClientUseCaseProvider = Provider<UpdateClient>((ref) {
 final deleteClientUseCaseProvider = Provider<DeleteClient>((ref) {
   final repository = ref.watch(clientRepositoryProvider);
   return DeleteClient(repository);
+});
+
+final getClientByIdUseCaseProvider = Provider<GetClientById>((ref) {
+  final repository = ref.watch(clientRepositoryProvider);
+  return GetClientById(repository);
 });
 
 class ClientNotifier extends AsyncNotifier<List<ClientEntity>> {
