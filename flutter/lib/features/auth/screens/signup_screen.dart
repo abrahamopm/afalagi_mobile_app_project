@@ -1,11 +1,11 @@
-import 'package:afalagi/Core/widgets/button.dart';
-import 'package:afalagi/Core/widgets/input.dart';
-import 'package:afalagi/Core/util/validators.dart';
+import 'package:afalagi/core/widgets/button.dart';
+import 'package:afalagi/core/widgets/input.dart';
+import 'package:afalagi/core/util/validators.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:afalagi/Core/theme/theme.dart';
+import 'package:afalagi/core/theme/theme.dart';
 import 'package:go_router/go_router.dart';
-import 'package:afalagi/Core/widgets/image.dart';
+import 'package:afalagi/core/widgets/image.dart';
 
 import '../providers/auth_provider.dart';
 
@@ -21,6 +21,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   final _fullNameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _phoneController = TextEditingController();
+  final _agencyNameController = TextEditingController();
+  final _agencyLicenseController = TextEditingController();
   bool _obscurePassword = true;
   bool _agreeToTerms = false;
 
@@ -29,6 +32,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     _fullNameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    _phoneController.dispose();
+    _agencyNameController.dispose();
+    _agencyLicenseController.dispose();
     super.dispose();
   }
 
@@ -51,6 +57,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
         name: _fullNameController.text.trim(),
         email: _emailController.text.trim(),
         password: _passwordController.text,
+        phone: _phoneController.text.trim(),
+        agencyName: _agencyNameController.text.trim(),
+        agencyLicense: _agencyLicenseController.text.trim(),
       );
 
       if (mounted) {
@@ -120,6 +129,28 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                 ),
                 onSuffixIconTap: _togglePasswordVisibility,
                 validator: Validators.validatePassword,
+              ),
+              const SizedBox(height: 24),
+              CustomTextField(
+                label: "PHONE (OPTIONAL)",
+                hintText: "+251 9XX XXX XXX",
+                controller: _phoneController,
+                keyboardType: TextInputType.phone,
+                prefixIcon: const Icon(Icons.phone_outlined, size: 20),
+              ),
+              const SizedBox(height: 24),
+              CustomTextField(
+                label: "AGENCY NAME (OPTIONAL)",
+                hintText: "Your Agency",
+                controller: _agencyNameController,
+                prefixIcon: const Icon(Icons.business_outlined, size: 20),
+              ),
+              const SizedBox(height: 24),
+              CustomTextField(
+                label: "AGENCY LICENSE (OPTIONAL)",
+                hintText: "License number",
+                controller: _agencyLicenseController,
+                prefixIcon: const Icon(Icons.badge_outlined, size: 20),
               ),
               const SizedBox(height: 10),
               Row(
