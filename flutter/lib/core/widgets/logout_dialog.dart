@@ -1,9 +1,9 @@
 import 'package:afalagi/features/auth/providers/auth_provider.dart';
-import 'package:afalagi/Core/theme/theme.dart';
+import 'package:afalagi/core/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:afalagi/Core/widgets/button.dart';
+import 'package:afalagi/core/widgets/button.dart';
 
 class LogoutDialog extends ConsumerWidget {
   const LogoutDialog({super.key});
