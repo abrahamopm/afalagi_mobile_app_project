@@ -1,5 +1,5 @@
 import '../../domain/entities/viewing_entity.dart';
-import '../../../../Core/database/database_tables.dart';
+import '../../../../core/database/database_tables.dart';
 
 class ViewingModel extends ViewingEntity {
   const ViewingModel({

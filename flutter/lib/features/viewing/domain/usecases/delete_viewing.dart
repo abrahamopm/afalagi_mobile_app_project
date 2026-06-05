@@ -1,4 +1,4 @@
-import 'package:afalagi/Core/usecases/usecase.dart';
+import 'package:afalagi/core/usecases/usecase.dart';
 import '../repositories/viewing_repository.dart';
 
 class DeleteViewing extends UseCase<void, String> {
