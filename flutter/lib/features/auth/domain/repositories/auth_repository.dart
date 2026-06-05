@@ -15,4 +15,6 @@ abstract class AuthRepository {
   Future<void> deleteAccount();
   Future<void> logout();
   Future<bool> isAuthenticated();
+  Future<void> saveRememberedEmail(String? email);
+  Future<String?> getRememberedEmail();
 }
