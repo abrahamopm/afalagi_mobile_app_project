@@ -24,6 +24,10 @@ import 'package:afalagi/features/admin/domain/repositories/admin_repository.dart
 import 'package:afalagi/features/property/domain/entities/property_entity.dart';
 import 'package:afalagi/features/client/domain/entities/client_entity.dart';
 import 'package:afalagi/features/admin/domain/entities/admin_stats.dart';
+import 'package:afalagi/features/tags/screens/tag_management_screen.dart';
+import 'package:afalagi/features/tags/providers/tag_provider.dart';
+import 'package:afalagi/features/tags/domain/repositories/tag_repository.dart';
+import 'package:afalagi/features/tags/domain/entities/tag_entity.dart';
 
 class MockAuthRepository extends Mock implements AuthRepository {}
 class MockGetCurrentUser extends Mock implements GetCurrentUser {}
@@ -31,6 +35,7 @@ class MockLoginUseCase extends Mock implements LoginUseCase {}
 class MockPropertyRepository extends Mock implements PropertyRepository {}
 class MockClientRepository extends Mock implements ClientRepository {}
 class MockAdminRepository extends Mock implements AdminRepository {}
+class MockTagRepository extends Mock implements TagRepository {}
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -144,5 +149,23 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(AdminDashboardScreen), findsOneWidget);
+  });
+
+  testWidgets('tag management screen displays tags', (tester) async {
+    final mockTagRepo = MockTagRepository();
+    when(() => mockTagRepo.getAll()).thenAnswer((_) async => [
+      const TagEntity(id: '1', name: 'Luxury', color: '#1B385E'),
+    ]);
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [tagRepositoryProvider.overrideWithValue(mockTagRepo)],
+        child: const MaterialApp(home: TagManagementScreen()),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Luxury'), findsOneWidget);
+    expect(find.text('Create New Tag'), findsOneWidget);
   });
 }
