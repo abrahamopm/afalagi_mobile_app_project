@@ -1,7 +1,7 @@
 import 'dart:convert';
-import 'package:afalagi/Core/theme/theme.dart';
-import 'package:afalagi/Core/widgets/button.dart';
-import 'package:afalagi/Core/widgets/input.dart';
+import 'package:afalagi/core/theme/theme.dart';
+import 'package:afalagi/core/widgets/button.dart';
+import 'package:afalagi/core/widgets/input.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:afalagi/features/property/domain/entities/property_entity.dart';
 import 'package:flutter/material.dart';
