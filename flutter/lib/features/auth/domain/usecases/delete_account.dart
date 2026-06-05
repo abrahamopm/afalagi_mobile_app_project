@@ -1,4 +1,4 @@
-import 'package:afalagi/Core/usecases/usecase.dart';
+import 'package:afalagi/core/usecases/usecase.dart';
 import '../repositories/auth_repository.dart';
 
 class DeleteAccount extends UseCase<void, NoParams> {
