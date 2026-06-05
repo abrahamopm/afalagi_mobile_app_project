@@ -9,6 +9,7 @@ import '../domain/entities/tag_entity.dart';
 import '../domain/repositories/tag_repository.dart';
 import '../domain/usecases/create_tag.dart';
 import '../domain/usecases/delete_tag.dart';
+import '../domain/usecases/get_tag_by_id.dart';
 import '../domain/usecases/get_tags.dart';
 import '../domain/usecases/update_tag.dart';
 
@@ -51,6 +52,11 @@ final updateTagUseCaseProvider = Provider<UpdateTag>((ref) {
 final deleteTagUseCaseProvider = Provider<DeleteTag>((ref) {
   final repository = ref.watch(tagRepositoryProvider);
   return DeleteTag(repository);
+});
+
+final getTagByIdUseCaseProvider = Provider<GetTagById>((ref) {
+  final repository = ref.watch(tagRepositoryProvider);
+  return GetTagById(repository);
 });
 
 class TagNotifier extends AsyncNotifier<List<TagEntity>> {
