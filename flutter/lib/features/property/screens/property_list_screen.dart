@@ -1,5 +1,5 @@
-import 'package:afalagi/Core/widgets/afalagi_dialog.dart';
-import 'package:afalagi/Core/widgets/property_card.dart';
+import 'package:afalagi/core/widgets/afalagi_dialog.dart';
+import 'package:afalagi/core/widgets/property_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';

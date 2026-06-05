@@ -1,4 +1,4 @@
-import 'package:afalagi/Core/theme/theme.dart';
+import 'package:afalagi/core/theme/theme.dart';
 import 'package:afalagi/features/client/domain/entities/client_entity.dart';
 import 'package:afalagi/features/client/providers/client_provider.dart';
 import 'package:afalagi/features/property/domain/entities/property_entity.dart';

@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
-import '../../../../Core/constants/constants.dart';
-import '../../../../Core/datasources/base_remote_data_source.dart';
+import '../../../../core/constants/constants.dart';
+import '../../../../core/datasources/base_remote_data_source.dart';
 import '../models/tag_model.dart';
 
 class TagRemoteDS extends BaseRemoteDataSource<TagModel> {
