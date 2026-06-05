@@ -1,4 +1,4 @@
-import 'package:afalagi/Core/usecases/usecase.dart';
+import 'package:afalagi/core/usecases/usecase.dart';
 import '../repositories/tag_repository.dart';
 
 class DeleteTag extends UseCase<void, String> {

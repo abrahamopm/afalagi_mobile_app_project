@@ -1,5 +1,5 @@
-import 'package:afalagi/Core/theme/theme.dart';
-import 'package:afalagi/Core/widgets/image.dart';
+import 'package:afalagi/core/theme/theme.dart';
+import 'package:afalagi/core/widgets/image.dart';
 import 'package:afalagi/features/admin/domain/entities/admin_user_summary.dart';
 import 'package:flutter/material.dart';
 

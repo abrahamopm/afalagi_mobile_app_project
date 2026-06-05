@@ -1,4 +1,4 @@
-import 'package:afalagi/Core/util/format.dart';
+import 'package:afalagi/core/util/format.dart';
 
 class PropertyEntity {
   final String id;
