@@ -5,15 +5,17 @@ import 'package:mocktail/mocktail.dart';
 import 'package:go_router/go_router.dart';
 import 'package:afalagi/features/auth/screens/login_screen.dart';
 import 'package:afalagi/features/auth/providers/auth_provider.dart';
+import 'package:afalagi/features/auth/domain/repositories/auth_repository.dart';
 import 'package:afalagi/features/auth/domain/usecases/login_usecase.dart';
 import 'package:afalagi/features/auth/domain/usecases/get_current_user.dart';
 import 'package:afalagi/features/auth/data/models/user_model.dart';
 import 'package:afalagi/core/usecases/usecase.dart';
-import 'package:afalagi/Core/widgets/input.dart';
-import 'package:afalagi/Core/widgets/button.dart';
+import 'package:afalagi/core/widgets/input.dart';
+import 'package:afalagi/core/widgets/button.dart';
 
 class MockLoginUseCase extends Mock implements LoginUseCase {}
 class MockGetCurrentUser extends Mock implements GetCurrentUser {}
+class MockAuthRepository extends Mock implements AuthRepository {}
 
 void main() {
   setUpAll(() {
@@ -23,10 +25,14 @@ void main() {
 
   late MockLoginUseCase mockLoginUseCase;
   late MockGetCurrentUser mockGetCurrentUser;
+  late MockAuthRepository mockAuthRepository;
 
   setUp(() {
     mockLoginUseCase = MockLoginUseCase();
     mockGetCurrentUser = MockGetCurrentUser();
+    mockAuthRepository = MockAuthRepository();
+    when(() => mockAuthRepository.getRememberedEmail()).thenAnswer((_) async => null);
+    when(() => mockAuthRepository.saveRememberedEmail(any())).thenAnswer((_) async => {});
   });
 
   testWidgets('LoginScreen displays fields, validates input, and triggers login flow', (WidgetTester tester) async {
@@ -45,6 +51,7 @@ void main() {
         overrides: [
           getMeUseCaseProvider.overrideWithValue(mockGetCurrentUser),
           loginUseCaseProvider.overrideWithValue(mockLoginUseCase),
+          authRepositoryProvider.overrideWithValue(mockAuthRepository),
         ],
         child: MaterialApp.router(
           routerConfig: router,
@@ -79,12 +86,14 @@ void main() {
 
     // Act: Tap sign in again
     await tester.tap(find.byType(CustomButton));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
     await tester.pumpAndSettle();
 
     // Verify use case was called with correct parameters
     verify(() => mockLoginUseCase(any())).called(1);
-    
-    // Verify we navigated to the dashboard
+
+    // Verify navigation was triggered
     expect(find.text('Dashboard'), findsOneWidget);
   });
 }
