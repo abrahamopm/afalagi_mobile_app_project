@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:go_router/go_router.dart';
 import 'package:afalagi/main.dart';
 import 'package:afalagi/features/auth/screens/splash_screen.dart';
 import 'package:afalagi/features/auth/screens/login_screen.dart';
@@ -72,10 +73,18 @@ void main() {
     final mockAuthRepo = MockAuthRepository();
     when(() => mockAuthRepo.getRememberedEmail()).thenAnswer((_) async => null);
 
+    final router = GoRouter(
+      initialLocation: '/login',
+      routes: [
+        GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
+        GoRoute(path: '/signup', builder: (context, state) => const SignupScreen()),
+      ],
+    );
+
     await tester.pumpWidget(
       ProviderScope(
         overrides: [authRepositoryProvider.overrideWithValue(mockAuthRepo)],
-        child: const MaterialApp(home: LoginScreen()),
+        child: MaterialApp.router(routerConfig: router),
       ),
     );
     await tester.pumpAndSettle();
@@ -121,7 +130,7 @@ void main() {
           propertyRepositoryProvider.overrideWithValue(mockPropertyRepo),
           clientRepositoryProvider.overrideWithValue(mockClientRepo),
         ],
-        child: const MaterialApp(home: ClientListScreen()),
+        child: const MaterialApp(home: Scaffold(body: ClientListScreen())),
       ),
     );
     await tester.pumpAndSettle();
